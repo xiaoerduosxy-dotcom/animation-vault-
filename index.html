@@ -40,134 +40,504 @@
 
     <script>
         const sections = [
-            { id: "01", label: "01-CSS纯动效", items: [
-                { title: "Hero区渐变流动", url: "01-CSS纯动效/01-hero-mesh.html", description: "网格渐变色彩流动，带文字错位淡入和按钮扫光。" },
-                { title: "SaaS定价卡片", url: "01-CSS纯动效/02-pricing-hover.html", description: "卡片平滑浮起，核心套餐边框发光与计费切换。" },
-                { title: "骨架屏加载", url: "01-CSS纯动效/03-skeleton.html", description: "Shimmer占位符与内容渲染时的交错过渡。" },
-                { title: "导航栏菜单", url: "01-CSS纯动效/04-nav-menu.html", description: "滑动下划线、下拉面板展开与汉堡图标变形。" },
-                { title: "3D 旋转画廊", url: "01-CSS纯动效/05-3d-carousel.html", description: "CSS 3D Transform 实现的旋转卡片画廊与等待列表。" },
-                { title: "书脊式画廊", url: "01-CSS纯动效/06-spine-gallery.html", description: "书脊排列的展览卡片，悬停展开动效。" },
-            ]},
-            { id: "02", label: "02-Canvas数学驱动", items: [
-                { title: "AI助手点阵", url: "02-Canvas数学驱动/01-ai-dot-matrix.html", description: "4种状态动效：待机脉冲、思考螺旋、聆听波纹、警报网格。" },
-                { title: "信号遥测雷达", url: "02-Canvas数学驱动/02-signal-radar.html", description: "实时示波器波形与极坐标雷达扫描。" },
-                { title: "Perlin噪声流场", url: "02-Canvas数学驱动/03-noise-flow.html", description: "数百个粒子跟随噪声向量运动，形成有机流体感。" },
-                { title: "音频可视化", url: "02-Canvas数学驱动/04-audio-viz.html", description: "随节奏脉冲的同心环与圆形排列的频谱条。" },
-                { title: "展览画廊 Canvas", url: "02-Canvas数学驱动/05-exhibition-canvas.html", description: "Canvas 动效展览归档界面，数学驱动的交互效果。" },
-            ]},
-            { id: "03", label: "03-SVG路径动画", items: [
-                { title: "Logo路径描边", url: "03-SVG路径动画/01-logo-reveal.html", description: "利用 stroke-dashoffset 让路径逐笔显现后填充颜色。" },
-                { title: "电路板数据流", url: "03-SVG路径动画/02-circuit-board.html", description: "节点脉冲与数据包发光点沿 SVG 路径流动。" },
-                { title: "流程图步步绘制", url: "03-SVG路径动画/03-process-flow.html", description: "滚动触发连接线顺次绘制与节点放大弹出。" },
-            ]},
-            { id: "04", label: "04-滚动触发", items: [
-                { title: "核心数据滚动", url: "04-滚动触发/01-scroll-counter.html", description: "进入视口后，4个数字从零平滑递增至目标值。" },
-                { title: "评价卡片交错", url: "04-滚动触发/02-testimonial.html", description: "滚动时，评价卡片从左右两侧交错滑入。" },
-                { title: "技能进度条", url: "04-滚动触发/03-progress-bar.html", description: "进入视口时宽度动画拉伸，伴随百分比数字增加。" },
-            ]},
-            { id: "05", label: "05-粒子物理动效", items: [
-                { title: "星空物理连线", url: "05-粒子物理动效/01-star-particle.html", description: "鼠标排斥、弹簧回弹与相邻粒子的星座连线物理引擎。" },
-                { title: "鼠标彗星拖尾", url: "05-粒子物理动效/02-cursor-trail.html", description: "鼠标移动留下发光粒子并随帧率渐隐缩小。" },
-                { title: "星云信号粒子", url: "05-粒子物理动效/03-nebula-signal.html", description: "粒子构成星云形态，呈现信号系统的有机流动感。" },
-                { title: "粒子流聚焦", url: "05-粒子物理动效/04-particle-flow.html", description: "WebGL 粒子流模拟，鼠标交互影响粒子轨迹与湍流。" },
-                { title: "信号丢失星云", url: "05-粒子物理动效/05-signal-lost-nebula.html", description: "黑白高对比星云粒子背景，居中「信号丢失」故障态视觉。" },
-                { title: "信号与系统课程页", url: "05-粒子物理动效/06-signal-course-module.html", description: "星云 Canvas 背景 + 课程模块信息层，教育场景落地页。" },
-            ]},
-            { id: "06", label: "06-WebGL-3D", items: [
-                { title: "3D线框球呼吸", url: "06-WebGL-3D/01-wireframe-sphere.html", description: "响应鼠标倾斜，并伴有顶点位移造成的有机呼吸效果。" },
-                { title: "液态金属极光", url: "06-WebGL-3D/02-liquid-metal.html", description: "利用着色器制作的缓慢、催眠般的色彩流动背景。" },
-                { title: "页面碎片转场", url: "06-WebGL-3D/03-shatter-trans.html", description: "页面破碎成 3D 碎片飞向镜头并重组为新页面的电影级转场。" },
-                { title: "生成艺术仪表盘", url: "06-WebGL-3D/04-generative-dashboard.html", description: "六面板 WebGL shader 生成艺术：元球、分形地形、粒子等。" },
-                { title: "液态极光 Hero", url: "06-WebGL-3D/05-liquid-aurora-hero.html", description: "全屏 WebGL 极光着色器背景，毛玻璃 Hero 卡片与导航栏。" },
-                { title: "量子走廊", url: "06-WebGL-3D/06-quantum-corridor.html", description: "Instanced Mesh 立方体矩阵，扫描线着色器与后处理 Bloom。" },
-                { title: "量子数据矩阵", url: "06-WebGL-3D/07-quantum-data-matrix.html", description: "正交相机下的 3D 数据立方体矩阵，迷雾氛围与动态高亮。" },
-                { title: "SYMBOLON 符号系统", url: "06-WebGL-3D/08-symbolon.html", description: "WebGL 抽象符号与意义架构的视觉呈现。" },
-            ]},
-            { id: "07", label: "07-UI组件", items: [
-                { title: "Signal Capture Unit", url: "07-UI组件/01-signal-capture.html", description: "复古工业仪表盘风格的音频播放器 UI 组件。" },
-                { title: "Aura 会话界面", url: "07-UI组件/02-aura-session.html", description: "Three.js 径向 UI 录音界面，环形参数节点与波形动效。" },
-                { title: "Signal Monitor Unit", url: "07-UI组件/03-signal-monitor.html", description: "示波器波形 Canvas 动效，工业风信号监测面板。" },
-                { title: "液态玻璃组件", url: "07-UI组件/04-liquid-glass.html", description: "毛玻璃拟态 UI 控件，WebGL 折射背景与参数调节面板。" },
-                { title: "液态玻璃错误态", url: "07-UI组件/05-liquid-glass-error.html", description: "液态玻璃组件的错误状态变体，红色告警视觉。" },
-                { title: "情绪收藏罐 · 首页", url: "07-UI组件/06-emotion-jar-home.html", description: "移动端情绪记录 App 主界面，浮动粒子与玻璃罐动效。" },
-                { title: "情绪收藏罐 · 开启", url: "07-UI组件/07-emotion-jar-open.html", description: "开罐仪式动效，情绪粒子汇入玻璃罐。" },
-                { title: "情绪收藏罐 · 详情", url: "07-UI组件/08-emotion-jar-detail.html", description: "单条情绪记录详情页，时间轴与色彩标签。" },
-                { title: "情绪收藏罐 · 记录", url: "07-UI组件/09-emotion-jar-record.html", description: "情绪录入表单页，色彩选择与动效反馈。" },
-                { title: "情绪收藏罐 · 空状态", url: "07-UI组件/10-emotion-jar-empty.html", description: "无数据空状态插画与引导文案。" },
-                { title: "情绪收藏罐 · 设置", url: "07-UI组件/11-emotion-jar-settings.html", description: "App 设置页，开关控件与分组列表。" },
-                { title: "情绪收藏罐 · 周报", url: "07-UI组件/12-emotion-jar-weekly.html", description: "情绪数据周报，图表与趋势可视化。" },
-                { title: "Lumière 画廊网格", url: "07-UI组件/13-gallery-grid.html", description: "会员访问画廊网格界面，纯 CSS 卡片布局。" },
-                { title: "信号捕捉组件", url: "07-UI组件/14-signal-widget.html", description: "信号捕捉小组件，纯 CSS 动画仪表盘风格。" },
-                { title: "Ribbon 设计系统", url: "07-UI组件/15-ribbon-landing.html", description: "Ribbon 设计系统落地页，纯 CSS 布局与排版。" },
-                { title: "KINETIC 动效归档", url: "07-UI组件/16-kinetic-archive.html", description: "KINETIC 动效归档界面，纯 CSS 网格布局。" },
-                { title: "动效展览网格", url: "07-UI组件/17-motion-grid.html", description: "动效展览归档网格布局，纯 CSS 卡片排列。" },
-            ]},
-            { id: "08", label: "08-动效图表", coming: true, items: [
-                { title: "动效图表", url: "", description: "数据驱动的动态图表组件，持续收集中。" },
-            ]},
-            { id: "09", label: "09-大屏可视化", items: [
-                { title: "数据可视化大标题", url: "09-大屏可视化/01-data-viz-title.html", description: "深色科技风数据大屏标题区，动态图表与指标卡片布局。" },
-                { title: "综合指挥中心", url: "09-大屏可视化/02-command-center.html", description: "多模块指挥驾驶舱，地图、监控与实时数据面板。" },
-                { title: "智慧环卫驾驶舱", url: "09-大屏可视化/03-sanitation-dashboard.html", description: "海南省智慧环卫管理大屏，车辆轨迹与运营指标可视化。" },
-                { title: "城镇网格化治理平台 v1", url: "09-大屏可视化/04-governance-v1.html", description: "城镇网格化基层治理数据大屏第一版，Chart.js 图表。" },
-                { title: "城镇网格化治理平台 v2", url: "09-大屏可视化/05-governance-v2.html", description: "城镇网格化基层治理数据大屏第二版，优化布局与交互。" },
-            ]},
-            { id: "10", label: "10-案例-Fig-Mint", items: [
-                { title: "Fig Mint 主页", url: "10-案例-Fig-Mint/01-homepage.html", description: "复古科技美学产品主页，CRT 绿屏 + RetroSerif 字体。" },
-                { title: "Fig Mint 技术规格", url: "10-案例-Fig-Mint/02-specs.html", description: "产品参数页，mini CRT 组件与复古排版。" },
-                { title: "Fig Mint 下单页", url: "10-案例-Fig-Mint/03-order.html", description: "打字机动效表单，复古工业风下单流程。" },
-                { title: "Fig Mint 订单确认", url: "10-案例-Fig-Mint/04-order-confirmed.html", description: "订单成功页，CRT 终端风格确认界面。" },
-                { title: "Fig Mint 开箱", url: "10-案例-Fig-Mint/05-unboxing.html", description: "产品开箱页，RetroSerif 排版与复古插图风格。" },
-                { title: "Fig Mint 报纸评测", url: "10-案例-Fig-Mint/06-newspaper.html", description: "虚构报纸版式的产品评测，复古印刷美学。" },
-                { title: "FigOS 启动画面 v1", url: "10-案例-Fig-Mint/07-figos-boot-v1.html", description: "操作系统启动动画，CRT 扫描线 + 绿屏终端。" },
-                { title: "FigOS 启动画面 v2", url: "10-案例-Fig-Mint/08-figos-boot-v2.html", description: "启动画面第二版，深色背景 + 白色 CRT 光晕。" },
-                { title: "FigOS 桌面系统", url: "10-案例-Fig-Mint/09-figos-desktop.html", description: "完整虚构操作系统桌面 UI，窗口交互与终端模拟。" },
-            ]},
-            { id: "11", label: "11-案例-Aura-Capital", items: [
-                { title: "Aura Capital 网络图谱", url: "11-案例-Aura-Capital/01-network.html", description: "金融机构网络关系可视化，SVG 动态连线 + 脉冲节点。" },
-                { title: "Aura Capital 仪表盘", url: "11-案例-Aura-Capital/02-dashboard.html", description: "Three.js 3D 背景 + 深色金融数据仪表盘，明暗主题切换。" },
-                { title: "Aura Capital 季度业绩", url: "11-案例-Aura-Capital/03-performance.html", description: "SVG 动态图表：柱状图与甜甜圈图的进场动效。" },
-                { title: "Aura Capital 资本流动", url: "11-案例-Aura-Capital/04-capital-flow.html", description: "Three.js 全屏 3D 粒子流，呈现资本流动路径。" },
-            ]},
-            { id: "12", label: "12-个人主页模板", items: [
-                { title: "工业设计系统 v1", url: "12-个人主页模板/01-industrial-v1.html", description: "橙色强调色，工业设计系统风格个人作品集，双栏布局。" },
-                { title: "工业设计系统 v2", url: "12-个人主页模板/02-industrial-v2.html", description: "工业设计系统第二版，自定义光标与交互细节优化。" },
-                { title: "流体博客 v1", url: "12-个人主页模板/03-fluid-blog-v1.html", description: "霓虹黄绿配黑，大字排版流体设计个人博客。" },
-                { title: "流体博客 v2", url: "12-个人主页模板/04-fluid-blog-v2.html", description: "流体博客第二版，交互与排版细节迭代。" },
-                { title: "新拟态作品集", url: "12-个人主页模板/05-neumorphic-portfolio.html", description: "暖米色新拟态风格，Vibe & Logic 个人作品集布局。" },
-                { title: "AI 工程师主页", url: "12-个人主页模板/06-ai-engineer.html", description: "新拟态 + 暖黄色，独立创造者 & AI 工程师个人页。" },
-                { title: "中文博客", url: "12-个人主页模板/07-chinese-blog.html", description: "明朝体 + 温暖文艺调性，中文个人博客模板。" },
-            ]},
-            { id: "13", label: "13-案例-t0-Finance", items: [
-                { title: "t0 架构展示", url: "13-案例-t0-Finance/01-architecture.html", description: "三栏 WebGL 生成艺术展示 t0 金融系统架构流程。" },
-                { title: "t0 SYS.CONNECT 详情", url: "13-案例-t0-Finance/02-sys-connect.html", description: "数据连接服务详情页，Canvas 节点网络可视化与服务列表。" },
-            ]},
-            { id: "14", label: "14-案例-FoxTrove", items: [
-                { title: "FoxTrove 主页", url: "14-案例-FoxTrove/01-hero-page.html", description: "情报科技品牌主页，Three.js 暗色复古科技美学。" },
-                { title: "FoxTrove 情报运营", url: "14-案例-FoxTrove/02-operations-page.html", description: "运营情报页面，Three.js + GSAP 滚动动效。" },
-                { title: "FoxTrove 案例研究", url: "14-案例-FoxTrove/03-case-studies.html", description: "案例研究展示页，GSAP + ScrollTrigger 滚动叙事。" },
-                { title: "FoxTrove 运营报告", url: "14-案例-FoxTrove/04-report.html", description: "运营情报报告页面，GSAP 动效。" },
-            ]},
-            { id: "15", label: "15-案例-PostPostHotel", items: [
-                { title: "Post Post 数字钥匙", url: "15-案例-PostPostHotel/01-digital-key.html", description: "精品酒店数字钥匙界面，复古纸质纹理风格。" },
-                { title: "Post Post 礼宾服务", url: "15-案例-PostPostHotel/02-concierge.html", description: "礼宾服务与景点推荐页面，复古排版设计。" },
-                { title: "Post Post 客人登记", url: "15-案例-PostPostHotel/03-guest-registry.html", description: "客人登记册界面，复古酒店美学。" },
-                { title: "Post Post 酒店指南", url: "15-案例-PostPostHotel/04-hotel-guide.html", description: "酒店指南手册页面，复古印刷风格。" },
-                { title: "Post Post 结账账单", url: "15-案例-PostPostHotel/05-checkout-folio.html", description: "结账账单界面，复古票据设计。" },
-            ]},
-            { id: "16", label: "16-案例-XenoFlora", items: [
-                { title: "XENO_FLORA 配置面板", url: "16-案例-XenoFlora/01-config-panel.html", description: "生物科技配置面板，Canvas 粒子动效 + 荧光绿美学。" },
-                { title: "XENO_FLORA DNA 序列", url: "16-案例-XenoFlora/02-dna-sequencer.html", description: "DNA 序列分析器界面，Canvas 2D 可视化。" },
-                { title: "XENO_FLORA 数字培养皿", url: "16-案例-XenoFlora/03-digital-terrarium.html", description: "数字培养皿界面，Canvas 生物动效模拟。" },
-            ]},
-            { id: "17", label: "17-案例-PatternPlotter", items: [
-                { title: "Pattern Plotter 配置", url: "17-案例-PatternPlotter/01-config-ui.html", description: "图案绘制工具配置界面，极简暗色工具美学。" },
-                { title: "Pattern Plotter 浏览器", url: "17-案例-PatternPlotter/02-browser.html", description: "图案库浏览器界面，纯 CSS 网格布局。" },
-                { title: "Pattern Plotter 导出", url: "17-案例-PatternPlotter/03-export-preview.html", description: "图案导出预览界面，参数设置与实时预览。" },
-                { title: "Pattern Plotter 调色板", url: "17-案例-PatternPlotter/04-palette-editor.html", description: "调色板编辑器，色彩管理工具界面。" },
-                { title: "Pattern Plotter 故障态", url: "17-案例-PatternPlotter/05-system-failure.html", description: "系统故障错误页面，工具美学错误态设计。" },
-                { title: "Pattern Plotter 植物图案", url: "17-案例-PatternPlotter/06-flora-pattern.html", description: "植物图案生成器，Canvas 2D 图案绘制。" },
-            ]},
+            {
+                id: "01",
+                label: "01-CSS纯动效",
+                items: [
+                    {
+                        title: "Gallery Waitlist",
+                        url: "01-CSS纯动效/05-3d-carousel.html",
+                        description: "3D轮播画廊，视差滚动与图片深度空间排列"
+                    },
+                    {
+                        title: "动效展览馆 | Motion Archives",
+                        url: "01-CSS纯动效/06-spine-gallery.html",
+                        description: "书脊式画廊布局，纯CSS驱动的视觉展示"
+                    }
+                ]
+            },
+            {
+                id: "02",
+                label: "02-Canvas数学驱动",
+                items: [
+                    {
+                        title: "AI Core Dot Matrix",
+                        url: "02-Canvas数学驱动/01-ai-dot-matrix.html",
+                        description: "AI核心点阵可视化，Canvas数学驱动的动态矩阵"
+                    },
+                    {
+                        title: "Signal Telemetry Radar",
+                        url: "02-Canvas数学驱动/02-signal-radar.html",
+                        description: "信号遥测雷达图，实时数据流动画效果"
+                    },
+                    {
+                        title: "Motion Exhibition Archive",
+                        url: "02-Canvas数学驱动/05-exhibition-canvas.html",
+                        description: "动效展览归档界面，Canvas驱动的交互式展示"
+                    }
+                ]
+            },
+            {
+                id: "03",
+                label: "03-SVG路径动画",
+                coming: true,
+                items: [
+                    { title: "SVG路径动画", url: "", description: "SVG 路径描边与动画效果，持续收集中。" }
+                ]
+            },
+            {
+                id: "04",
+                label: "04-滚动触发",
+                coming: true,
+                items: [
+                    { title: "滚动触发动效", url: "", description: "滚动视口触发的交互动画，持续收集中。" }
+                ]
+            },
+            {
+                id: "05",
+                label: "05-粒子物理动效",
+                items: [
+                    {
+                        title: "Interactive Particle Hero",
+                        url: "05-粒子物理动效/01-star-particle.html",
+                        description: "交互式粒子背景，鼠标驱动的星空粒子系统"
+                    },
+                    {
+                        title: "Premium Cursor Trail Experience",
+                        url: "05-粒子物理动效/02-cursor-trail.html",
+                        description: "高级光标拖尾效果，流体粒子跟随动画"
+                    },
+                    {
+                        title: "Cosmic Nebula Visualization",
+                        url: "05-粒子物理动效/03-nebula-signal.html",
+                        description: "宇宙星云可视化，多层粒子渲染与物理模拟"
+                    },
+                    {
+                        title: "Particle Flow - Focus Mode",
+                        url: "05-粒子物理动效/04-particle-flow.html",
+                        description: "专注模式粒子流，渐变光晕与粒子动力学"
+                    },
+                    {
+                        title: "Signal Lost - Cosmic Nebula",
+                        url: "05-粒子物理动效/05-signal-lost-nebula.html",
+                        description: "信号丢失主题页，深空星云粒子场景"
+                    },
+                    {
+                        title: "信号与系统 - 课程模块",
+                        url: "05-粒子物理动效/06-signal-course-module.html",
+                        description: "课程模块粒子背景，教育场景动效组件"
+                    }
+                ]
+            },
+            {
+                id: "06",
+                label: "06-WebGL-3D",
+                items: [
+                    {
+                        title: "Generative Dashboard - Six Panel Study",
+                        url: "06-WebGL-3D/04-generative-dashboard.html",
+                        description: "生成式仪表盘，WebGL着色器驱动的六宫格面板"
+                    },
+                    {
+                        title: "Liquid Aurora WebGL Shader",
+                        url: "06-WebGL-3D/05-liquid-aurora-hero.html",
+                        description: "液态极光着色器，WebGL实现的流体光影效果"
+                    },
+                    {
+                        title: "Quantum Corridor - Ground View",
+                        url: "06-WebGL-3D/06-quantum-corridor.html",
+                        description: "量子走廊地面视角，3D隧道穿梭动画"
+                    },
+                    {
+                        title: "Quantum Data Matrix",
+                        url: "06-WebGL-3D/07-quantum-data-matrix.html",
+                        description: "量子数据矩阵，WebGL驱动的数据流可视化"
+                    },
+                    {
+                        title: "SYMBOLON — Architecture of Meaning",
+                        url: "06-WebGL-3D/08-symbolon.html",
+                        description: "符号学架构，3D符号网络与语义空间可视化"
+                    }
+                ]
+            },
+            {
+                id: "07",
+                label: "07-UI组件",
+                items: [
+                    {
+                        title: "Signal Capture Unit",
+                        url: "07-UI组件/01-signal-capture.html",
+                        description: "信号捕获单元，深色卡片式UI组件"
+                    },
+                    {
+                        title: "Aura - Active Session",
+                        url: "07-UI组件/02-aura-session.html",
+                        description: "Aura会话界面，活跃状态监控组件"
+                    },
+                    {
+                        title: "Signal Monitor Unit",
+                        url: "07-UI组件/03-signal-monitor.html",
+                        description: "信号监控单元，实时数据展示组件"
+                    },
+                    {
+                        title: "Liquid Glass Component",
+                        url: "07-UI组件/04-liquid-glass.html",
+                        description: "液态玻璃组件，毛玻璃拟态设计"
+                    },
+                    {
+                        title: "Liquid Glass Component - Error State",
+                        url: "07-UI组件/05-liquid-glass-error.html",
+                        description: "液态玻璃错误态，毛玻璃拟态设计错误状态"
+                    },
+                    {
+                        title: "情绪收藏罐",
+                        url: "07-UI组件/06-emotion-jar-home.html",
+                        description: "情绪记录应用主页，温馨治愈的UI设计"
+                    },
+                    {
+                        title: "情绪收藏罐 - 开启",
+                        url: "07-UI组件/07-emotion-jar-open.html",
+                        description: "情绪罐开启动画，玻璃罐打开交互效果"
+                    },
+                    {
+                        title: "情绪收藏罐 - 详情",
+                        url: "07-UI组件/08-emotion-jar-detail.html",
+                        description: "情绪记录详情页，情感标签与时间轴展示"
+                    },
+                    {
+                        title: "情绪收藏罐 - 记录",
+                        url: "07-UI组件/09-emotion-jar-record.html",
+                        description: "情绪记录输入页，表单与情感选择器"
+                    },
+                    {
+                        title: "情绪收藏罐 - 空状态",
+                        url: "07-UI组件/10-emotion-jar-empty.html",
+                        description: "空状态占位页，引导用户首次记录"
+                    },
+                    {
+                        title: "情绪收藏罐 - 设置",
+                        url: "07-UI组件/11-emotion-jar-settings.html",
+                        description: "应用设置页面，开关与选项配置"
+                    },
+                    {
+                        title: "情绪周报 - 情绪收藏罐",
+                        url: "07-UI组件/12-emotion-jar-weekly.html",
+                        description: "情绪数据周报，可视化图表与趋势分析"
+                    },
+                    {
+                        title: "Lumière Archive | Member Access",
+                        url: "07-UI组件/13-gallery-grid.html",
+                        description: "会员访问画廊，网格布局与遮罩效果"
+                    },
+                    {
+                        title: "Signal Capture Unit",
+                        url: "07-UI组件/14-signal-widget.html",
+                        description: "信号捕获微件，小尺寸组件设计"
+                    },
+                    {
+                        title: "Ribbon — Design systems for teams that ship",
+                        url: "07-UI组件/15-ribbon-landing.html",
+                        description: "Ribbon设计系统落地页，极简风格展示"
+                    },
+                    {
+                        title: "KINETIC // Motion Archive",
+                        url: "07-UI组件/16-kinetic-archive.html",
+                        description: "动效归档界面，时间轴与分类标签"
+                    },
+                    {
+                        title: "Motion Exhibition Archive",
+                        url: "07-UI组件/17-motion-grid.html",
+                        description: "动效展览网格，卡片式布局与悬浮效果"
+                    }
+                ]
+            },
+            {
+                id: "08",
+                label: "08-动效图表",
+                coming: true,
+                items: [
+                    { title: "动效图表", url: "", description: "数据驱动的动态图表组件，持续收集中。" }
+                ]
+            },
+            {
+                id: "09",
+                label: "09-大屏可视化",
+                items: [
+                    {
+                        title: "可视化数据大标题",
+                        url: "09-大屏可视化/01-data-viz-title.html",
+                        description: "大屏标题组件，数据可视化动态标题设计"
+                    },
+                    {
+                        title: "综合指挥中心驾驶舱",
+                        url: "09-大屏可视化/02-command-center.html",
+                        description: "指挥中心驾驶舱，多模块实时数据大屏"
+                    },
+                    {
+                        title: "海南省智慧环卫管理驾驶舱",
+                        url: "09-大屏可视化/03-sanitation-dashboard.html",
+                        description: "环卫管理驾驶舱，地图与数据图表联动"
+                    },
+                    {
+                        title: "城镇网格化基层治理平台",
+                        url: "09-大屏可视化/04-governance-v1.html",
+                        description: "基层治理平台V1，网格化管理数据大屏"
+                    },
+                    {
+                        title: "城镇网格化基层治理平台",
+                        url: "09-大屏可视化/05-governance-v2.html",
+                        description: "基层治理平台V2，优化版数据大屏设计"
+                    }
+                ]
+            },
+            {
+                id: "10",
+                label: "10-案例-Fig-Mint",
+                items: [
+                    {
+                        title: "Fig Mint",
+                        url: "10-案例-Fig-Mint/01-homepage.html",
+                        description: "Fig Mint虚构产品主页，复古科技美学设计"
+                    },
+                    {
+                        title: "Fig Mint - Technical Specifications",
+                        url: "10-案例-Fig-Mint/02-specs.html",
+                        description: "技术规格页，复古排版与参数展示"
+                    },
+                    {
+                        title: "Order Fig Mint",
+                        url: "10-案例-Fig-Mint/03-order.html",
+                        description: "产品订购页，表单与配置选项"
+                    },
+                    {
+                        title: "Order Confirmed - Fig Mint",
+                        url: "10-案例-Fig-Mint/04-order-confirmed.html",
+                        description: "订单确认页，确认动画与信息展示"
+                    },
+                    {
+                        title: "Unboxing Fig Mint",
+                        url: "10-案例-Fig-Mint/05-unboxing.html",
+                        description: "开箱体验页，分步展示与交互动画"
+                    },
+                    {
+                        title: "The Daily Mint - Machine Intelligence",
+                        url: "10-案例-Fig-Mint/06-newspaper.html",
+                        description: "复古报纸布局，机器智能主题内容页"
+                    },
+                    {
+                        title: "FigOS 1.0 - Booting...",
+                        url: "10-案例-Fig-Mint/07-figos-boot-v1.html",
+                        description: "FigOS启动动画V1，复古终端启动序列"
+                    },
+                    {
+                        title: "FigOS - Booting...",
+                        url: "10-案例-Fig-Mint/08-figos-boot-v2.html",
+                        description: "FigOS启动动画V2，优化版终端启动效果"
+                    },
+                    {
+                        title: "FigOS 1.0 Desktop",
+                        url: "10-案例-Fig-Mint/09-figos-desktop.html",
+                        description: "FigOS桌面系统，复古操作系统界面模拟"
+                    }
+                ]
+            },
+            {
+                id: "11",
+                label: "11-案例-Aura-Capital",
+                items: [
+                    {
+                        title: "Aura Capital | Origination Network",
+                        url: "11-案例-Aura-Capital/01-network.html",
+                        description: "Aura Capital网络关系图，金融数据可视化"
+                    },
+                    {
+                        title: "AURA // Dashboard",
+                        url: "11-案例-Aura-Capital/02-dashboard.html",
+                        description: "Aura仪表盘主页，数据图表与指标展示"
+                    },
+                    {
+                        title: "Q3 2024 Performance | Aura Capital",
+                        url: "11-案例-Aura-Capital/03-performance.html",
+                        description: "季度业绩报告页，财务数据可视化设计"
+                    },
+                    {
+                        title: "Global Flow | Private Credit",
+                        url: "11-案例-Aura-Capital/04-capital-flow.html",
+                        description: "全球资金流动图，私募信贷数据流向可视化"
+                    }
+                ]
+            },
+            {
+                id: "12",
+                label: "12-个人主页模板",
+                items: [
+                    {
+                        title: "Personal Portfolio — Industrial Design System",
+                        url: "12-个人主页模板/01-industrial-v1.html",
+                        description: "工业设计系统个人作品集V1，深色主题"
+                    },
+                    {
+                        title: "Personal Portfolio — Industrial Design System",
+                        url: "12-个人主页模板/02-industrial-v2.html",
+                        description: "工业设计系统个人作品集V2，布局优化版"
+                    },
+                    {
+                        title: "Personal Blog // Fluid Design",
+                        url: "12-个人主页模板/03-fluid-blog-v1.html",
+                        description: "流体设计博客V1，动态背景与卡片布局"
+                    },
+                    {
+                        title: "Personal Blog // Fluid Design",
+                        url: "12-个人主页模板/04-fluid-blog-v2.html",
+                        description: "流体设计博客V2，增强交互与视觉效果"
+                    },
+                    {
+                        title: "Vibe & Logic | 个人作品集 Portfolio",
+                        url: "12-个人主页模板/05-neumorphic-portfolio.html",
+                        description: "拟态设计作品集，柔和阴影与立体感"
+                    },
+                    {
+                        title: "林静 | 独立创造者 & AI 工程师",
+                        url: "12-个人主页模板/06-ai-engineer.html",
+                        description: "AI工程师个人主页，极简风格展示页"
+                    },
+                    {
+                        title: "ESTHER不二 — 在AI时代认真生活的女生",
+                        url: "12-个人主页模板/07-chinese-blog.html",
+                        description: "中文博客主页，温暖风格与人文叙事"
+                    }
+                ]
+            },
+            {
+                id: "13",
+                label: "13-案例-t0-Finance",
+                items: [
+                    {
+                        title: "t0 — Architecture",
+                        url: "13-案例-t0-Finance/01-architecture.html",
+                        description: "t0金融架构图，系统组件与关系可视化"
+                    },
+                    {
+                        title: "t0 — SYS.CONNECT Deep Dive",
+                        url: "13-案例-t0-Finance/02-sys-connect.html",
+                        description: "系统连接深度剖析，技术架构详细展示"
+                    }
+                ]
+            },
+            {
+                id: "14",
+                label: "14-案例-FoxTrove",
+                items: [
+                    {
+                        title: "FoxTrove | Intelligence & Operators",
+                        url: "14-案例-FoxTrove/01-hero-page.html",
+                        description: "FoxTrove情报与操作员主页，品牌落地页设计"
+                    },
+                    {
+                        title: "FoxTrove | Operations Intelligence",
+                        url: "14-案例-FoxTrove/02-operations-page.html",
+                        description: "运营情报页面，数据监控与操作界面"
+                    },
+                    {
+                        title: "Case Studies | FoxTrove Operations Intelligence",
+                        url: "14-案例-FoxTrove/03-case-studies.html",
+                        description: "案例研究页，项目展示与成果说明"
+                    },
+                    {
+                        title: "FoxTrove | Operations Intelligence Report",
+                        url: "14-案例-FoxTrove/04-report.html",
+                        description: "运营情报报告，数据可视化与分析展示"
+                    }
+                ]
+            },
+            {
+                id: "15",
+                label: "15-案例-PostPostHotel",
+                items: [
+                    {
+                        title: "Post Post Hotel - Digital Key",
+                        url: "15-案例-PostPostHotel/01-digital-key.html",
+                        description: "数字钥匙界面，虚拟酒店入住体验"
+                    },
+                    {
+                        title: "Post Post Hotel - Concierge & Attractions",
+                        url: "15-案例-PostPostHotel/02-concierge.html",
+                        description: "礼宾服务与景点推荐，交互式服务页面"
+                    },
+                    {
+                        title: "Post Post Hotel - Guest Registry",
+                        url: "15-案例-PostPostHotel/03-guest-registry.html",
+                        description: "客人登记表，表单与信息录入界面"
+                    },
+                    {
+                        title: "Post Post Hotel - Hotel Guide",
+                        url: "15-案例-PostPostHotel/04-hotel-guide.html",
+                        description: "酒店指南页，设施与服务信息展示"
+                    },
+                    {
+                        title: "Post Post Hotel - Checkout Folio",
+                        url: "15-案例-PostPostHotel/05-checkout-folio.html",
+                        description: "退房账单页，费用明细与支付界面"
+                    }
+                ]
+            },
+            {
+                id: "16",
+                label: "16-案例-XenoFlora",
+                items: [
+                    {
+                        title: "XENO_FLORA // CONFIGURATION_PANEL",
+                        url: "16-案例-XenoFlora/01-config-panel.html",
+                        description: "外星植物配置面板，科幻主题控制界面"
+                    },
+                    {
+                        title: "XENO_FLORA // DNA_SEQUENCER",
+                        url: "16-案例-XenoFlora/02-dna-sequencer.html",
+                        description: "DNA测序仪界面，基因序列可视化设计"
+                    },
+                    {
+                        title: "XENO_FLORA // DIGITAL TERRARIUM",
+                        url: "16-案例-XenoFlora/03-digital-terrarium.html",
+                        description: "数字培养皿，外星植物生长模拟界面"
+                    }
+                ]
+            },
+            {
+                id: "17",
+                label: "17-案例-PatternPlotter",
+                items: [
+                    {
+                        title: "Pattern Plotter // CONFIG_UI",
+                        url: "17-案例-PatternPlotter/01-config-ui.html",
+                        description: "图案绘制器配置界面，参数调节与设置"
+                    },
+                    {
+                        title: "Pattern Plotter // BROWSER",
+                        url: "17-案例-PatternPlotter/02-browser.html",
+                        description: "图案浏览器，网格展示与预览功能"
+                    },
+                    {
+                        title: "Pattern Plotter // EXPORT_PREVIEW",
+                        url: "17-案例-PatternPlotter/03-export-preview.html",
+                        description: "导出预览页，格式选择与输出设置"
+                    },
+                    {
+                        title: "Pattern Plotter // PALETTE_EDITOR",
+                        url: "17-案例-PatternPlotter/04-palette-editor.html",
+                        description: "调色板编辑器，颜色选择与配色方案"
+                    },
+                    {
+                        title: "Pattern Plotter // SYSTEM_FAILURE",
+                        url: "17-案例-PatternPlotter/05-system-failure.html",
+                        description: "系统故障页，错误状态与提示设计"
+                    },
+                    {
+                        title: "Pattern Plotter // FLORA_01",
+                        url: "17-案例-PatternPlotter/06-flora-pattern.html",
+                        description: "植物图案01，生成式花卉图案设计"
+                    }
+                ]
+            }
         ];
 
         const root = document.getElementById('gallery-root');
