@@ -176,16 +176,17 @@
         function makeCard(asset, isComingSoon) {
             const card = document.createElement('div');
             card.className = 'glass-card rounded-2xl p-4 flex flex-col transition-transform duration-300 hover:-translate-y-1 h-full';
+            const encodedUrl = encodeURI(asset.url);
             const preview = isComingSoon
                 ? `<div class="absolute inset-0 flex items-center justify-center"><span class="text-gray-600 text-xs font-mono border border-gray-800 px-3 py-1 rounded-full">COMING SOON</span></div>`
-                : `<iframe src="${asset.url}" loading="lazy" class="absolute top-0 left-0 w-[200%] h-[200%] origin-top-left scale-50 pointer-events-none" frameborder="0" scrolling="no"></iframe>
+                : `<iframe src="${encodedUrl}" loading="lazy" class="absolute top-0 left-0 w-[200%] h-[200%] origin-top-left scale-50 pointer-events-none" frameborder="0" scrolling="no"></iframe>
                    <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
                        <span class="text-[#c2ff00] text-xs font-mono bg-black/80 px-3 py-1 rounded-full backdrop-blur-md border border-[#c2ff00]/30">LIVE PREVIEW</span>
                    </div>`;
             const actions = isComingSoon
                 ? `<div class="flex gap-2 mt-auto"><span class="flex-1 text-center bg-gray-900 text-gray-600 py-2 rounded-lg text-xs font-semibold border border-gray-800">即将上线</span></div>`
                 : `<div class="flex gap-2 mt-auto">
-                       <a href="${asset.url}" target="_blank" class="flex-1 text-center accent-bg accent-hover py-2 rounded-lg text-xs font-semibold transition-colors cursor-pointer text-black">👀 全屏</a>
+                       <a href="${encodedUrl}" target="_blank" class="flex-1 text-center accent-bg accent-hover py-2 rounded-lg text-xs font-semibold transition-colors cursor-pointer text-black">👀 全屏</a>
                        <button onclick="copyCode('${asset.url}', this)" class="flex-1 text-center bg-gray-800 hover:bg-gray-700 text-white py-2 rounded-lg text-xs font-semibold transition-colors border border-gray-700">📋 复制</button>
                    </div>`;
             card.innerHTML = `
