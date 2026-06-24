@@ -1,0 +1,328 @@
+<html lang="en" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">Q3 2024 Performance | Aura Capital</title>
+    <style vid="5">
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+        :root {
+            --bg-color: #0c0c0c; 
+            --card-color: #1a1a1a;
+            --ink-color: #f2f1ed;
+            --accent-color: #f2f1ed;
+            --hairline: 1px solid rgba(242, 241, 237, 0.15);
+            --font-stack: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body, html {
+            width: 1280px;
+            height: 960px;
+            font-family: var(--font-stack);
+            color: var(--ink-color);
+            background-color: #000;
+            overflow: hidden;
+        }
+
+        .app-wrapper {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 24px 40px;
+            background-color: var(--bg-color);
+        }
+
+        .global-bar {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            width: 100%;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(242, 241, 237, 0.1);
+            color: rgba(242, 241, 237, 0.6);
+            font-size: 13px;
+            margin-bottom: 24px;
+        }
+
+        .global-bar .center { text-align: center; }
+        .global-bar .right { text-align: right; }
+
+        .main-card {
+            background-color: var(--card-color);
+            border-radius: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 40px 60px;
+            position: relative;
+            border: 1px solid rgba(242, 241, 237, 0.05);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 40px;
+        }
+
+        .title {
+            font-size: 64px;
+            line-height: 0.9;
+            font-weight: 500;
+            letter-spacing: -0.04em;
+        }
+
+        .local-nav {
+            display: flex;
+            gap: 40px;
+            font-size: 13px;
+            padding-top: 12px;
+        }
+
+        .local-nav a {
+            color: var(--ink-color);
+            text-decoration: none;
+            opacity: 0.6;
+        }
+        .local-nav a.active { opacity: 1; border-bottom: 1px solid var(--ink-color); padding-bottom: 4px; }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 40px;
+            flex-grow: 1;
+        }
+
+        .chart-container {
+            border-top: var(--hairline);
+            padding-top: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chart-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            opacity: 0.5;
+            margin-bottom: 20px;
+        }
+
+        .yield-chart {
+            flex-grow: 1;
+            position: relative;
+            width: 100%;
+        }
+
+        .svg-chart {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        .chart-line {
+            fill: none;
+            stroke: var(--ink-color);
+            stroke-width: 2;
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: draw 2s ease-out forwards;
+        }
+
+        .chart-line.secondary {
+            stroke: rgba(242, 241, 237, 0.3);
+            stroke-width: 1.5;
+            stroke-dasharray: 5,5;
+            animation-delay: 0.5s;
+        }
+
+        @keyframes draw {
+            to { stroke-dashoffset: 0; }
+        }
+
+        .bar-group {
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+            height: 160px;
+            width: 100%;
+        }
+
+        .bar {
+            flex: 1;
+            background: rgba(242, 241, 237, 0.1);
+            position: relative;
+            transition: height 1s ease-out;
+            height: 0;
+        }
+
+        .bar-fill {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: var(--ink-color);
+            height: 0;
+            animation: growBar 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes growBar {
+            from { height: 0; }
+            to { height: var(--target-height); }
+        }
+
+        .donut-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            position: relative;
+        }
+
+        .donut-svg {
+            transform: rotate(-90deg);
+        }
+
+        .donut-ring {
+            fill: transparent;
+            stroke: rgba(242, 241, 237, 0.05);
+            stroke-width: 20;
+        }
+
+        .donut-segment {
+            fill: transparent;
+            stroke: var(--ink-color);
+            stroke-width: 20;
+            stroke-dasharray: 251.2;
+            stroke-dashoffset: 251.2;
+            animation: donutDraw 1.5s ease-out forwards;
+        }
+
+        @keyframes donutDraw {
+            to { stroke-dashoffset: var(--offset); }
+        }
+
+        .donut-center-text {
+            position: absolute;
+            text-align: center;
+        }
+
+        .donut-center-text .value { font-size: 24px; font-weight: 500; }
+        .donut-center-text .label { font-size: 10px; opacity: 0.5; }
+
+        .stats-row {
+            margin-top: auto;
+            border-top: var(--hairline);
+            padding-top: 24px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+        }
+
+        .stat-item .stat-val { font-size: 24px; font-weight: 500; }
+        .stat-item .stat-label { font-size: 12px; opacity: 0.5; margin-top: 4px; }
+
+    </style>
+</head>
+<body vid="6">
+    <div class="app-wrapper" vid="7">
+        <header class="global-bar" vid="8">
+            <div class="left" vid="9">Aura Capital Partners</div>
+            <div class="center" vid="10">Internal Performance Dashboard</div>
+            <div class="right" vid="11">Q3 Report, 2024</div>
+        </header>
+
+        <main class="main-card" vid="12">
+            <div class="card-header" vid="13">
+                <h1 class="title" vid="14">Yield<br vid="15">Metrics</h1>
+                <nav class="local-nav" vid="16">
+                    <a href="#" class="active" vid="17">Performance</a>
+                    <a href="#" vid="18">Portfolio</a>
+                    <a href="#" vid="19">Liquidity</a>
+                    <a href="#" vid="20">Risk</a>
+                </nav>
+            </div>
+
+            <div class="dashboard-grid" vid="21">
+                
+                <div class="chart-container" vid="22">
+                    <div class="chart-label" vid="23">Historical Net Yield (Annualized %)</div>
+                    <div class="yield-chart" vid="24">
+                        <svg class="svg-chart" viewBox="0 0 600 200" vid="25">
+                            
+                            <path class="chart-line secondary" d="M0,140 L100,135 L200,145 L300,130 L400,138 L500,132 L600,140" vid="26"></path>
+                            
+                            <path class="chart-line" d="M0,150 L100,120 L200,90 L300,110 L400,60 L500,80 L600,40" vid="27"></path>
+                        </svg>
+                    </div>
+                </div>
+
+                
+                <div class="chart-container" vid="28">
+                    <div class="chart-label" vid="29">Asset Class Allocation</div>
+                    <div class="donut-container" vid="30">
+                        <svg class="donut-svg" width="120" height="120" vid="31">
+                            <circle class="donut-ring" cx="60" cy="60" r="40" vid="32"></circle>
+                            <circle class="donut-segment" cx="60" cy="60" r="40" style="--offset: 70;" vid="33"></circle>
+                        </svg>
+                        <div class="donut-center-text" vid="34">
+                            <div class="value" vid="35">72%</div>
+                            <div class="label" vid="36">Senior Debt</div>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div class="chart-container" vid="37">
+                    <div class="chart-label" vid="38">Deployment Volume ($M)</div>
+                    <div class="bar-group" vid="39">
+                        <div class="bar" vid="40"><div class="bar-fill" style="--target-height: 40%;" vid="41"></div></div>
+                        <div class="bar" vid="42"><div class="bar-fill" style="--target-height: 65%;" vid="43"></div></div>
+                        <div class="bar" vid="44"><div class="bar-fill" style="--target-height: 55%;" vid="45"></div></div>
+                        <div class="bar" vid="46"><div class="bar-fill" style="--target-height: 90%;" vid="47"></div></div>
+                        <div class="bar" vid="48"><div class="bar-fill" style="--target-height: 75%;" vid="49"></div></div>
+                        <div class="bar" vid="50"><div class="bar-fill" style="--target-height: 85%;" vid="51"></div></div>
+                    </div>
+                </div>
+
+                
+                <div class="chart-container" vid="52">
+                    <div class="chart-label" vid="53">Top Origination Hubs</div>
+                    <div style="font-size: 13px; line-height: 2;" vid="54">
+                        <div style="display:flex; justify-content:space-between;" vid="55"><span vid="56">New York</span><span vid="57">$420M</span></div>
+                        <div style="display:flex; justify-content:space-between; opacity:0.6" vid="58"><span vid="59">London</span><span vid="60">$315M</span></div>
+                        <div style="display:flex; justify-content:space-between; opacity:0.6" vid="61"><span vid="62">Singapore</span><span vid="63">$180M</span></div>
+                        <div style="display:flex; justify-content:space-between; opacity:0.6" vid="64"><span vid="65">Dubai</span><span vid="66">$112M</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-row" vid="67">
+                <div class="stat-item" vid="68">
+                    <div class="stat-val" vid="69">12.4%</div>
+                    <div class="stat-label" vid="70">Net IRR Q3</div>
+                </div>
+                <div class="stat-item" vid="71">
+                    <div class="stat-val" vid="72">$1.2B</div>
+                    <div class="stat-label" vid="73">Total AUM</div>
+                </div>
+                <div class="stat-item" vid="74">
+                    <div class="stat-val" vid="75">0.24%</div>
+                    <div class="stat-label" vid="76">Default Rate</div>
+                </div>
+                <div class="stat-item" vid="77">
+                    <div class="stat-val" vid="78">84</div>
+                    <div class="stat-label" vid="79">Active Facilities</div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+</body></html>

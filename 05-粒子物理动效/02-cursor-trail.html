@@ -1,0 +1,293 @@
+<html lang="en" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">Premium Cursor Trail Experience</title>
+    <script src="https://cdn.tailwindcss.com/3.4.17" vid="5"></script>
+    <style vid="6">
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500&family=Inter:wght@300;400&display=swap');
+        
+        :root {
+            --bg-color: #030303;
+        }
+
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: var(--bg-color);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            cursor: crosshair; 
+        }
+
+        
+        .bg-gradient-radial {
+            background: radial-gradient(circle at center, #14110d 0%, var(--bg-color) 100%);
+        }
+
+        .title-font {
+            font-family: 'Cinzel', serif;
+        }
+
+        #trail-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none; 
+            z-index: 50;
+        }
+
+        
+        .fade-in {
+            animation: fadeIn 2s ease-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .delay-1 { animation-delay: 0.5s; }
+        .delay-2 { animation-delay: 1s; }
+        .delay-3 { animation-delay: 1.5s; }
+    </style>
+</head>
+<body class="bg-gradient-radial w-screen h-screen flex flex-col justify-between selection:bg-yellow-900/30 selection:text-yellow-100" vid="7">
+
+    
+    <header class="w-full p-8 md:px-12 flex justify-between items-center z-10 relative text-[10px] sm:text-xs tracking-[0.25em] uppercase text-white/50 fade-in delay-1" vid="8">
+        <div class="hover:text-yellow-600/80 transition-colors duration-500 cursor-pointer flex items-center gap-3" vid="9">
+            <span class="w-2 h-2 rounded-full bg-yellow-600/50 block" vid="10"></span>
+            AURELIA
+        </div>
+        <nav class="hidden md:flex gap-16" vid="11">
+            <a href="#" class="hover:text-yellow-500 transition-colors duration-500 relative group" vid="12">
+                Exhibition
+                <span class="absolute -bottom-2 left-1/2 w-0 h-[1px] bg-yellow-500 transition-all duration-500 group-hover:w-full group-hover:left-0" vid="13"></span>
+            </a>
+            <a href="#" class="hover:text-yellow-500 transition-colors duration-500 relative group" vid="14">
+                Atelier
+                <span class="absolute -bottom-2 left-1/2 w-0 h-[1px] bg-yellow-500 transition-all duration-500 group-hover:w-full group-hover:left-0" vid="15"></span>
+            </a>
+            <a href="#" class="hover:text-yellow-500 transition-colors duration-500 relative group" vid="16">
+                Contact
+                <span class="absolute -bottom-2 left-1/2 w-0 h-[1px] bg-yellow-500 transition-all duration-500 group-hover:w-full group-hover:left-0" vid="17"></span>
+            </a>
+        </nav>
+        <button class="md:hidden text-white/50 hover:text-white transition-colors" vid="18">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" vid="19"><line x1="4" x2="20" y1="12" y2="12" vid="20"></line><line x1="4" x2="20" y1="6" y2="6" vid="21"></line><line x1="4" x2="20" y1="18" y2="18" vid="22"></line></svg>
+        </button>
+    </header>
+
+    
+    <main class="flex-1 flex flex-col items-center justify-center z-10 relative px-4 text-center" vid="23">
+        <div class="relative inline-block fade-in delay-2" vid="24">
+            <h1 class="title-font text-5xl md:text-7xl lg:text-9xl text-transparent bg-clip-text bg-gradient-to-b from-[#FFFDF2] to-[#B3934B] tracking-[0.15em] font-light select-none pb-4 drop-shadow-2xl" vid="25">
+                LUMINESCENCE
+            </h1>
+            
+            <div class="absolute inset-0 bg-yellow-600/5 blur-3xl -z-10 rounded-full scale-150" vid="26"></div>
+        </div>
+        
+        <p class="mt-4 md:mt-8 text-xs md:text-sm tracking-[0.4em] text-[#B3934B]/60 uppercase font-light fade-in delay-3" vid="27">
+            Illuminate the void
+        </p>
+        
+        
+        <div class="absolute top-1/2 left-0 w-1/4 h-[1px] bg-gradient-to-r from-transparent via-[#B3934B]/10 to-transparent -translate-y-1/2 fade-in delay-3 hidden md:block" vid="28"></div>
+        <div class="absolute top-1/2 right-0 w-1/4 h-[1px] bg-gradient-to-l from-transparent via-[#B3934B]/10 to-transparent -translate-y-1/2 fade-in delay-3 hidden md:block" vid="29"></div>
+    </main>
+
+    
+    <footer class="w-full p-8 md:px-12 flex flex-col md:flex-row justify-between items-center gap-6 z-10 relative text-[9px] sm:text-[10px] tracking-widest uppercase text-white/30 fade-in delay-3" vid="30">
+        <div vid="31">EST. 2024 © STUDIO AURELIA</div>
+        
+        
+        <div class="flex flex-col items-center gap-3" vid="32">
+            <div class="w-[1px] h-8 bg-gradient-to-b from-white/30 to-transparent" vid="33"></div>
+            <span vid="34">Scroll</span>
+        </div>
+        
+        <div class="flex gap-6" vid="35">
+            <a href="#" class="hover:text-yellow-600/80 transition-colors" vid="36">Instagram</a>
+            <a href="#" class="hover:text-yellow-600/80 transition-colors" vid="37">Twitter</a>
+        </div>
+    </footer>
+
+    
+    <canvas id="trail-canvas" vid="38"></canvas>
+
+    <script vid="39">
+        const canvas = document.getElementById('trail-canvas');
+        const ctx = canvas.getContext('2d', { alpha: true });
+        
+        let width, height;
+        let particles = [];
+        let mouse = { x: null, y: null };
+        let prevMouse = { x: null, y: null };
+
+        
+        const LIFESPAN_FRAMES = 60; 
+        const SPACING_DENSITY = 2; 
+        const BASE_PARTICLE_SIZE = 6; 
+
+        
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = width * dpr;
+            canvas.height = height * dpr;
+            ctx.scale(dpr, dpr);
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+
+        
+        class Particle {
+            constructor(x, y) {
+                
+                
+                this.x = x + (Math.random() - 0.5) * 2;
+                this.y = y + (Math.random() - 0.5) * 2;
+                
+                this.life = LIFESPAN_FRAMES;
+                this.maxLife = LIFESPAN_FRAMES;
+                
+                
+                this.radius = BASE_PARTICLE_SIZE + (Math.random() * 2);
+                
+                
+                
+                this.vx = (Math.random() - 0.5) * 0.3;
+                this.vy = (Math.random() - 0.5) * 0.3;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.life--; 
+            }
+
+            draw(ctx) {
+                if (this.life <= 0) return;
+
+                
+                const progress = this.life / this.maxLife; 
+                
+                
+                const sizeProgress = progress; 
+                
+                
+                
+                const alphaProgress = Math.pow(progress, 3); 
+
+                const currentRadius = this.radius * sizeProgress;
+                
+                
+                if (currentRadius <= 0.2) return;
+
+                
+                
+                ctx.globalCompositeOperation = 'screen';
+
+                
+                
+                
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, currentRadius * 3.5, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(184, 134, 11, ${alphaProgress * 0.1})`; 
+                ctx.fill();
+
+                
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, currentRadius * 2.0, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(218, 165, 32, ${alphaProgress * 0.3})`; 
+                ctx.fill();
+                
+                
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, currentRadius * 1.0, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 215, 0, ${alphaProgress * 0.6})`; 
+                ctx.fill();
+
+                
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, currentRadius * 0.3, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 250, 230, ${alphaProgress * 0.9})`; 
+                ctx.fill();
+            }
+        }
+
+        
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+
+            
+            
+            
+            
+            if (prevMouse.x !== null && prevMouse.y !== null) {
+                const dx = mouse.x - prevMouse.x;
+                const dy = mouse.y - prevMouse.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                
+                
+                const steps = Math.ceil(dist / SPACING_DENSITY);
+
+                
+                for (let i = 0; i < steps; i++) {
+                    const px = prevMouse.x + (dx * (i / steps));
+                    const py = prevMouse.y + (dy * (i / steps));
+                    particles.push(new Particle(px, py));
+                }
+            } else {
+                
+                particles.push(new Particle(mouse.x, mouse.y));
+            }
+
+            
+            prevMouse.x = mouse.x;
+            prevMouse.y = mouse.y;
+        });
+
+        
+        window.addEventListener('mouseout', () => {
+            prevMouse.x = null;
+            prevMouse.y = null;
+        });
+        
+        
+        window.addEventListener('mouseenter', (e) => {
+            prevMouse.x = e.clientX;
+            prevMouse.y = e.clientY;
+        });
+
+        
+        function animate() {
+            
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.clearRect(0, 0, width, height);
+
+            
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw(ctx);
+            }
+
+            
+            particles = particles.filter(p => p.life > 0);
+
+            
+            requestAnimationFrame(animate);
+        }
+
+        
+        animate();
+    </script>
+
+</body></html>

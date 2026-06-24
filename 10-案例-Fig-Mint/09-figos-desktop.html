@@ -1,0 +1,397 @@
+<html lang="en" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">FigOS 1.0 Desktop</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" vid="5">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" vid="6">
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&amp;family=VT323&amp;display=swap" rel="stylesheet" vid="7">
+    <style vid="8">
+        :root {
+            --beige-light: #F0EDE0;
+            --beige-main: #E0DCCF;
+            --screen-black: #1a1c1f;
+            --crt-green: #33ff00;
+            --font-mono: 'VT323', monospace;
+            --font-serif: 'EB Garamond', serif;
+            --win-bg: #ffffff;
+            --accent-blue: #468CCF;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--screen-black);
+            font-family: var(--font-mono);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        
+        .crt-container {
+            width: 100%;
+            height: 100%;
+            background: #222529;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .crt-container::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            z-index: 100;
+            background-size: 100% 3px, 3px 100%;
+            pointer-events: none;
+        }
+
+        .crt-container::after {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: rgba(18, 16, 16, 0.1);
+            opacity: 0;
+            z-index: 100;
+            pointer-events: none;
+            animation: flicker 0.15s infinite;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0.27; }
+            5% { opacity: 0.31; }
+            10% { opacity: 0.13; }
+            15% { opacity: 0.37; }
+            20% { opacity: 0.23; }
+            25% { opacity: 0.44; }
+            30% { opacity: 0.19; }
+            35% { opacity: 0.12; }
+            40% { opacity: 0.38; }
+            45% { opacity: 0.23; }
+            50% { opacity: 0.11; }
+            55% { opacity: 0.11; }
+            60% { opacity: 0.45; }
+            65% { opacity: 0.23; }
+            70% { opacity: 0.32; }
+            75% { opacity: 0.12; }
+            80% { opacity: 0.23; }
+            85% { opacity: 0.21; }
+            90% { opacity: 0.31; }
+            95% { opacity: 0.12; }
+            100% { opacity: 0.23; }
+        }
+
+        
+        .menu-bar {
+            height: 32px;
+            background: #fff;
+            border-bottom: 2px solid #000;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            z-index: 50;
+            font-family: var(--font-serif);
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .menu-item {
+            margin-right: 25px;
+            cursor: default;
+        }
+
+        .menu-item.apple {
+            font-size: 20px;
+            margin-right: 20px;
+        }
+
+        .desktop {
+            flex: 1;
+            position: relative;
+            background: #606060; 
+            background-image: radial-gradient(#404040 1px, transparent 1px);
+            background-size: 4px 4px;
+        }
+
+        .icon {
+            position: absolute;
+            width: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .icon-visual {
+            width: 40px;
+            height: 40px;
+            background: #fff;
+            border: 2px solid #000;
+            position: relative;
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.5);
+        }
+
+        .icon-label {
+            background: #fff;
+            padding: 1px 4px;
+            font-size: 14px;
+            border: 1px solid #000;
+            text-align: center;
+        }
+
+        .icon.disk { right: 30px; top: 30px; }
+        .icon.write { right: 30px; top: 130px; }
+        .icon.think { right: 30px; top: 230px; }
+        .icon.trash { right: 30px; bottom: 30px; }
+
+        
+        .icon-visual::after {
+            content: '';
+            position: absolute;
+            top: 4px; right: 4px;
+            width: 8px; height: 8px;
+            background: var(--accent-blue);
+        }
+        .icon.disk .icon-visual::after { background: #E57D25; }
+        .icon.trash .icon-visual { border-radius: 0 0 4px 4px; height: 35px; width: 30px; margin-top: 5px;}
+
+        
+        .window {
+            position: absolute;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 6px 6px 0 rgba(0,0,0,0.3);
+            min-width: 300px;
+            z-index: 10;
+        }
+
+        .window-header {
+            height: 28px;
+            background: repeating-linear-gradient(0deg, #fff, #fff 2px, #000 2px, #000 4px);
+            border-bottom: 2px solid #000;
+            display: flex;
+            align-items: center;
+            padding: 0 5px;
+            cursor: move;
+        }
+
+        .window-title-bg {
+            background: #fff;
+            padding: 0 12px;
+            margin: 0 auto;
+            font-weight: bold;
+            font-size: 16px;
+            border: 2px solid #000;
+            transform: translateY(1px);
+        }
+
+        .close-box {
+            width: 16px;
+            height: 16px;
+            background: #fff;
+            border: 2px solid #000;
+            cursor: pointer;
+        }
+
+        .window-content {
+            padding: 15px;
+            font-size: 18px;
+            line-height: 1.4;
+            color: #000;
+        }
+
+        .prompt {
+            display: flex;
+            gap: 8px;
+        }
+
+        .cursor-prompt {
+            width: 10px;
+            height: 18px;
+            background: #000;
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink { 
+            0%, 100% { opacity: 1; } 
+            50% { opacity: 0; } 
+        }
+
+        .footer-info {
+            position: absolute;
+            bottom: 10px;
+            left: 15px;
+            color: rgba(255,255,255,0.5);
+            font-size: 12px;
+            pointer-events: none;
+        }
+
+        #memo-window { top: 100px; left: 100px; width: 450px; }
+        #system-window { top: 400px; left: 150px; width: 320px; }
+
+    </style>
+</head>
+<body vid="9">
+
+    <div class="crt-container" vid="10">
+        <div class="menu-bar" vid="11">
+            <div class="menu-item apple" vid="12"></div>
+            <div class="menu-item" vid="13">File</div>
+            <div class="menu-item" vid="14">Edit</div>
+            <div class="menu-item" vid="15">View</div>
+            <div class="menu-item" vid="16">Special</div>
+            <div style="flex: 1" vid="17"></div>
+            <div class="menu-item" vid="18">10:42 AM</div>
+        </div>
+
+        <div class="desktop" vid="19">
+            
+            <div class="icon disk" vid="20">
+                <div class="icon-visual" vid="21"></div>
+                <div class="icon-label" vid="22">Disk A</div>
+            </div>
+            
+            <div class="icon write" vid="23">
+                <div class="icon-visual" vid="24"></div>
+                <div class="icon-label" vid="25">Write</div>
+            </div>
+
+            <div class="icon think" vid="26">
+                <div class="icon-visual" vid="27"></div>
+                <div class="icon-label" vid="28">Think</div>
+            </div>
+
+            <div class="icon trash" vid="29">
+                <div class="icon-visual" vid="30"></div>
+                <div class="icon-label" vid="31">Trash</div>
+            </div>
+
+            
+            <div class="window" id="memo-window" style="transform: translate(0px, 0px);" vid="32">
+                <div class="window-header" vid="33">
+                    <div class="close-box" vid="34"></div>
+                    <div class="window-title-bg" vid="35">Untitled.txt</div>
+                    <div style="width: 16px;" vid="36"></div>
+                </div>
+                <div class="window-content" vid="37">
+                    <div class="typewriter-text" vid="38">
+                        Good morning.<br vid="39">
+                        Your neural engine has processed the morning intake. Drafts are ready in the 'Write' folder. System synapse is at 98% efficiency.
+                    </div>
+                    <div class="prompt" style="margin-top: 15px;" vid="40">
+                        <span vid="41">&gt;</span>
+                        <span class="cursor-prompt" vid="42"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="window" id="system-window" vid="43">
+                <div class="window-header" vid="44">
+                    <div class="close-box" vid="45"></div>
+                    <div class="window-title-bg" vid="46">System Info</div>
+                    <div style="width: 16px;" vid="47"></div>
+                </div>
+                <div class="window-content" style="font-size: 14px;" vid="48">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;" vid="49">
+                        <span vid="50">Version:</span>
+                        <span vid="51">FigOS 1.0.4</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;" vid="52">
+                        <span vid="53">Memory:</span>
+                        <span vid="54">512K Synapse</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;" vid="55">
+                        <span vid="56">Processor:</span>
+                        <span vid="57">Neural Engine v1</span>
+                    </div>
+                    <div style="border-top: 1px solid #000; margin-top: 10px; padding-top: 10px; text-align: center;" vid="58">
+                        "The future fits on your desk."
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-info" vid="59">Fig Mint Personal Computer | Neural Architecture Enabled</div>
+        </div>
+    </div>
+
+    <script vid="60">
+        
+        function makeDraggable(el) {
+            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+            const header = el.querySelector(".window-header");
+            
+            if (header) {
+                header.onmousedown = dragMouseDown;
+            }
+
+            function dragMouseDown(e) {
+                e = e || window.event;
+                e.preventDefault();
+                
+                document.querySelectorAll('.window').forEach(w => w.style.zIndex = 10);
+                el.style.zIndex = 20;
+                
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmouseup = closeDragElement;
+                document.onmousemove = elementDrag;
+            }
+
+            function elementDrag(e) {
+                e = e || window.event;
+                e.preventDefault();
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                el.style.top = (el.offsetTop - pos2) + "px";
+                el.style.left = (el.offsetLeft - pos1) + "px";
+            }
+
+            function closeDragElement() {
+                document.onmouseup = null;
+                document.onmousemove = null;
+            }
+        }
+
+        document.querySelectorAll('.window').forEach(win => {
+            makeDraggable(win);
+        });
+
+        
+        document.querySelectorAll('.close-box').forEach(btn => {
+            btn.onclick = (e) => {
+                e.target.closest('.window').style.display = 'none';
+            }
+        });
+
+        
+        document.querySelector('.icon.write').onclick = () => {
+            const win = document.getElementById('memo-window');
+            win.style.display = 'block';
+            win.style.zIndex = 20;
+        };
+
+        document.querySelector('.icon.disk').onclick = () => {
+            const win = document.getElementById('system-window');
+            win.style.display = 'block';
+            win.style.zIndex = 20;
+        };
+    </script>
+
+
+</body></html>

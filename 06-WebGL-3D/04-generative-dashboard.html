@@ -1,0 +1,194 @@
+<html vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">Generative Dashboard - Six Panel Study</title>
+    <style vid="5">
+        :root {
+            --bg-color: #F2EBDB;
+            --line-color: #4E3934;
+        }
+        * {
+            box-sizing: border-box;
+        }
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background-color: var(--bg-color);
+            cursor: crosshair; 
+        }
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body vid="6">
+    <canvas id="glcanvas" vid="7"></canvas>
+
+    <script vid="8">
+        const canvas = document.getElementById('glcanvas');
+        const gl = canvas.getContext('webgl2', { antialias: true });
+
+        const vertexShaderSource = `#version 300 es
+            out vec2 vUv;
+            void main() {
+                float x = -1.0 + float((gl_VertexID & 1) << 2);
+                float y = -1.0 + float((gl_VertexID & 2) << 1);
+                vUv = vec2(x, y) * 0.5 + 0.5;
+                gl_Position = vec4(x, y, 0.0, 1.0);
+            }
+        `;
+
+        const fragmentShaderSource = `#version 300 es
+            precision highp float;
+            in vec2 vUv;
+            out vec4 fragColor;
+            uniform vec2 u_resolution;
+            uniform float u_time;
+
+            #define BG_COLOR vec3(0.949, 0.922, 0.859)
+            #define LINE_COLOR vec3(0.306, 0.224, 0.204)
+
+            float hash(vec2 p) { return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
+            mat2 rot(float a) { float s=sin(a), c=cos(a); return mat2(c,-s,s,c); }
+
+            // 1. Metaballs
+            vec3 renderPanel1(vec2 uv) {
+                vec2 p = uv * 2.0 - 1.0;
+                float d = 0.0;
+                for(float i=0.0; i<5.0; i++) {
+                    vec2 pos = 0.5 * vec2(sin(u_time*0.7+i*1.2), cos(u_time*0.5+i*0.8));
+                    d += 0.08 / length(p - pos);
+                }
+                float m = smoothstep(0.48, 0.5, d);
+                return mix(BG_COLOR, LINE_COLOR, m);
+            }
+
+            // 2. Fractal Terrain
+            float noise(vec2 p) {
+                vec2 i = floor(p), f = fract(p);
+                f = f*f*(3.0-2.0*f);
+                return mix(mix(hash(i), hash(i+vec2(1,0)), f.x),
+                           mix(hash(i+vec2(0,1)), hash(i+vec2(1,1)), f.x), f.y);
+            }
+            float fbm(vec2 p) {
+                float v = 0.0, a = 0.5;
+                for(int i=0; i<5; i++) { v += a * noise(p); p *= 2.0; a *= 0.5; }
+                return v;
+            }
+            vec3 renderPanel2(vec2 uv) {
+                vec2 p = uv * 10.0 + u_time * 0.2;
+                float h = fbm(p);
+                float grid = abs(fract(h * 10.0) - 0.5) / fwidth(h * 10.0);
+                return mix(BG_COLOR, LINE_COLOR, (1.0 - smoothstep(0.0, 1.0, grid)) * 0.4);
+            }
+
+            // 3. Particle Flow
+            vec3 renderPanel3(vec2 uv) {
+                vec2 p = uv * 6.0;
+                vec3 col = BG_COLOR;
+                for(float i=0.0; i<15.0; i++) {
+                    float t = u_time * 0.5 + i * 0.5;
+                    vec2 pos = vec2(fract(i * 0.23) * 6.0, mod(t, 6.0));
+                    pos.x += sin(pos.y + u_time) * 0.5;
+                    float d = length(p - pos);
+                    col = mix(col, LINE_COLOR, smoothstep(0.08, 0.07, d));
+                }
+                return col;
+            }
+
+            // 4. Liquid Simulation (Refraction/Waves)
+            vec3 renderPanel4(vec2 uv) {
+                vec2 p = uv * 10.0;
+                float d = sin(p.x * 0.5 + u_time) + sin(p.y * 0.5 + u_time * 0.8);
+                vec2 dist = vec2(sin(d + u_time), cos(d + u_time)) * 0.1;
+                float lines = sin((uv.x + dist.x) * 40.0) * sin((uv.y + dist.y) * 40.0);
+                return mix(BG_COLOR, LINE_COLOR, smoothstep(0.1, 0.0, abs(lines)) * 0.3);
+            }
+
+            // 5. Magnetic Field Lines
+            vec3 renderPanel5(vec2 uv) {
+                vec2 p = uv * 2.0 - 1.0;
+                vec2 m1 = vec2(sin(u_time), cos(u_time)) * 0.5;
+                vec2 m2 = -m1;
+                vec2 v1 = p - m1; vec2 v2 = p - m2;
+                float field = length(v1)/dot(v1,v1) - length(v2)/dot(v2,v2);
+                float grid = abs(fract(field * 5.0) - 0.5) / fwidth(field * 5.0);
+                return mix(BG_COLOR, LINE_COLOR, (1.0 - smoothstep(0.0, 1.2, grid)) * 0.5);
+            }
+
+            // 6. Crystal Growth
+            vec3 renderPanel6(vec2 uv) {
+                vec2 p = (uv - 0.5) * 2.0;
+                float a = atan(p.y, p.x);
+                float r = length(p);
+                float shape = abs(sin(a * 3.0 + u_time * 0.2)) * 0.5 + 0.2;
+                float crystal = smoothstep(shape, shape - 0.02, r);
+                float facets = abs(fract(r * 15.0 - u_time) - 0.5) / fwidth(r * 15.0);
+                vec3 col = mix(BG_COLOR, LINE_COLOR, crystal * 0.2);
+                col = mix(col, LINE_COLOR, (1.0 - smoothstep(0.0, 1.0, facets)) * crystal * 0.4);
+                return col;
+            }
+
+            void main() {
+                vec2 grid = floor(vUv * vec2(3.0, 2.0));
+                vec2 localUV = fract(vUv * vec2(3.0, 2.0));
+                vec3 col;
+                
+                int index = int(grid.x + grid.y * 3.0);
+                if(index == 0) col = renderPanel1(localUV);
+                else if(index == 1) col = renderPanel2(localUV);
+                else if(index == 2) col = renderPanel3(localUV);
+                else if(index == 3) col = renderPanel4(localUV);
+                else if(index == 4) col = renderPanel5(localUV);
+                else col = renderPanel6(localUV);
+
+                // Grid borders
+                vec2 border = smoothstep(0.005, 0.0, localUV) + smoothstep(0.995, 1.0, localUV);
+                if(max(border.x, border.y) > 0.5) col = LINE_COLOR;
+                
+                // Noise grain
+                col = mix(col, vec3(hash(vUv * u_resolution + u_time)), 0.04);
+                fragColor = vec4(col, 1.0);
+            }
+        `;
+
+        function createShader(gl, type, source) {
+            const shader = gl.createShader(type);
+            gl.shaderSource(shader, source);
+            gl.compileShader(shader);
+            return shader;
+        }
+
+        const program = gl.createProgram();
+        gl.attachShader(program, createShader(gl, gl.VERTEX_SHADER, vertexShaderSource));
+        gl.attachShader(program, createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource));
+        gl.linkProgram(program);
+        gl.useProgram(program);
+
+        const uRes = gl.getUniformLocation(program, "u_resolution");
+        const uTime = gl.getUniformLocation(program, "u_time");
+
+        function resize() {
+            canvas.width = window.innerWidth * window.devicePixelRatio;
+            canvas.height = window.innerHeight * window.devicePixelRatio;
+            gl.viewport(0, 0, canvas.width, canvas.height);
+            gl.uniform2f(uRes, canvas.width, canvas.height);
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+
+        function render(t) {
+            gl.uniform1f(uTime, t * 0.001);
+            gl.drawArrays(gl.TRIANGLES, 0, 3);
+            requestAnimationFrame(render);
+        }
+        requestAnimationFrame(render);
+    </script>
+
+</body></html>

@@ -1,0 +1,732 @@
+<html lang="en" vid="0"><head vid="1">
+<meta charset="UTF-8" vid="2">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+<title vid="4">Motion Exhibition Archive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" vid="5">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" vid="6">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&amp;family=Syne:wght@700;800&amp;display=swap" rel="stylesheet" vid="7">
+<style vid="8">
+    :root {
+        --bg-outer: #171717;
+        --bg-inner: #EAEBE8;
+        --text-dark: #1A1A1A;
+        --text-light: #EAEBE8;
+        --acid: #E5FF00;
+        --panel-grey: #7A7A7A;
+        --panel-dark: #1C1C1C;
+        
+        --radius: 24px;
+        --gap: 16px;
+        --pad: 32px;
+        
+        --font-display: 'Syne', sans-serif;
+        --font-ui: 'Inter', sans-serif;
+    }
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        background-color: var(--bg-outer);
+        color: var(--text-dark);
+        font-family: var(--font-ui);
+        -webkit-font-smoothing: antialiased;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        padding: 2vw;
+        position: relative;
+        overflow-x: hidden;
+    }
+
+    
+    #noise-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: -1;
+        pointer-events: none;
+        opacity: 0.8;
+    }
+
+    
+    .app-container {
+        background-color: var(--bg-inner);
+        border-radius: 40px;
+        width: 100%;
+        max-width: 1400px;
+        min-height: 90vh;
+        display: flex;
+        flex-direction: column;
+        padding: var(--gap);
+        gap: var(--gap);
+        position: relative;
+        z-index: 1;
+        box-shadow: 0 0 0 1px rgba(255,255,255,0.05);
+    }
+
+    
+    nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 24px;
+        background-color: var(--bg-inner);
+        border-radius: var(--radius);
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-family: var(--font-display);
+        font-size: 20px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        color: var(--text-dark);
+    }
+
+    .logo svg {
+        width: 32px;
+        height: 32px;
+        fill: var(--acid);
+    }
+
+    .menu-toggle {
+        width: 32px;
+        height: 24px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 6px;
+        cursor: pointer;
+    }
+
+    .menu-toggle span {
+        display: block;
+        height: 2px;
+        width: 100%;
+        background-color: var(--text-dark);
+    }
+
+    
+    .grid-layout {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        grid-auto-rows: minmax(min-content, auto);
+        gap: var(--gap);
+        flex-grow: 1;
+    }
+
+    .card {
+        border-radius: var(--radius);
+        padding: var(--pad);
+        overflow: hidden;
+        position: relative;
+    }
+
+    
+    .header-card {
+        grid-column: span 12;
+        background-color: var(--bg-inner);
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding-top: 60px;
+        padding-bottom: 40px;
+    }
+
+    .header-card h1 {
+        font-family: var(--font-display);
+        font-size: clamp(4rem, 10vw, 9rem);
+        line-height: 0.85;
+        letter-spacing: -0.04em;
+        text-transform: none;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
+
+    .custom-char {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .bracket {
+        display: inline-block;
+        border: 0.12em solid var(--text-dark);
+        border-right: none;
+        width: 0.4em;
+        height: 0.8em;
+        margin-right: -0.1em;
+    }
+
+    .subtitle {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-top: 2rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .sparkle {
+        position: absolute;
+        width: 40px;
+        height: 40px;
+    }
+    .sparkle-1 { top: 0; right: 20%; width: 60px; height: 60px; }
+    .sparkle-2 { bottom: 20%; left: 45%; }
+
+    
+    .info-card {
+        grid-column: span 4;
+        background-color: var(--acid);
+        color: var(--text-dark);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 250px;
+    }
+
+    .info-card p {
+        font-size: 1.25rem;
+        line-height: 1.3;
+        font-weight: 500;
+        letter-spacing: -0.02em;
+    }
+
+    .system-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        opacity: 0.6;
+        margin-bottom: 1rem;
+        display: block;
+    }
+
+    
+    .list-card {
+        grid-column: span 4;
+        background-color: var(--panel-grey);
+        color: var(--acid);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .list-card ul {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        justify-content: space-between;
+    }
+
+    .list-card li {
+        border-bottom: 1px solid var(--acid);
+        padding: 1rem 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 1.5rem;
+        font-weight: 500;
+        letter-spacing: -0.02em;
+        cursor: pointer;
+        transition: padding-left 0.3s ease;
+    }
+    
+    .list-card li:first-child {
+        padding-top: 0;
+    }
+
+    .list-card li:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    .list-card li:hover {
+        padding-left: 10px;
+    }
+
+    .arrow-icon {
+        width: 20px;
+        height: 20px;
+        fill: currentColor;
+        transition: transform 0.3s ease;
+    }
+
+    .list-card li:hover .arrow-icon {
+        transform: translate(4px, 4px);
+    }
+
+    
+    .director-card {
+        grid-column: span 4;
+        background-color: var(--panel-dark);
+        color: var(--acid);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .director-card h2 {
+        font-family: var(--font-display);
+        font-size: 3rem;
+        letter-spacing: -0.05em;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .director-card h2 .bracket {
+        border-color: var(--acid);
+        height: 0.75em;
+    }
+
+    
+    .exhibit-card {
+        grid-column: span 8;
+        background-color: #e0e0e0; 
+        min-height: 500px;
+        padding: 0;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    
+    .feature-card {
+        grid-column: span 4;
+        background-color: var(--panel-grey);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 500px;
+        position: relative;
+    }
+
+    .circular-text {
+        position: absolute;
+        width: 80%;
+        height: 80%;
+        animation: rotate 20s linear infinite;
+    }
+
+    .asterisk {
+        width: 100px;
+        height: 100px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .asterisk-line {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 100%;
+        height: 8px;
+        background-color: var(--text-dark);
+        border-radius: 4px;
+        transform-origin: center;
+        box-shadow: 2px 4px 10px rgba(0,0,0,0.3); 
+    }
+    .asterisk-line:nth-child(1) { transform: translateY(-50%) rotate(0deg); }
+    .asterisk-line:nth-child(2) { transform: translateY(-50%) rotate(45deg); }
+    .asterisk-line:nth-child(3) { transform: translateY(-50%) rotate(90deg); }
+    .asterisk-line:nth-child(4) { transform: translateY(-50%) rotate(135deg); }
+
+
+    @keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    
+    .webgl-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: var(--radius);
+        overflow: hidden;
+    }
+
+    .exhibit-label {
+        position: absolute;
+        top: var(--pad);
+        left: var(--pad);
+        background: var(--bg-inner);
+        color: var(--text-dark);
+        padding: 8px 16px;
+        border-radius: 40px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        z-index: 10;
+    }
+
+    
+    .meta-row {
+        grid-column: span 12;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: var(--gap);
+    }
+
+    .meta-card {
+        background-color: var(--bg-inner);
+        border: 1px solid rgba(0,0,0,0.1);
+        border-radius: var(--radius);
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 120px;
+    }
+
+    .meta-value {
+        font-family: var(--font-display);
+        font-size: 2rem;
+        letter-spacing: -0.02em;
+    }
+
+    
+    @media (max-width: 1024px) {
+        .info-card, .list-card, .director-card, .feature-card {
+            grid-column: span 6;
+        }
+        .exhibit-card {
+            grid-column: span 12;
+        }
+    }
+
+    @media (max-width: 768px) {
+        body { padding: 0; }
+        .app-container { border-radius: 0; min-height: 100vh; }
+        .grid-layout { display: flex; flex-direction: column; }
+        .meta-row { grid-template-columns: 1fr 1fr; }
+    }
+</style>
+</head>
+<body vid="9">
+
+
+<canvas id="noise-canvas" vid="10"></canvas>
+
+<div class="app-container" vid="11">
+    <nav vid="12">
+        <div class="logo" vid="13">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" vid="14">
+                <circle cx="50" cy="50" r="45" stroke="#1A1A1A" stroke-width="6" fill="#E5FF00" vid="15"></circle>
+                <path d="M50 5 V95 M5 50 H95 M25 10 Q50 60 75 10 M25 90 Q50 40 75 90" stroke="#1A1A1A" stroke-width="4" fill="none" vid="16"></path>
+            </svg>
+            MXA
+        </div>
+        <div class="menu-toggle" vid="17">
+            <span vid="18"></span>
+            <span vid="19"></span>
+        </div>
+    </nav>
+
+    <main class="grid-layout" vid="20">
+        
+        
+        <div class="header-card card" vid="21">
+            <svg class="sparkle sparkle-1" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" vid="22">
+                <path d="M50 0C50 27.6142 72.3858 50 100 50C72.3858 50 50 72.3858 50 100C50 72.3858 27.6142 50 0 50C27.6142 50 50 27.6142 50 0Z" fill="#1A1A1A" vid="23"></path>
+            </svg>
+            <svg class="sparkle sparkle-2" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" vid="24">
+                <path d="M50 0C50 27.6142 72.3858 50 100 50C72.3858 50 50 72.3858 50 100C50 72.3858 27.6142 50 0 50C27.6142 50 50 27.6142 50 0Z" fill="#1A1A1A" vid="25"></path>
+            </svg>
+            <h1 vid="26">
+                <span vid="27">Motion</span>
+                <span vid="28"><span class="custom-char" vid="29"><span class="bracket" vid="30"></span>E</span>xhibition</span>
+                <span vid="31">Archive®</span>
+            </h1>
+            <div class="subtitle" vid="32">
+                <span vid="33">Curated Interactive Experiences</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" vid="34"><circle cx="12" cy="12" r="10" vid="35"></circle></svg>
+                <span vid="36">Vol. 04</span>
+            </div>
+        </div>
+
+        
+        <div class="info-card card" vid="37">
+            <span class="system-label" vid="38">System Status / 01</span>
+            <p vid="39">
+                IDX.809.V2<br vid="40">
+                curator@mxa.studio<br vid="41">
+                Global Grid Network, Node 44
+            </p>
+        </div>
+
+        
+        <div class="list-card card" vid="42">
+            <ul vid="43">
+                <li vid="44">Kinetic Typography <svg class="arrow-icon" viewBox="0 0 24 24" vid="45"><path d="M7 7h10v10M17 7L7 17" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" vid="46"></path></svg></li>
+                <li vid="47">Fluid Dynamics <svg class="arrow-icon" viewBox="0 0 24 24" vid="48"><path d="M7 7h10v10M17 7L7 17" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" vid="49"></path></svg></li>
+                <li vid="50">Particle Systems <svg class="arrow-icon" viewBox="0 0 24 24" vid="51"><path d="M7 7h10v10M17 7L7 17" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" vid="52"></path></svg></li>
+                <li vid="53">WebGL Shaders <svg class="arrow-icon" viewBox="0 0 24 24" vid="54"><path d="M7 7h10v10M17 7L7 17" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" vid="55"></path></svg></li>
+            </ul>
+        </div>
+
+        
+        <div class="feature-card card" vid="56">
+            <svg class="circular-text" viewBox="0 0 200 200" vid="57">
+                <path id="curve" d="M 100, 100 m -70, 0 a 70,70 0 1,1 140,0 a 70,70 0 1,1 -140,0" fill="transparent" vid="58"></path>
+                <text width="500" vid="59">
+                    <textPath href="#curve" startOffset="0%" fill="#1A1A1A" font-family="'Syne', sans-serif" font-weight="700" font-size="18px" letter-spacing="4px" vid="60">
+                        GENERATIVE • VISUAL • SYSTEMS • GENERATIVE • VISUAL • SYSTEMS •
+                    </textPath>
+                </text>
+            </svg>
+            <div class="asterisk" vid="61">
+                <div class="asterisk-line" vid="62"></div>
+                <div class="asterisk-line" vid="63"></div>
+                <div class="asterisk-line" vid="64"></div>
+                <div class="asterisk-line" vid="65"></div>
+            </div>
+        </div>
+
+        
+        <div class="exhibit-card card" vid="66">
+            <div class="exhibit-label" vid="67">Exhibit A — Interference</div>
+            <div class="webgl-container" vid="68">
+                <canvas id="exhibit-1" vid="69"></canvas>
+            </div>
+        </div>
+
+        
+        <div class="director-card card" vid="70">
+            <span class="system-label" style="color:var(--acid);" vid="71">Featured Artists / 02</span>
+            <h2 vid="72"><span class="bracket" vid="73"></span>Creators</h2>
+            <ul class="list-card" style="background:transparent; flex-grow:1; margin-top:-1rem;" vid="74">
+                
+                <li style="color:var(--acid); border-color:#333;" vid="75">Oskar Stålberg <svg class="arrow-icon" viewBox="0 0 24 24" vid="76"><path d="M7 7h10v10M17 7L7 17" stroke="currentColor" stroke-width="2" fill="none" vid="77"></path></svg></li>
+                <li style="color:var(--acid); border-color:#333;" vid="78">Yuri Artiukh <svg class="arrow-icon" viewBox="0 0 24 24" vid="79"><path d="M7 7h10v10M17 7L7 17" stroke="currentColor" stroke-width="2" fill="none" vid="80"></path></svg></li>
+                <li style="color:var(--acid); border-color:transparent;" vid="81">Mario Klingemann <svg class="arrow-icon" viewBox="0 0 24 24" vid="82"><path d="M7 7h10v10M17 7L7 17" stroke="currentColor" stroke-width="2" fill="none" vid="83"></path></svg></li>
+            </ul>
+        </div>
+
+        
+        <div class="meta-row" vid="84">
+            <div class="meta-card" vid="85">
+                <span class="system-label" style="color:#1A1A1A; opacity:0.5;" vid="86">Active Nodes</span>
+                <span class="meta-value" vid="87">1,024</span>
+            </div>
+            <div class="meta-card" vid="88">
+                <span class="system-label" style="color:#1A1A1A; opacity:0.5;" vid="89">Frame Rate</span>
+                <span class="meta-value" vid="90">60 FPS</span>
+            </div>
+            <div class="meta-card" vid="91">
+                <span class="system-label" style="color:#1A1A1A; opacity:0.5;" vid="92">Render Engine</span>
+                <span class="meta-value" style="font-size: 1.5rem; display:flex; align-items:center; height:100%;" vid="93">WebGL 2.0</span>
+            </div>
+            <div class="meta-card" style="background:var(--text-dark); color:var(--bg-inner);" vid="94">
+                <span class="system-label" style="color:var(--bg-inner); opacity:0.5;" vid="95">Status</span>
+                <span class="meta-value" style="color:var(--acid);" vid="96">ONLINE</span>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+
+<script vid="97">
+    
+    
+    
+    const initNoise = () => {
+        const canvas = document.getElementById('noise-canvas');
+        const gl = canvas.getContext('webgl');
+        if (!gl) return;
+
+        const resize = () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            gl.viewport(0, 0, canvas.width, canvas.height);
+        };
+        window.addEventListener('resize', resize);
+        resize();
+
+        const vsSource = `
+            attribute vec2 position;
+            void main() {
+                gl_Position = vec4(position, 0.0, 1.0);
+            }
+        `;
+
+        const fsSource = `
+            precision mediump float;
+            uniform vec2 u_resolution;
+            uniform float u_time;
+            
+            float random(vec2 st) {
+                return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453123);
+            }
+            
+            void main() {
+                vec2 st = gl_FragCoord.xy/u_resolution.xy;
+                // Generate grain
+                float noise = random(st * u_time);
+                // Mix subtle grain (mostly transparent)
+                gl_FragColor = vec4(vec3(0.0), noise * 0.06); 
+            }
+        `;
+
+        const compileShader = (type, source) => {
+            const shader = gl.createShader(type);
+            gl.shaderSource(shader, source);
+            gl.compileShader(shader);
+            return shader;
+        };
+
+        const program = gl.createProgram();
+        gl.attachShader(program, compileShader(gl.VERTEX_SHADER, vsSource));
+        gl.attachShader(program, compileShader(gl.FRAGMENT_SHADER, fsSource));
+        gl.linkProgram(program);
+        gl.useProgram(program);
+
+        const buffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+            -1.0, -1.0,  1.0, -1.0, -1.0,  1.0,
+            -1.0,  1.0,  1.0, -1.0,  1.0,  1.0
+        ]), gl.STATIC_DRAW);
+
+        const positionLocation = gl.getAttribLocation(program, "position");
+        gl.enableVertexAttribArray(positionLocation);
+        gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
+        const timeLocation = gl.getUniformLocation(program, "u_time");
+        const resLocation = gl.getUniformLocation(program, "u_resolution");
+
+        const render = (time) => {
+            gl.uniform1f(timeLocation, time * 0.001);
+            gl.uniform2f(resLocation, canvas.width, canvas.height);
+            gl.drawArrays(gl.TRIANGLES, 0, 6);
+            requestAnimationFrame(render);
+        };
+        requestAnimationFrame(render);
+    };
+
+    
+    
+    
+    const initExhibit = () => {
+        const canvas = document.getElementById('exhibit-1');
+        const container = canvas.parentElement;
+        const gl = canvas.getContext('webgl');
+        if (!gl) return;
+
+        const resize = () => {
+            const rect = container.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+            gl.viewport(0, 0, canvas.width, canvas.height);
+        };
+        window.addEventListener('resize', resize);
+        resize();
+
+        const vsSource = `
+            attribute vec2 position;
+            void main() {
+                gl_Position = vec4(position, 0.0, 1.0);
+            }
+        `;
+
+        
+        
+        const fsSource = `
+            precision highp float;
+            uniform vec2 u_resolution;
+            uniform float u_time;
+
+            // Palette
+            vec3 acid = vec3(229.0/255.0, 255.0/255.0, 0.0);
+            vec3 dark = vec3(26.0/255.0, 26.0/255.0, 26.0);
+            vec3 mid = vec3(122.0/255.0, 122.0/255.0, 122.0);
+
+            void main() {
+                vec2 uv = gl_FragCoord.xy / u_resolution.xy;
+                uv.x *= u_resolution.x / u_resolution.y;
+
+                // Create distortion
+                vec2 p = uv;
+                p.x += sin(p.y * 5.0 + u_time * 0.5) * 0.1;
+                p.y += cos(p.x * 4.0 + u_time * 0.3) * 0.1;
+
+                // Create sharp bands
+                float band = sin(p.x * 20.0 - u_time) * cos(p.y * 15.0 + u_time * 1.2);
+                
+                // Step function for sharp, brutalist edges instead of smooth gradients
+                vec3 col;
+                if(band > 0.4) {
+                    col = acid;
+                } else if(band > -0.2) {
+                    col = dark;
+                } else {
+                    col = mid;
+                }
+
+                // Add scanline effect for texture
+                float scanline = sin(uv.y * 800.0) * 0.04;
+                col -= scanline;
+
+                gl_FragColor = vec4(col, 1.0);
+            }
+        `;
+
+        const compileShader = (type, source) => {
+            const shader = gl.createShader(type);
+            gl.shaderSource(shader, source);
+            gl.compileShader(shader);
+            return shader;
+        };
+
+        const program = gl.createProgram();
+        gl.attachShader(program, compileShader(gl.VERTEX_SHADER, vsSource));
+        gl.attachShader(program, compileShader(gl.FRAGMENT_SHADER, fsSource));
+        gl.linkProgram(program);
+        gl.useProgram(program);
+
+        const buffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+            -1.0, -1.0,  1.0, -1.0, -1.0,  1.0,
+            -1.0,  1.0,  1.0, -1.0,  1.0,  1.0
+        ]), gl.STATIC_DRAW);
+
+        const positionLocation = gl.getAttribLocation(program, "position");
+        gl.enableVertexAttribArray(positionLocation);
+        gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
+        const timeLocation = gl.getUniformLocation(program, "u_time");
+        const resLocation = gl.getUniformLocation(program, "u_resolution");
+
+        const render = (time) => {
+            gl.uniform1f(timeLocation, time * 0.001);
+            gl.uniform2f(resLocation, canvas.width, canvas.height);
+            gl.drawArrays(gl.TRIANGLES, 0, 6);
+            requestAnimationFrame(render);
+        };
+        requestAnimationFrame(render);
+    };
+
+    
+    window.onload = () => {
+        initNoise();
+        initExhibit();
+    };
+</script>
+
+</body></html>

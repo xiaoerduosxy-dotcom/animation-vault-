@@ -1,0 +1,442 @@
+<html lang="en" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">XENO_FLORA // DNA_SEQUENCER</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" vid="5">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" vid="6">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;500&amp;family=Playfair+Display:ital,wght@0,400..900;1,400..900&amp;display=swap" rel="stylesheet" vid="7">
+    <style vid="8">
+        :root {
+            --acid: #C4FF99;
+            --black: #0D0D0D;
+            --font-serif: 'Playfair Display', serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: crosshair;
+        }
+
+        body {
+            background-color: var(--acid);
+            color: var(--black);
+            font-family: var(--font-mono);
+            height: 100vh;
+            width: 1280px;
+            height: 800px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            text-transform: none;
+            -webkit-font-smoothing: antialiased;
+            position: relative;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        header {
+            position: relative;
+            z-index: 10;
+            padding: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .brand-block {
+            display: flex;
+            align-items: baseline;
+            gap: 0;
+        }
+
+        .main-title {
+            font-family: var(--font-serif);
+            font-size: 80px;
+            font-weight: 400;
+            letter-spacing: -2px;
+            line-height: 0.9;
+        }
+
+        .bracket {
+            font-family: var(--font-serif);
+            font-size: 110px;
+            font-weight: 300;
+            margin: 0 40px;
+            position: relative;
+            top: 10px;
+        }
+
+        .year-stamp {
+            font-family: var(--font-serif);
+            font-size: 80px;
+            font-weight: 400;
+        }
+
+        .nav-utility {
+            display: flex;
+            gap: 24px;
+            font-size: 11px;
+            font-weight: 500;
+            text-transform: capitalize;
+        }
+
+        .nav-utility span:hover {
+            text-decoration: line-through;
+        }
+
+        .active-link {
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+
+        main {
+            flex: 1;
+            position: relative;
+            z-index: 10;
+            padding: 0 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding-bottom: 60px;
+        }
+
+        .genome-display {
+            width: 60%;
+            height: 400px;
+            position: relative;
+        }
+
+        .sequencer-controls {
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .control-group {
+            border-top: 1px solid var(--black);
+            padding-top: 12px;
+        }
+
+        .control-label {
+            font-size: 10px;
+            font-weight: 500;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 1px;
+            background: var(--black);
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 12px;
+            width: 12px;
+            background: var(--black);
+            border-radius: 50%;
+            margin-top: -6px;
+        }
+
+        .data-readout {
+            position: absolute;
+            left: 40px;
+            top: 200px;
+            font-size: 10px;
+            line-height: 1.6;
+            max-width: 250px;
+            opacity: 0.8;
+            pointer-events: none;
+        }
+
+        .readout-line {
+            display: block;
+            white-space: pre;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        footer {
+            position: relative;
+            z-index: 10;
+            padding: 40px;
+            display: grid;
+            grid-template-columns: 1fr 1.5fr 1fr 1fr;
+            align-items: end;
+            gap: 20px;
+        }
+
+        .footer-col {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .footer-label {
+            font-size: 10px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .footer-link {
+            font-size: 11px;
+            text-decoration: none;
+            color: var(--black);
+        }
+
+        .footer-link:hover {
+            font-style: italic;
+        }
+
+        .mutation-trigger {
+            background: var(--black);
+            color: var(--acid);
+            padding: 15px 25px;
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            font-size: 12px;
+            letter-spacing: 1px;
+            font-weight: 500;
+            z-index: 100;
+            border: none;
+            transition: opacity 0.2s;
+        }
+
+        .mutation-trigger:active {
+            opacity: 0.7;
+        }
+
+        #helix-container {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+        }
+
+        .ui-decoration {
+            position: absolute;
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-size: 40px;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body vid="9">
+
+    <button class="mutation-trigger" id="spliceBtn" vid="10">RESEQUENCE_GENOME</button>
+
+    <header vid="11">
+        <div class="brand-block" vid="12">
+            <h1 class="main-title" vid="13">XenoFlora</h1>
+            <span class="bracket" vid="14">(</span>
+            <span class="year-stamp" vid="15">2024</span>
+            <span class="bracket" vid="16">)</span>
+        </div>
+        <nav class="nav-utility" vid="17">
+            <span vid="18">Archive_01</span>
+            <span class="active-link" vid="19">DNA_Sequencer</span>
+            <span vid="20">✕</span>
+        </nav>
+    </header>
+
+    <div class="data-readout" id="dna-log" vid="21">
+        <span class="readout-line" vid="22">STRAND_ALPHA: [AT][GC][CG][TA]</span>
+        <span class="readout-line" vid="23">SPLICING_EFFICIENCY: 98.2%</span>
+        <span class="readout-line" vid="24">BIO_STABILITY: MODERATE</span>
+        <span class="readout-line" vid="25">------------------------</span>
+        <span class="readout-line" vid="26">SEQ_01: ACGT-TGCA-AAGG</span>
+        <span class="readout-line" vid="27">SEQ_02: CCCT-GGGA-TTTA</span>
+        <span class="readout-line" vid="28">SEQ_03: GATA-TAGC-CCGT</span>
+        <span class="readout-line" vid="29">PHASE: SEQUENCE_LOAD...</span>
+    </div>
+
+    <span class="ui-decoration" style="top: 150px; right: 100px;" vid="30">Synthetic_Evolution</span>
+
+    <main vid="31">
+        <div id="helix-container" vid="32"></div>
+
+        <div class="sequencer-controls" vid="33">
+            <div class="control-group" vid="34">
+                <span class="control-label" vid="35">MUTATION_RATE <em id="mut-val" vid="36">0.05</em></span>
+                <input type="range" id="mutationRate" min="0" max="1" step="0.01" value="0.05" vid="37">
+            </div>
+            <div class="control-group" vid="38">
+                <span class="control-label" vid="39">BASE_PAIR_DENSITY <em id="den-val" vid="40">40</em></span>
+                <input type="range" id="pairDensity" min="10" max="100" step="1" value="40" vid="41">
+            </div>
+            <div class="control-group" vid="42">
+                <span class="control-label" vid="43">HELIX_VELOCITY <em id="vel-val" vid="44">1.0</em></span>
+                <input type="range" id="helixVel" min="0.1" max="5" step="0.1" value="1.0" vid="45">
+            </div>
+        </div>
+    </main>
+
+    <footer vid="46">
+        <div class="footer-col" vid="47">
+            <span class="footer-label" vid="48">Genomics</span>
+            <a href="#" class="footer-link" vid="49">Base.Edit_v4</a>
+            <a href="#" class="footer-link" vid="50">Lumen.Transcription</a>
+            <a href="#" class="footer-link" vid="51">Strain.A7</a>
+            <a href="#" class="footer-link" vid="52">Resonance.Map</a>
+        </div>
+        <div class="footer-col" vid="53">
+            <span class="footer-label" vid="54">Observations</span>
+            <a href="#" class="footer-link" vid="55">Archive.2304</a>
+            <a href="#" class="footer-link" vid="56">Spore.Migration</a>
+            <a href="#" class="footer-link" vid="57">Crystal.Symbiosis</a>
+        </div>
+        <div class="footer-col" vid="58">
+            <a href="#" class="footer-link" vid="59">Instagram</a>
+            <a href="#" class="footer-link" vid="60">Terminal</a>
+            <a href="#" class="footer-link" vid="61">Source</a>
+        </div>
+        <div class="footer-col" style="text-align: right;" vid="62">
+            <span class="footer-label" vid="63">Current Locale</span>
+            <span class="footer-link" vid="64">English / [UTC-5]</span>
+        </div>
+    </footer>
+
+    <script type="importmap" vid="65">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <script type="module" vid="66">
+        import * as THREE from 'three';
+
+        let scene, camera, renderer, helixGroup;
+        let mutationRate = 0.05;
+        let density = 40;
+        let velocity = 1.0;
+        let clock = new THREE.Clock();
+
+        function init() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(50, 1280 / 800, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(1280, 800);
+            document.getElementById('helix-container').appendChild(renderer.domElement);
+
+            camera.position.set(0, 0, 12);
+            createHelix();
+            animate();
+        }
+
+        function createHelix() {
+            if(helixGroup) scene.remove(helixGroup);
+            helixGroup = new THREE.Group();
+            
+            const pairs = parseInt(density);
+            const spread = 8;
+            const step = spread / pairs;
+            
+            const mat = new THREE.MeshBasicMaterial({ color: 0x0D0D0D, wireframe: true });
+            const lineMat = new THREE.LineBasicMaterial({ color: 0x0D0D0D, transparent: true, opacity: 0.3 });
+            const sphereGeom = new THREE.IcosahedronGeometry(0.1, 0);
+
+            for(let i = 0; i < pairs; i++) {
+                const y = (i * step) - (spread / 2);
+                const angle = i * 0.4;
+                
+                
+                const sphere1 = new THREE.Mesh(sphereGeom, mat);
+                sphere1.position.set(Math.cos(angle) * 1.5, y, Math.sin(angle) * 1.5);
+                helixGroup.add(sphere1);
+
+                
+                const sphere2 = new THREE.Mesh(sphereGeom, mat);
+                sphere2.position.set(Math.cos(angle + Math.PI) * 1.5, y, Math.sin(angle + Math.PI) * 1.5);
+                helixGroup.add(sphere2);
+
+                
+                const points = [sphere1.position, sphere2.position];
+                const geom = new THREE.BufferGeometry().setFromPoints(points);
+                const line = new THREE.Line(geom, lineMat);
+                helixGroup.add(line);
+            }
+
+            scene.add(helixGroup);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const elapsed = clock.getElapsedTime();
+            
+            if(helixGroup) {
+                helixGroup.rotation.y += 0.01 * velocity;
+                helixGroup.children.forEach((child, i) => {
+                    if(child.type === 'Mesh') {
+                        const noise = Math.sin(elapsed * 2 + i) * mutationRate;
+                        child.scale.set(1 + noise, 1 + noise, 1 + noise);
+                    }
+                });
+            }
+
+            renderer.render(scene, camera);
+
+            
+            if(Math.random() > 0.95) {
+                const log = document.getElementById('dna-log');
+                const bases = ['A', 'T', 'C', 'G'];
+                const randBase = bases[Math.floor(Math.random() * 4)] + bases[Math.floor(Math.random() * 4)];
+                const newLine = document.createElement('span');
+                newLine.className = 'readout-line';
+                newLine.innerText = `LOG_MUTATION: +${randBase} @ ${elapsed.toFixed(2)}s`;
+                log.prepend(newLine);
+                if(log.children.length > 12) log.removeChild(log.lastChild);
+            }
+        }
+
+        
+        document.getElementById('mutationRate').addEventListener('input', (e) => {
+            mutationRate = parseFloat(e.target.value);
+            document.getElementById('mut-val').innerText = mutationRate.toFixed(2);
+        });
+
+        document.getElementById('pairDensity').addEventListener('input', (e) => {
+            density = parseInt(e.target.value);
+            document.getElementById('den-val').innerText = density;
+            createHelix();
+        });
+
+        document.getElementById('helixVel').addEventListener('input', (e) => {
+            velocity = parseFloat(e.target.value);
+            document.getElementById('vel-val').innerText = velocity.toFixed(1);
+        });
+
+        document.getElementById('spliceBtn').addEventListener('click', () => {
+            createHelix();
+            mutationRate = Math.random();
+            document.getElementById('mutationRate').value = mutationRate;
+            document.getElementById('mut-val').innerText = mutationRate.toFixed(2);
+        });
+
+        init();
+    </script>
+
+</body></html>

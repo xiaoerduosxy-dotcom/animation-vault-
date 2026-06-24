@@ -1,0 +1,650 @@
+<html lang="en" data-theme="dark" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">AURA // Dashboard</title>
+    
+    <script src="https://unpkg.com/@phosphor-icons/web" vid="5"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js" vid="6"></script>
+
+    <style vid="7">
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@300;400;500;600&display=swap');
+
+        :root {
+            --radius-pill: 999px;
+            --radius-card: 24px;
+            --radius-outer: 48px;
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 48px;
+
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            --transition-theme: background-color 0.6s var(--ease-out-expo), color 0.6s var(--ease-out-expo);
+            --transition-element: background-color 0.3s ease, transform 0.2s ease, opacity 0.3s ease;
+        }
+
+        [data-theme="dark"] {
+            --bg-base: #030407; 
+            --bg-surface-1: rgba(255, 255, 255, 0.02); 
+            --bg-surface-2: rgba(255, 255, 255, 0.05); 
+            --bg-surface-3: rgba(255, 255, 255, 0.1);  
+            --bg-accent: #FFFFFF; 
+            --bg-accent-hover: #E0EDFF;
+            --text-primary: #FFFFFF;
+            --text-secondary: rgba(255, 255, 255, 0.5);
+            --text-accent: #030407; 
+            --text-tech: rgba(255, 255, 255, 0.3);
+            --glow-color: 255, 255, 255;
+            --shader-core: #FFFFFF;
+            --shader-fringe: #4A88FF;
+            --border-subtle: rgba(255, 255, 255, 0.08);
+        }
+
+        [data-theme="light"] {
+            --bg-base: #F5F7FA;
+            --bg-surface-1: rgba(0, 0, 0, 0.03);
+            --bg-surface-2: rgba(0, 0, 0, 0.06);
+            --bg-surface-3: rgba(0, 0, 0, 0.12);
+            --bg-accent: #050608; 
+            --bg-accent-hover: #1A1E26;
+            --text-primary: #050608;
+            --text-secondary: rgba(0, 0, 0, 0.5);
+            --text-accent: #FFFFFF;
+            --text-tech: rgba(0, 0, 0, 0.3);
+            --glow-color: 0, 0, 0;
+            --shader-core: #050608;
+            --shader-fringe: #8BA3CC;
+            --border-subtle: rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow: hidden;
+            transition: var(--transition-theme);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        #webgl-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        
+        .dashboard-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            height: 100vh;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            grid-template-rows: auto 1fr;
+            padding: var(--space-lg);
+            gap: var(--space-lg);
+        }
+
+        
+        .sidebar {
+            grid-row: 1 / 3;
+            background: var(--bg-surface-1);
+            backdrop-filter: blur(20px);
+            border-radius: var(--radius-outer);
+            padding: var(--space-xl) var(--space-lg);
+            display: flex;
+            flex-direction: column;
+            gap: 48px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .brand-section {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+            list-style: none;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 20px;
+            border-radius: var(--radius-pill);
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: var(--transition-element);
+        }
+
+        .nav-item.active {
+            background: var(--bg-surface-3);
+            color: var(--text-primary);
+        }
+
+        .nav-item:hover:not(.active) {
+            background: var(--bg-surface-2);
+            color: var(--text-primary);
+        }
+
+        
+        .top-nav {
+            grid-column: 2;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 var(--space-md);
+        }
+
+        
+        .main-content {
+            grid-column: 2;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: auto 1fr;
+            gap: var(--space-lg);
+            overflow-y: auto;
+            padding-bottom: var(--space-xl);
+            scrollbar-width: none;
+        }
+
+        .main-content::-webkit-scrollbar { display: none; }
+
+        
+        .module {
+            background: var(--bg-surface-1);
+            backdrop-filter: blur(20px);
+            border-radius: var(--radius-card);
+            padding: var(--space-lg);
+            border: 1px solid var(--border-subtle);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        .module-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .module-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.2em;
+            color: var(--text-tech);
+            text-transform: uppercase;
+        }
+
+        .metric-large {
+            font-size: 40px;
+            font-weight: 300;
+            letter-spacing: -0.04em;
+        }
+
+        .metric-sub {
+            font-size: 12px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .trend-up { color: #4ADE80; }
+
+        
+        .node-card {
+            grid-column: span 1;
+            background: var(--bg-surface-1);
+            border-radius: var(--radius-card);
+            padding: var(--space-lg);
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .node-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: var(--radius-pill);
+            background: var(--bg-surface-3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 0 20px rgba(var(--glow-color), 0.1);
+        }
+
+        .node-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .node-name {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .node-status {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: #4ADE80;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: #4ADE80;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #4ADE80;
+        }
+
+        
+        .chart-module {
+            grid-column: span 2;
+            height: 320px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .grid-bg {
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(var(--border-subtle) 1px, transparent 1px), 
+                              linear-gradient(90deg, var(--border-subtle) 1px, transparent 1px);
+            background-size: 40px 40px;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        
+        .top-bar-controls {
+            display: flex;
+            gap: var(--space-md);
+            align-items: center;
+        }
+
+        .version-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .theme-toggle {
+            height: 40px;
+            padding: 0 16px;
+            background-color: var(--bg-surface-1);
+            color: var(--text-primary);
+            gap: 8px;
+            font-size: 13px;
+            border-radius: var(--radius-pill);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            transition: var(--transition-element);
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--bg-surface-2);
+        }
+
+        .system-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: var(--text-primary);
+            background: var(--bg-surface-2);
+            padding: 4px 12px;
+            border-radius: var(--radius-pill);
+            letter-spacing: 0.1em;
+        }
+
+        
+        .btn-action {
+            padding: 10px 20px;
+            border-radius: var(--radius-pill);
+            background: var(--bg-accent);
+            color: var(--text-accent);
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            border: none;
+            transition: var(--transition-element);
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(var(--glow-color), 0.2);
+        }
+
+        .tech-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.2em;
+            color: var(--text-tech);
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body vid="8">
+
+    <div id="webgl-container" vid="9"></div>
+
+    <div class="dashboard-container" vid="10">
+        
+        <aside class="sidebar" vid="11">
+            <div class="brand-section" vid="12">
+                <div class="system-badge" vid="13">AURA.OS</div>
+                <h1 style="font-size: 24px; font-weight: 500;" vid="14">Console</h1>
+            </div>
+
+            <nav class="nav-links" vid="15">
+                <a href="#" class="nav-item active" vid="16"><i class="ph ph-squares-four" vid="17"></i> Dashboard</a>
+                <a href="#" class="nav-item" vid="18"><i class="ph ph-shield-check" vid="19"></i> Security Nodes</a>
+                <a href="#" class="nav-item" vid="20"><i class="ph ph-activity" vid="21"></i> System Metrics</a>
+                <a href="#" class="nav-item" vid="22"><i class="ph ph-users" vid="23"></i> Access Control</a>
+                <a href="#" class="nav-item" vid="24"><i class="ph ph-gear" vid="25"></i> Core Settings</a>
+            </nav>
+
+            <div style="margin-top: auto;" vid="26">
+                <div class="tech-label" style="margin-bottom: 12px;" vid="27">UPLINK_STATUS</div>
+                <div class="node-status" vid="28">
+                    <div class="status-dot" vid="29"></div>
+                    SECURE CONNECTION
+                </div>
+            </div>
+        </aside>
+
+        <header class="top-nav" vid="30">
+            <div class="tech-label" vid="31">SYS.CORE // NODE_01</div>
+            
+            <div class="top-bar-controls" vid="32">
+                <div class="version-tag" vid="33">V03.01</div>
+                <button class="theme-toggle" id="themeToggleBtn" vid="34">
+                    <i class="ph ph-moon" id="themeIcon" vid="35"></i>
+                    <span id="themeText" vid="36">DARK</span>
+                </button>
+                <div class="node-avatar" style="width: 40px; height: 40px; font-size: 16px;" vid="37">
+                    <i class="ph ph-user" vid="38"></i>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content" vid="39">
+            
+            
+            <div class="module" vid="40">
+                <div class="module-header" vid="41">
+                    <span class="module-title" vid="42">Neural Throughput</span>
+                    <i class="ph ph-chart-line-up" style="color: var(--text-tech);" vid="43"></i>
+                </div>
+                <div class="metric-large" vid="44">1,248.4 <span style="font-size: 16px; color: var(--text-secondary);" vid="45">TF/S</span></div>
+                <div class="metric-sub trend-up" vid="46">
+                    <i class="ph ph-caret-up" vid="47"></i> 12.4% vs prev
+                </div>
+            </div>
+
+            <div class="module" vid="48">
+                <div class="module-header" vid="49">
+                    <span class="module-title" vid="50">Active Sessions</span>
+                    <i class="ph ph-users-three" style="color: var(--text-tech);" vid="51"></i>
+                </div>
+                <div class="metric-large" vid="52">14,802</div>
+                <div class="metric-sub" vid="53">
+                    <span vid="54">Global nodes sync'd</span>
+                </div>
+            </div>
+
+            <div class="module" vid="55">
+                <div class="module-header" vid="56">
+                    <span class="module-title" vid="57">Core Latency</span>
+                    <i class="ph ph-timer" style="color: var(--text-tech);" vid="58"></i>
+                </div>
+                <div class="metric-large" vid="59">0.08 <span style="font-size: 16px; color: var(--text-secondary);" vid="60">ms</span></div>
+                <div class="metric-sub" vid="61">
+                    <span style="color: #4ADE80;" vid="62">Optimal Performance</span>
+                </div>
+            </div>
+
+            
+            <div class="node-card" vid="63">
+                <div class="node-avatar" vid="64">
+                    <i class="ph-fill ph-fingerprint" vid="65"></i>
+                </div>
+                <div class="node-info" vid="66">
+                    <div class="node-name" vid="67">Admin_01</div>
+                    <div class="node-status" vid="68">
+                        <div class="status-dot" vid="69"></div>
+                        BIOMETRIC_AUTH_PASS
+                    </div>
+                </div>
+                <button class="btn-action" style="margin-left: auto;" vid="70">Audit</button>
+            </div>
+
+            
+            <div class="module chart-module" vid="71">
+                <div class="grid-bg" vid="72"></div>
+                <div class="module-header" style="position: relative; z-index: 2;" vid="73">
+                    <span class="module-title" vid="74">System Activity Log</span>
+                    <button class="theme-toggle" style="height: 32px;" vid="75">Export Data</button>
+                </div>
+                
+                <div style="flex: 1; display: flex; align-items: flex-end; gap: 4px; padding-bottom: 20px; z-index: 1;" vid="76">
+                    <div style="height: 40%; width: 100%; background: linear-gradient(to top, rgba(var(--glow-color), 0.1), transparent); border-top: 1px solid var(--text-secondary); border-radius: 2px;" vid="77"></div>
+                    <div style="height: 60%; width: 100%; background: linear-gradient(to top, rgba(var(--glow-color), 0.1), transparent); border-top: 1px solid var(--text-secondary); border-radius: 2px;" vid="78"></div>
+                    <div style="height: 30%; width: 100%; background: linear-gradient(to top, rgba(var(--glow-color), 0.1), transparent); border-top: 1px solid var(--text-secondary); border-radius: 2px;" vid="79"></div>
+                    <div style="height: 80%; width: 100%; background: linear-gradient(to top, rgba(var(--glow-color), 0.1), transparent); border-top: 1px solid var(--text-secondary); border-radius: 2px;" vid="80"></div>
+                </div>
+            </div>
+
+            
+            <div class="module" vid="81">
+                <div class="module-header" vid="82">
+                    <span class="module-title" vid="83">Security Feed</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 8px;" vid="84">
+                    <div style="font-size: 13px; padding-bottom: 12px; border-bottom: 1px solid var(--border-subtle);" vid="85">
+                        <span class="tech-label" style="display: block; font-size: 9px; margin-bottom: 4px;" vid="86">12:44:01</span>
+                        NEW_NODE_DISCOVERED: TOKYO_04
+                    </div>
+                    <div style="font-size: 13px; padding-bottom: 12px; border-bottom: 1px solid var(--border-subtle);" vid="87">
+                        <span class="tech-label" style="display: block; font-size: 9px; margin-bottom: 4px;" vid="88">12:42:15</span>
+                        UPLINK_ENCRYPTION_ROTATED
+                    </div>
+                    <div style="font-size: 13px;" vid="89">
+                        <span class="tech-label" style="display: block; font-size: 9px; margin-bottom: 4px;" vid="90">12:39:58</span>
+                        BACKUP_SEQUENCE_COMPLETE
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script vid="91">
+        const themeBtn = document.getElementById('themeToggleBtn');
+        const themeIcon = document.getElementById('themeIcon');
+        const themeText = document.getElementById('themeText');
+        const htmlElement = document.documentElement;
+
+        function getComputedColors() {
+            const styles = getComputedStyle(document.documentElement);
+            return {
+                core: new THREE.Color(styles.getPropertyValue('--shader-core').trim()),
+                fringe: new THREE.Color(styles.getPropertyValue('--shader-fringe').trim())
+            };
+        }
+
+        themeBtn.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            htmlElement.setAttribute('data-theme', newTheme);
+            
+            if (newTheme === 'dark') {
+                themeIcon.className = 'ph ph-moon';
+                themeText.textContent = 'DARK';
+            } else {
+                themeIcon.className = 'ph ph-sun';
+                themeText.textContent = 'LIGHT';
+            }
+
+            setTimeout(() => {
+                const colors = getComputedColors();
+                if (material) {
+                    material.uniforms.u_colorCore.value = colors.core;
+                    material.uniforms.u_colorFringe.value = colors.fringe;
+                    material.uniforms.u_isLightMode.value = newTheme === 'light' ? 1.0 : 0.0;
+                }
+            }, 50); 
+        });
+
+        
+        const container = document.getElementById('webgl-container');
+        const scene = new THREE.Scene();
+        const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 10);
+        camera.position.z = 1;
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        container.appendChild(renderer.domElement);
+
+        const geometry = new THREE.PlaneGeometry(2, 2);
+
+        const vertexShader = `
+            varying vec2 vUv;
+            void main() {
+                vUv = uv;
+                gl_Position = vec4(position, 1.0);
+            }
+        `;
+
+        const fragmentShader = `
+            uniform float u_time;
+            uniform vec2 u_resolution;
+            uniform vec2 u_mouse;
+            uniform vec3 u_colorCore;
+            uniform vec3 u_colorFringe;
+            uniform float u_isLightMode;
+            varying vec2 vUv;
+
+            vec2 hash( vec2 p ) {
+                p = vec2( dot(p,vec2(127.1,311.7)), dot(p,vec2(269.5,183.3)) );
+                return -1.0 + 2.0*fract(sin(p)*43758.5453123);
+            }
+            float noise( in vec2 p ) {
+                const float K1 = 0.366025404;
+                const float K2 = 0.211324865;
+                vec2 i = floor( p + (p.x+p.y)*K1 );
+                vec2 a = p - i + (i.x+i.y)*K2;
+                vec2 o = (a.x>a.y) ? vec2(1.0,0.0) : vec2(0.0,1.0);
+                vec2 b = a - o + K2;
+                vec2 c = a - 1.0 + 2.0*K2;
+                vec3 h = max( 0.5-vec3(dot(a,a), dot(b,b), dot(c,c) ), 0.0 );
+                vec3 n = h*h*h*h*vec3( dot(a,hash(i+0.0)), dot(b,hash(i+o)), dot(c,hash(i+1.0)));
+                return dot( n, vec3(70.0) );
+            }
+
+            float sdArc(vec2 p, vec2 center, float radius, float width, float warp) {
+                p.y += sin(p.x * 3.0 + u_time * 0.3) * warp;
+                p.x += noise(p * 1.5 + u_time * 0.1) * (warp * 0.5);
+                float d = length(p - center) - radius;
+                return abs(d) - width;
+            }
+
+            void main() {
+                vec2 uv = gl_FragCoord.xy / u_resolution.xy;
+                vec2 st = uv;
+                st.x *= u_resolution.x / u_resolution.y;
+                vec2 mouseOffset = (u_mouse - 0.5) * 0.05;
+                st += mouseOffset;
+
+                vec2 center = vec2(0.1, 0.5);
+                float d1 = sdArc(st, center, 1.2, 0.02, 0.15);
+                float d2 = sdArc(st, center, 1.25, 0.05, 0.2);
+                
+                float coreGlow = exp(-d1 * 25.0);
+                float fringeGlow = exp(-d2 * 10.0);
+                float wash = smoothstep(1.5, -0.5, st.x) * 0.2;
+
+                vec3 finalColor = vec3(0.0);
+                finalColor += u_colorCore * coreGlow;
+                finalColor += u_colorFringe * fringeGlow;
+                finalColor += u_colorFringe * wash;
+
+                float alpha = clamp(coreGlow + fringeGlow + wash, 0.0, 1.0);
+                if(u_isLightMode > 0.5) {
+                    alpha = clamp((coreGlow * 1.2 + fringeGlow + wash * 0.3), 0.0, 0.3);
+                }
+
+                gl_FragColor = vec4(finalColor, alpha);
+            }
+        `;
+
+        const initialColors = getComputedColors();
+        
+        const material = new THREE.ShaderMaterial({
+            vertexShader,
+            fragmentShader,
+            uniforms: {
+                u_time: { value: 0.0 },
+                u_resolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+                u_mouse: { value: new THREE.Vector2(0.5, 0.5) },
+                u_colorCore: { value: initialColors.core },
+                u_colorFringe: { value: initialColors.fringe },
+                u_isLightMode: { value: 0.0 }
+            },
+            transparent: true,
+            blending: THREE.AdditiveBlending 
+        });
+
+        const mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
+
+        let targetMouse = new THREE.Vector2(0.5, 0.5);
+        document.addEventListener('mousemove', (e) => {
+            targetMouse.x = e.clientX / window.innerWidth;
+            targetMouse.y = 1.0 - (e.clientY / window.innerHeight); 
+        });
+
+        const clock = new THREE.Clock();
+        function animate() {
+            requestAnimationFrame(animate);
+            material.uniforms.u_time.value = clock.getElapsedTime();
+            material.uniforms.u_mouse.value.lerp(targetMouse, 0.03);
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            material.uniforms.u_resolution.value.set(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body></html>

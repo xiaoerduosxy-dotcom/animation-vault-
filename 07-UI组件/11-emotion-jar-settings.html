@@ -1,0 +1,193 @@
+<html lang="zh-CN" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">情绪收藏罐 - 设置</title>
+    <script src="https://cdn.tailwindcss.com/3.4.17" vid="5"></script>
+    <style vid="6">
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500&display=swap');
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #E5E5E5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 24px;
+        }
+
+        .streak-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .streak-dot.active {
+            background: #D4CDBC;
+            box-shadow: 0 0 8px rgba(212, 205, 188, 0.6);
+        }
+
+        .streak-dot.inactive {
+            background: #E8E3DB;
+            opacity: 0.4;
+        }
+
+        .toggle-dot {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        input:checked ~ .toggle-bg {
+            background-color: #D4CDBC;
+        }
+
+        input:checked ~ .toggle-dot {
+            transform: translateX(1.25rem);
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        @keyframes soft-pulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        .animate-soft-pulse {
+            animation: soft-pulse 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body vid="7">
+
+    <div id="app-container" class="w-[400px] h-[867px] relative overflow-hidden bg-[#FAFAF7] text-stone-800 rounded-[20px] shadow-2xl" vid="8">
+
+        
+        <div class="absolute top-0 left-0 right-0 h-24 px-8 flex items-center justify-between z-30" vid="9">
+            <button onclick="history.back()" class="p-2 -ml-2 text-stone-400 hover:text-stone-600 transition-colors" vid="10">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" vid="11"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" vid="12"></path></svg>
+            </button>
+            <h1 class="text-sm font-medium text-stone-500 tracking-[0.2em]" vid="13">设置与回顾</h1>
+            <div class="w-10" vid="14"></div>
+        </div>
+
+        
+        <div class="absolute inset-0 pt-24 pb-28 overflow-y-auto hide-scrollbar" vid="15">
+            
+            
+            <div class="px-8 mb-10" vid="16">
+                <div class="glass-panel p-6 shadow-[0_8px_30px_rgba(0,0,0,0.02)]" vid="17">
+                    <div class="flex justify-between items-center mb-6" vid="18">
+                        <div vid="19">
+                            <h2 class="text-xs font-medium text-stone-400 tracking-widest uppercase" vid="20">连续捕捉</h2>
+                            <p class="text-2xl font-light text-stone-700 mt-1" vid="21">12 <span class="text-xs text-stone-400 tracking-normal" vid="22">天</span></p>
+                        </div>
+                        <div class="w-10 h-10 bg-[#F5F3EF] rounded-full flex items-center justify-center" vid="23">
+                            <span class="text-lg" vid="24">🗓️</span>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="grid grid-cols-7 gap-y-4 justify-items-center" vid="25">
+                        
+                        <div class="streak-dot active" vid="26"></div><div class="streak-dot active" vid="27"></div><div class="streak-dot active" vid="28"></div><div class="streak-dot active" vid="29"></div><div class="streak-dot active" vid="30"></div><div class="streak-dot active" vid="31"></div><div class="streak-dot active" vid="32"></div>
+                        <div class="streak-dot active" vid="33"></div><div class="streak-dot active" vid="34"></div><div class="streak-dot active" vid="35"></div><div class="streak-dot active" vid="36"></div><div class="streak-dot active" vid="37"></div><div class="streak-dot inactive" vid="38"></div><div class="streak-dot inactive" vid="39"></div>
+                        <div class="streak-dot inactive" vid="40"></div><div class="streak-dot inactive" vid="41"></div><div class="streak-dot inactive" vid="42"></div><div class="streak-dot inactive" vid="43"></div><div class="streak-dot inactive" vid="44"></div><div class="streak-dot inactive" vid="45"></div><div class="streak-dot inactive" vid="46"></div>
+                        <div class="streak-dot inactive" vid="47"></div><div class="streak-dot inactive" vid="48"></div><div class="streak-dot inactive" vid="49"></div><div class="streak-dot inactive" vid="50"></div><div class="streak-dot inactive" vid="51"></div><div class="streak-dot inactive" vid="52"></div><div class="streak-dot inactive" vid="53"></div>
+                    </div>
+                    <p class="text-[10px] text-stone-400 mt-6 text-center tracking-widest font-light" vid="54">每一个点都是一次呼吸的瞬间</p>
+                </div>
+            </div>
+
+            
+            <div class="px-8 mb-10" vid="55">
+                <h3 class="text-xs font-medium text-stone-400 tracking-widest mb-4 pl-1" vid="56">容器自定义</h3>
+                <div class="space-y-3" vid="57">
+                    <div class="flex items-center justify-between p-4 bg-white/40 rounded-[20px] border border-white/60" vid="58">
+                        <div class="flex items-center gap-4" vid="59">
+                            <div class="w-8 h-8 rounded-full bg-amber-100 border border-amber-200" vid="60"></div>
+                            <span class="text-sm text-stone-600" vid="61">发光罐</span>
+                        </div>
+                        <svg class="w-4 h-4 text-stone-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" vid="62"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" vid="63"></path></svg>
+                    </div>
+                    <div class="flex items-center justify-between p-4 bg-white/40 rounded-[20px] border border-white/60" vid="64">
+                        <div class="flex items-center gap-4" vid="65">
+                            <div class="w-8 h-8 rounded-full bg-blue-100 border border-blue-200" vid="66"></div>
+                            <span class="text-sm text-stone-600" vid="67">安静罐</span>
+                        </div>
+                        <svg class="w-4 h-4 text-stone-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" vid="68"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" vid="69"></path></svg>
+                    </div>
+                    <button class="w-full py-3 flex items-center justify-center gap-2 text-stone-400 text-xs border border-dashed border-stone-200 rounded-[20px] hover:bg-stone-50 transition-colors" vid="70">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" vid="71"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" vid="72"></path></svg>
+                        添加新的容器
+                    </button>
+                </div>
+            </div>
+
+            
+            <div class="px-8 space-y-2" vid="73">
+                <h3 class="text-xs font-medium text-stone-400 tracking-widest mb-4 pl-1" vid="74">偏好设置</h3>
+                
+                
+                <label class="flex items-center justify-between p-4 bg-white/60 rounded-[20px] cursor-pointer" vid="75">
+                    <div class="flex flex-col" vid="76">
+                        <span class="text-sm text-stone-600" vid="77">每日温润提醒</span>
+                        <span class="text-[10px] text-stone-400" vid="78">在微风时分，提醒你停下脚步</span>
+                    </div>
+                    <div class="relative inline-block w-10 align-middle select-none transition duration-200 ease-in" vid="79">
+                        <input type="checkbox" name="toggle" id="toggle" class="absolute block w-5 h-5 rounded-full bg-white border-2 border-stone-100 appearance-none cursor-pointer z-10 toggle-dot" checked="" vid="80">
+                        <label for="toggle" class="block overflow-hidden h-5 rounded-full bg-stone-200 cursor-pointer toggle-bg transition-colors" vid="81"></label>
+                    </div>
+                </label>
+
+                
+                <button class="w-full flex items-center justify-between p-4 bg-white/60 rounded-[20px] hover:bg-white/80 transition-colors" vid="82">
+                    <div class="flex flex-col items-start" vid="83">
+                        <span class="text-sm text-stone-600" vid="84">导出这段记忆</span>
+                        <span class="text-[10px] text-stone-400" vid="85">将罐中的碎片整理成 PDF 或长图</span>
+                    </div>
+                    <svg class="w-5 h-5 text-stone-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" vid="86"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4" vid="87"></path></svg>
+                </button>
+
+                
+                <button class="w-full flex items-center justify-between p-4 bg-white/60 rounded-[20px] hover:bg-white/80 transition-colors" vid="88">
+                    <span class="text-sm text-stone-600" vid="89">背景氛围</span>
+                    <span class="text-xs text-stone-400" vid="90">柔暖白</span>
+                </button>
+            </div>
+
+            
+            <div class="px-8 mt-12 mb-8 text-center" vid="91">
+                <p class="text-[10px] text-stone-300 italic tracking-[0.15em] font-light" vid="92">“慢慢来，万物都有它的时节。”</p>
+            </div>
+        </div>
+
+        
+        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 w-[280px] h-14 bg-white/80 backdrop-blur-xl border border-stone-100 shadow-[0_8px_30px_rgb(0,0,0,0.06)] rounded-[28px] px-6 flex items-center justify-between z-40 transition-colors duration-500" vid="93">
+            <button class="w-12 h-12 flex items-center justify-center text-stone-400" vid="94">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" vid="95"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" vid="96"></path></svg>
+            </button>
+            <button class="w-12 h-12 flex items-center justify-center text-stone-400" vid="97">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" vid="98"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" vid="99"></path></svg>
+            </button>
+            <button class="w-12 h-12 flex items-center justify-center text-stone-800" vid="100">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" vid="101">
+                    <path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482C19.138 20.161 22 16.416 22 12c0-5.523-4.477-10-10-10z" vid="102"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+</body></html>

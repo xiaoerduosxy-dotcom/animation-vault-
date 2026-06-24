@@ -1,0 +1,565 @@
+<html lang="en" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">Liquid Glass Component</title>
+    <style vid="5">
+        :root {
+            --bg-color: #F6F6F9;
+            --ui-text: #6B6B78;
+            --ui-text-dim: #A0A0B0;
+            --ui-border: rgba(0, 0, 0, 0.06);
+            --ui-accent: #000000;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+            overflow: hidden;
+            background-image: 
+                radial-gradient(circle at 50% 0%, #FFFFFF 0%, transparent 70%),
+                radial-gradient(circle at 50% 100%, #EAEAF2 0%, transparent 70%);
+        }
+
+        
+        .component-wrapper {
+            position: relative;
+            width: 480px;
+            height: 600px;
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid var(--ui-border);
+            border-radius: 12px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 
+                0 20px 40px rgba(0,0,0,0.02),
+                0 1px 3px rgba(0,0,0,0.01),
+                inset 0 1px 0 rgba(255,255,255,0.8);
+            z-index: 10;
+        }
+
+        
+        .component-header {
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--ui-border);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--ui-text);
+        }
+
+        .header-left {
+            display: flex;
+            gap: 16px;
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background-color: #4CAF50;
+            border-radius: 50%;
+            margin-right: 6px;
+            box-shadow: 0 0 8px #4CAF50;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+
+        .header-right {
+            color: var(--ui-text-dim);
+        }
+
+        
+        .canvas-container {
+            flex-grow: 1;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: crosshair;
+        }
+
+        #webgl-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; 
+        }
+
+        
+        .reticle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 320px;
+            height: 320px;
+            border: 1px dashed rgba(0,0,0,0.05);
+            border-radius: 50%;
+            pointer-events: none;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .canvas-container:hover .reticle {
+            transform: translate(-50%, -50%) scale(0.95);
+            border-color: rgba(0,0,0,0.1);
+        }
+
+        
+        .component-footer {
+            padding: 16px 20px;
+            border-top: 1px solid var(--ui-border);
+            display: flex;
+            justify-content: space-between;
+            font-size: 9px;
+            color: var(--ui-text);
+            letter-spacing: 0.05em;
+        }
+
+        .metric-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .metric-label {
+            color: var(--ui-text-dim);
+        }
+
+        .metric-value {
+            color: var(--ui-accent);
+            font-weight: 600;
+        }
+
+        
+        .corner {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border: 1px solid var(--ui-border);
+            pointer-events: none;
+        }
+        .corner-tl { top: -1px; left: -1px; border-right: none; border-bottom: none; border-radius: 12px 0 0 0; }
+        .corner-tr { top: -1px; right: -1px; border-left: none; border-bottom: none; border-radius: 0 12px 0 0; }
+        .corner-bl { bottom: -1px; left: -1px; border-right: none; border-top: none; border-radius: 0 0 0 12px; }
+        .corner-br { bottom: -1px; right: -1px; border-left: none; border-top: none; border-radius: 0 0 12px 0; }
+
+    </style>
+</head>
+<body vid="6">
+
+    <div class="component-wrapper" vid="7">
+        <div class="corner corner-tl" vid="8"></div>
+        <div class="corner corner-tr" vid="9"></div>
+        <div class="corner corner-bl" vid="10"></div>
+        <div class="corner corner-br" vid="11"></div>
+
+        <div class="component-header" vid="12">
+            <div class="header-left" vid="13">
+                <span vid="14"><span class="status-dot" vid="15"></span>SYS.ACTIVE</span>
+                <span vid="16">OBJ.001_LIQUID_GLASS</span>
+            </div>
+            <div class="header-right" vid="17">
+                DISPERSION_MODEL: C_0.42
+            </div>
+        </div>
+
+        <div class="canvas-container" id="interaction-zone" vid="18">
+            <div class="reticle" vid="19"></div>
+            <canvas id="webgl-canvas" vid="20"></canvas>
+        </div>
+
+        <div class="component-footer" vid="21">
+            <div class="metric-group" vid="22">
+                <span class="metric-label" vid="23">TENSION</span>
+                <span class="metric-value" id="val-tension" vid="24">0.84</span>
+            </div>
+            <div class="metric-group" vid="25">
+                <span class="metric-label" vid="26">REFRACTION_IDX</span>
+                <span class="metric-value" vid="27">1.52</span>
+            </div>
+            <div class="metric-group" vid="28">
+                <span class="metric-label" vid="29">VORTICITY</span>
+                <span class="metric-value" id="val-vorticity" vid="30">0.02</span>
+            </div>
+            <div class="metric-group" style="text-align: right;" vid="31">
+                <span class="metric-label" vid="32">INTERACTION</span>
+                <span class="metric-value" style="color: var(--ui-text-dim);" vid="33">AWAITING_INPUT</span>
+            </div>
+        </div>
+    </div>
+
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" vid="34"></script>
+
+    <script vid="35">
+        
+        const canvas = document.getElementById('webgl-canvas');
+        const container = document.getElementById('interaction-zone');
+        const valTension = document.getElementById('val-tension');
+        const valVorticity = document.getElementById('val-vorticity');
+
+        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        
+        const scene = new THREE.Scene();
+        
+        
+        const aspect = container.clientWidth / container.clientHeight;
+        const frustumSize = 4;
+        const camera = new THREE.OrthographicCamera(
+            frustumSize * aspect / - 2, frustumSize * aspect / 2, 
+            frustumSize / 2, frustumSize / - 2, 
+            0.1, 100
+        );
+        camera.position.set(0, 0, 5);
+
+        
+
+        
+        const noiseShaderChunk = `
+            vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
+            vec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}
+            float snoise(vec3 v){ 
+                const vec2  C = vec2(1.0/6.0, 1.0/3.0) ;
+                const vec4  D = vec4(0.0, 0.5, 1.0, 2.0);
+                vec3 i  = floor(v + dot(v, C.yyy) );
+                vec3 x0 = v - i + dot(i, C.xxx) ;
+                vec3 g = step(x0.yzx, x0.xyz);
+                vec3 l = 1.0 - g;
+                vec3 i1 = min( g.xyz, l.zxy );
+                vec3 i2 = max( g.xyz, l.zxy );
+                vec3 x1 = x0 - i1 + 1.0 * C.xxx;
+                vec3 x2 = x0 - i2 + 2.0 * C.xxx;
+                vec3 x3 = x0 - 1.0 + 3.0 * C.xxx;
+                i = mod(i, 289.0 ); 
+                vec4 p = permute( permute( permute( 
+                            i.z + vec4(0.0, i1.z, i2.z, 1.0 ))
+                        + i.y + vec4(0.0, i1.y, i2.y, 1.0 )) 
+                        + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));
+                float n_ = 1.0/7.0;
+                vec3  ns = n_ * D.wyz - D.xzx;
+                vec4 j = p - 49.0 * floor(p * ns.z *ns.z);
+                vec4 x_ = floor(j * ns.z);
+                vec4 y_ = floor(j - 7.0 * x_ );
+                vec4 x = x_ *ns.x + ns.yyyy;
+                vec4 y = y_ *ns.x + ns.yyyy;
+                vec4 h = 1.0 - abs(x) - abs(y);
+                vec4 b0 = vec4( x.xy, y.xy );
+                vec4 b1 = vec4( x.zw, y.zw );
+                vec4 s0 = floor(b0)*2.0 + 1.0;
+                vec4 s1 = floor(b1)*2.0 + 1.0;
+                vec4 sh = -step(h, vec4(0.0));
+                vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy ;
+                vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww ;
+                vec3 p0 = vec3(a0.xy,h.x);
+                vec3 p1 = vec3(a0.zw,h.y);
+                vec3 p2 = vec3(a1.xy,h.z);
+                vec3 p3 = vec3(a1.zw,h.w);
+                vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3)));
+                p0 *= norm.x;
+                p1 *= norm.y;
+                p2 *= norm.z;
+                p3 *= norm.w;
+                vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
+                m = m * m;
+                return 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1), 
+                                            dot(p2,x2), dot(p3,x3) ) );
+            }
+        `;
+
+        
+        const glassMaterial = new THREE.ShaderMaterial({
+            uniforms: {
+                uTime: { value: 0 },
+                uMouse: { value: new THREE.Vector2(0, 0) },
+                uHoverState: { value: 0 }
+            },
+            vertexShader: `
+                uniform float uTime;
+                uniform vec2 uMouse;
+                uniform float uHoverState;
+
+                varying vec3 vNormal;
+                varying vec3 vViewPosition;
+                varying vec3 vWorldPosition;
+                varying float vNoise;
+
+                ${noiseShaderChunk}
+
+                void main() {
+                    vNormal = normalize(normalMatrix * normal);
+                    
+                    // Liquid Displacement based on noise and hover state
+                    vec3 noisePos = position * 2.0 + uTime * 0.2;
+                    float n = snoise(noisePos);
+                    vNoise = n;
+                    
+                    // Mouse interaction pushes the surface slightly
+                    float distToMouse = distance(position.xy, uMouse * 2.0);
+                    float mouseInfluence = smoothstep(1.5, 0.0, distToMouse) * uHoverState * 0.2;
+
+                    vec3 displacedPosition = position + normal * (n * 0.08 + mouseInfluence);
+                    
+                    vec4 worldPosition = modelMatrix * vec4(displacedPosition, 1.0);
+                    vWorldPosition = worldPosition.xyz;
+                    
+                    vec4 mvPosition = viewMatrix * worldPosition;
+                    vViewPosition = -mvPosition.xyz;
+                    
+                    gl_Position = projectionMatrix * mvPosition;
+                }
+            `,
+            fragmentShader: `
+                uniform float uTime;
+                varying vec3 vNormal;
+                varying vec3 vViewPosition;
+                varying vec3 vWorldPosition;
+                varying float vNoise;
+
+                ${noiseShaderChunk}
+
+                // Cosine palette for iridescence matching the reference
+                vec3 palette( in float t ) {
+                    vec3 a = vec3(0.8, 0.8, 0.9);    // Base tone (light)
+                    vec3 b = vec3(0.4, 0.4, 0.4);    // Amplitude
+                    vec3 c = vec3(1.0, 1.0, 1.0);    // Frequency
+                    vec3 d = vec3(0.0, 0.33, 0.67);  // Phase shift (creates rainbow)
+                    return a + b * cos( 6.28318 * (c * t + d) );
+                }
+
+                void main() {
+                    vec3 normal = normalize(vNormal);
+                    vec3 viewDir = normalize(vViewPosition);
+
+                    // Fresnel Effect (edges)
+                    float fresnel = 1.0 - max(dot(viewDir, normal), 0.0);
+                    fresnel = pow(fresnel, 2.5);
+
+                    // Internal Refraction/Scattering Simulation
+                    // We use view angle, position, and noise to sample the palette,
+                    // creating the look of light bending into different spectrums inside.
+                    
+                    // Base color shifts based on viewing angle and internal noise
+                    float colorIndex = fresnel * 1.5 + vNoise * 0.3 + vWorldPosition.y * 0.2;
+                    vec3 baseColor = palette(colorIndex);
+
+                    // Chromatic Dispersion (Simulated)
+                    // We mix slightly shifted palettes to simulate R, G, B bending differently
+                    vec3 colorR = palette(colorIndex + 0.05);
+                    vec3 colorG = palette(colorIndex);
+                    vec3 colorB = palette(colorIndex - 0.05);
+                    
+                    vec3 dispersedColor = vec3(colorR.r, colorG.g, colorB.b);
+
+                    // Brightness adjustments to mimic the white background bleeding through
+                    vec3 bgColor = vec3(0.96, 0.96, 0.98); // Matches CSS --bg-color
+                    
+                    // The center should be more transparent (showing bg), edges more refractive
+                    float transmission = 1.0 - fresnel;
+                    vec3 finalColor = mix(dispersedColor, bgColor, transmission * 0.5);
+
+                    // Add subtle sharp internal "strands" or tensions based on high-frequency noise
+                    float internalStrand = snoise(vWorldPosition * 10.0 + uTime * 0.1);
+                    internalStrand = smoothstep(0.7, 1.0, internalStrand); // Isolate peaks
+                    
+                    // The strands catch the light, showing intense spectral color
+                    finalColor += internalStrand * palette(vNoise + uTime) * 0.5 * fresnel;
+
+                    // Specular highlight (soft, broad studio light)
+                    vec3 lightDir = normalize(vec3(1.0, 2.0, 1.0));
+                    vec3 halfVector = normalize(lightDir + viewDir);
+                    float specular = pow(max(dot(normal, halfVector), 0.0), 30.0);
+                    finalColor += vec3(1.0) * specular * 0.4;
+
+                    gl_FragColor = vec4(finalColor, 0.9 + fresnel * 0.1);
+                }
+            `,
+            transparent: true
+        });
+
+        
+        
+        const geometry = new THREE.IcosahedronGeometry(1.2, 64);
+        const sphere = new THREE.Mesh(geometry, glassMaterial);
+        scene.add(sphere);
+
+        
+        const shadowGeometry = new THREE.PlaneGeometry(3, 3);
+        const shadowMaterial = new THREE.ShaderMaterial({
+            uniforms: {
+                uTime: { value: 0 },
+                uHover: { value: 0 }
+            },
+            vertexShader: `
+                varying vec2 vUv;
+                void main() {
+                    vUv = uv;
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                }
+            `,
+            fragmentShader: `
+                uniform float uTime;
+                uniform float uHover;
+                varying vec2 vUv;
+
+                // Simple cosine palette for shadow dispersion
+                vec3 pal( in float t ) {
+                    return vec3(0.5,0.5,0.5) + vec3(0.5,0.5,0.5) * cos( 6.28318*(vec3(1.0)*t+vec3(0.0,0.33,0.67)) );
+                }
+
+                void main() {
+                    // Distance from center
+                    float dist = distance(vUv, vec2(0.5));
+                    
+                    // Create a soft glowing ring
+                    float glow = smoothstep(0.5, 0.1, dist);
+                    
+                    // Inner dark occlusion
+                    float occlusion = smoothstep(0.0, 0.3, dist);
+                    
+                    // Chromatic fringes based on distance and time
+                    vec3 shadowColor = pal(dist * 3.0 - uTime * 0.2);
+                    
+                    // Combine
+                    vec3 finalColor = mix(vec3(0.0), shadowColor, glow * 0.6);
+                    
+                    // Fade out edges
+                    float alpha = glow * occlusion * (0.5 + uHover * 0.2);
+                    
+                    gl_FragColor = vec4(finalColor, alpha);
+                }
+            `,
+            transparent: true,
+            blending: THREE.MultiplyBlending 
+        });
+        
+        
+        shadowMaterial.blending = THREE.NormalBlending; 
+
+        const shadow = new THREE.Mesh(shadowGeometry, shadowMaterial);
+        shadow.rotation.x = -Math.PI / 2;
+        shadow.position.y = -1.4; 
+        scene.add(shadow);
+
+
+        
+        function resize() {
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+            renderer.setSize(width, height);
+            
+            const aspect = width / height;
+            camera.left = -frustumSize * aspect / 2;
+            camera.right = frustumSize * aspect / 2;
+            camera.top = frustumSize / 2;
+            camera.bottom = -frustumSize / 2;
+            camera.updateProjectionMatrix();
+        }
+        
+        window.addEventListener('resize', resize);
+        resize(); 
+
+        
+        let mouseX = 0;
+        let mouseY = 0;
+        let targetX = 0;
+        let targetY = 0;
+        let isHovered = 0;
+        let targetHover = 0;
+
+        container.addEventListener('mousemove', (e) => {
+            const rect = container.getBoundingClientRect();
+            
+            mouseX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+            mouseY = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+        });
+
+        container.addEventListener('mouseenter', () => {
+            targetHover = 1;
+            document.querySelector('.component-footer .metric-group:last-child .metric-value').innerText = "TRACKING";
+            document.querySelector('.component-footer .metric-group:last-child .metric-value').style.color = "var(--ui-accent)";
+        });
+
+        container.addEventListener('mouseleave', () => {
+            targetHover = 0;
+            mouseX = 0;
+            mouseY = 0;
+            document.querySelector('.component-footer .metric-group:last-child .metric-value').innerText = "AWAITING_INPUT";
+            document.querySelector('.component-footer .metric-group:last-child .metric-value').style.color = "var(--ui-text-dim)";
+        });
+
+        
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const elapsedTime = clock.getElapsedTime();
+
+            
+            targetX += (mouseX - targetX) * 0.05;
+            targetY += (mouseY - targetY) * 0.05;
+            isHovered += (targetHover - isHovered) * 0.05;
+
+            
+            glassMaterial.uniforms.uTime.value = elapsedTime;
+            glassMaterial.uniforms.uMouse.value.set(targetX, targetY);
+            glassMaterial.uniforms.uHoverState.value = isHovered;
+
+            
+            shadowMaterial.uniforms.uTime.value = elapsedTime;
+            shadowMaterial.uniforms.uHover.value = isHovered;
+
+            
+            const floatOffset = Math.sin(elapsedTime * 1.5) * 0.05;
+            sphere.position.y = floatOffset;
+            
+            
+            sphere.rotation.x = targetY * 0.2;
+            sphere.rotation.y = targetX * 0.3;
+
+            
+            shadow.scale.setScalar(1.0 - floatOffset * 0.5 + isHovered * 0.1);
+            shadow.material.uniforms.uHover.value = isHovered;
+
+            
+            if(Math.random() > 0.8) {
+                const tensionBase = 0.84;
+                const tensionVal = (tensionBase + isHovered * 0.12 + Math.random() * 0.02).toFixed(2);
+                valTension.innerText = tensionVal;
+
+                const vortBase = 0.02;
+                const vortVal = (vortBase + (Math.abs(targetX) + Math.abs(targetY)) * 0.05 + Math.random() * 0.01).toFixed(3);
+                valVorticity.innerText = vortVal;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+    </script>
+
+</body></html>

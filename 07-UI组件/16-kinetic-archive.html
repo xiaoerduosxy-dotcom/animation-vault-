@@ -1,0 +1,524 @@
+<html lang="en" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">KINETIC // Motion Archive</title>
+    <style vid="5">
+        
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --bg: #0c0c0c;
+            --border: #2a2a2a;
+            --text-main: #f4f4f4;
+            --text-dim: #888888;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'Space Mono', monospace;
+            --col-left-width: 320px;
+            --pad: 3rem;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            line-height: 1.5;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        
+        .frame {
+            max-width: 1600px;
+            margin: 0 auto;
+            border: 1px solid var(--border);
+            border-bottom: none; 
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: var(--col-left-width) 1fr;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .col-left {
+            border-right: 1px solid var(--border);
+            padding: var(--pad);
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .col-right {
+            padding: var(--pad);
+        }
+
+        
+        h1, h2, h3 {
+            font-weight: 400;
+            letter-spacing: -0.02em;
+        }
+
+        .h-mega {
+            font-size: clamp(3rem, 5vw, 5rem);
+            line-height: 1.05;
+            max-width: 24ch;
+            margin-bottom: 2rem;
+        }
+
+        .h-section {
+            font-size: 1.25rem;
+            letter-spacing: -0.01em;
+            text-transform: uppercase;
+        }
+
+        .text-body {
+            font-size: 1.125rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+
+        .text-micro {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-dim);
+        }
+
+        
+        .logo-block {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--text-main);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        a:hover {
+            color: var(--text-main);
+        }
+
+        .tag-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        .tag {
+            border: 1px solid var(--border);
+            padding: 0.4rem 0.8rem;
+            border-radius: 100px;
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-dim);
+        }
+
+        .btn-outline {
+            display: inline-block;
+            border: 1px solid var(--border);
+            padding: 0.6rem 1.2rem;
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-main);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: transparent;
+        }
+
+        .btn-outline:hover {
+            background: var(--text-main);
+            color: var(--bg);
+        }
+
+        
+        .geo-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 1rem;
+        }
+        
+        .geo-icon path, .geo-icon circle, .geo-icon rect, .geo-icon polygon {
+            fill: none;
+            stroke: var(--text-dim);
+            stroke-width: 1px;
+            vector-effect: non-scaling-stroke;
+        }
+
+        
+        .data-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .data-list li {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px dotted var(--border);
+            padding-bottom: 0.25rem;
+        }
+
+        .data-list span:first-child {
+            color: var(--text-dim);
+        }
+        .data-list span:last-child {
+            color: var(--text-main);
+        }
+
+        
+        .header.row {
+            padding: 1.5rem var(--pad);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .intro-text-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            margin-top: 3rem;
+        }
+
+        
+        .exhibit-container {
+            width: 100%;
+            height: 600px;
+            background: #080808;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        
+        .ex-topology {
+            width: 300px;
+            height: 300px;
+            position: relative;
+            filter: blur(10px) contrast(30);
+            background: #080808; 
+            
+        }
+        
+        .ex-topology::before, .ex-topology::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 150px; height: 150px;
+            background: var(--text-main);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: screen;
+        }
+
+        .ex-topology::before {
+            animation: orbit1 8s infinite cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .ex-topology::after {
+            width: 100px; height: 100px;
+            animation: orbit2 6s infinite cubic-bezier(0.4, 0, 0.2, 1) reverse;
+        }
+
+        @keyframes orbit1 {
+            0% { transform: translate(-50%, -50%) rotate(0deg) translateX(80px) scale(1); }
+            50% { transform: translate(-50%, -50%) rotate(180deg) translateX(40px) scale(1.5); }
+            100% { transform: translate(-50%, -50%) rotate(360deg) translateX(80px) scale(1); }
+        }
+        @keyframes orbit2 {
+            0% { transform: translate(-50%, -50%) rotate(0deg) translateY(60px) scale(1.2); }
+            50% { transform: translate(-50%, -50%) rotate(180deg) translateY(90px) scale(0.8); }
+            100% { transform: translate(-50%, -50%) rotate(360deg) translateY(60px) scale(1.2); }
+        }
+
+        
+        .ex-lattice {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 15px;
+            transform: rotateX(60deg) rotateZ(-45deg);
+            transform-style: preserve-3d;
+        }
+
+        .lattice-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--text-main);
+            border-radius: 50%;
+            animation: wave 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes wave {
+            0% { transform: translateZ(0) scale(1); opacity: 0.2; }
+            100% { transform: translateZ(100px) scale(2); opacity: 1; }
+        }
+
+        
+        .ex-torsion {
+            width: 200px;
+            height: 200px;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: spin3d 15s linear infinite;
+        }
+
+        .ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 1px solid rgba(244, 244, 244, 0.3);
+            border-radius: 50%;
+        }
+
+        @keyframes spin3d {
+            0% { transform: rotateX(0) rotateY(0) rotateZ(0); }
+            100% { transform: rotateX(360deg) rotateY(720deg) rotateZ(360deg); }
+        }
+
+        
+        @media (max-width: 1024px) {
+            .row { grid-template-columns: 1fr; }
+            .col-left { border-right: none; border-bottom: 1px solid var(--border); padding: 2rem; }
+            .col-right { padding: 2rem; }
+            .intro-text-grid { grid-template-columns: 1fr; gap: 2rem; }
+            .exhibit-container { height: 400px; }
+            .h-mega { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body vid="6">
+
+    <div class="frame" vid="7">
+        
+        <header class="header row" style="display: flex;" vid="8">
+            <div class="logo-block" vid="9">
+                <div class="logo-dot" vid="10"></div>
+                <span class="text-micro" style="color: var(--text-main);" vid="11">KINETIC.ARCHIVE</span>
+            </div>
+            
+            <nav class="nav-links text-micro" vid="12">
+                <a href="#" vid="13">Exhibitions</a>
+                <a href="#" vid="14">Index</a>
+                <a href="#" vid="15">Theory</a>
+                <a href="#" vid="16">Sys_Log</a>
+                <a href="#" style="border: 1px solid var(--border); padding: 0.4rem 0.8rem;" vid="17">Access Terminal</a>
+            </nav>
+        </header>
+
+        
+        <div class="row" vid="18">
+            <div class="col-left" vid="19">
+                <svg class="geo-icon" viewBox="0 0 100 100" vid="20">
+                    <circle cx="50" cy="50" r="40" vid="21"></circle>
+                    <circle cx="40" cy="40" r="30" vid="22"></circle>
+                    <circle cx="60" cy="60" r="30" vid="23"></circle>
+                </svg>
+                <div vid="24">
+                    <h2 class="h-section" vid="25">MANIFESTO</h2>
+                    <br vid="26">
+                    <ul class="data-list text-micro" vid="27">
+                        <li vid="28"><span vid="29">DOC.ID</span> <span vid="30">MNF-001</span></li>
+                        <li vid="31"><span vid="32">STATUS</span> <span vid="33">ACTIVE</span></li>
+                        <li vid="34"><span vid="35">REVISION</span> <span vid="36">V.04</span></li>
+                    </ul>
+                </div>
+                <div style="margin-top: auto;" vid="37">
+                    <button class="btn-outline" vid="38">READ THESIS</button>
+                </div>
+            </div>
+
+            <div class="col-right" vid="39">
+                <h1 class="h-mega" vid="40">Cataloging the mechanics of digital physics and pure interface motion.</h1>
+                
+                <div class="tag-group" vid="41">
+                    <span class="tag" vid="42">Kinematics</span>
+                    <span class="tag" vid="43">Algorithmic</span>
+                    <span class="tag" vid="44">WebGL</span>
+                    <span class="tag" vid="45">CSS.Render</span>
+                </div>
+
+                <div class="intro-text-grid" vid="46">
+                    <p class="text-body" vid="47">
+                        This archive serves as a repository for experimental motion studies. By stripping away narrative context and utilitarian interface elements, we isolate the pure mechanics of easing, velocity, and spatial transformation. 
+                    </p>
+                    <p class="text-body" vid="48">
+                        Our methodology treats code as a physical material. The exhibits below demonstrate systemic behaviors—from simulated fluid dynamics to rigid body interactions—rendered natively within the browser environment.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="row" vid="49">
+            <div class="col-left" vid="50">
+                <svg class="geo-icon" viewBox="0 0 100 100" vid="51">
+                    <polygon points="50,10 90,90 10,90" vid="52"></polygon>
+                    <polygon points="50,30 70,80 30,80" vid="53"></polygon>
+                </svg>
+                <div vid="54">
+                    <h2 class="h-section" vid="55">TOPOLOGY</h2>
+                    <br vid="56">
+                    <ul class="data-list text-micro" vid="57">
+                        <li vid="58"><span vid="59">EX.NO</span> <span vid="60">01-FLUID</span></li>
+                        <li vid="61"><span vid="62">RENDER</span> <span vid="63">CSS.FILTER</span></li>
+                        <li vid="64"><span vid="65">EASING</span> <span vid="66">CUBIC-BEZIER</span></li>
+                        <li vid="67"><span vid="68">STATE</span> <span vid="69">LOOPING</span></li>
+                    </ul>
+                </div>
+                <div style="margin-top: auto;" vid="70">
+                    <p class="text-micro" style="line-height: 1.6; color: var(--text-dim);" vid="71">
+                        Observation of artificial fluid dynamics achieved via heavy blur and contrast manipulation on DOM nodes.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-right" vid="72">
+                <div class="exhibit-container" style="background: #000;" vid="73">
+                    
+                    <div class="ex-topology" vid="74"></div>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="row" vid="75">
+            <div class="col-left" vid="76">
+                <svg class="geo-icon" viewBox="0 0 100 100" vid="77">
+                    <rect x="20" y="20" width="60" height="60" vid="78"></rect>
+                    <rect x="30" y="30" width="40" height="40" vid="79"></rect>
+                    <line x1="20" y1="20" x2="80" y2="80" vid="80"></line>
+                    <line x1="80" y1="20" x2="20" y2="80" vid="81"></line>
+                </svg>
+                <div vid="82">
+                    <h2 class="h-section" vid="83">LATTICE</h2>
+                    <br vid="84">
+                    <ul class="data-list text-micro" vid="85">
+                        <li vid="86"><span vid="87">EX.NO</span> <span vid="88">02-HARMONIC</span></li>
+                        <li vid="89"><span vid="90">RENDER</span> <span vid="91">DOM.3D</span></li>
+                        <li vid="92"><span vid="93">DELAY</span> <span vid="94">STAGGERED</span></li>
+                        <li vid="95"><span vid="96">AXIS</span> <span vid="97">XYZ</span></li>
+                    </ul>
+                </div>
+                <div style="margin-top: auto;" vid="98">
+                    <p class="text-micro" style="line-height: 1.6; color: var(--text-dim);" vid="99">
+                        A study in staggered harmonic oscillation across a 3D isometric plane, demonstrating wave propagation.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-right" vid="100">
+                <div class="exhibit-container" vid="101">
+                    <div class="ex-lattice" id="lattice-container" vid="102">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="row" vid="103">
+            <div class="col-left" vid="104">
+                <svg class="geo-icon" viewBox="0 0 100 100" vid="105">
+                    <circle cx="50" cy="50" r="40" stroke-dasharray="4 4" vid="106"></circle>
+                    <circle cx="50" cy="50" r="20" vid="107"></circle>
+                    <line x1="50" y1="10" x2="50" y2="90" vid="108"></line>
+                    <line x1="10" y1="50" x2="90" y2="50" vid="109"></line>
+                </svg>
+                <div vid="110">
+                    <h2 class="h-section" vid="111">TORSION</h2>
+                    <br vid="112">
+                    <ul class="data-list text-micro" vid="113">
+                        <li vid="114"><span vid="115">EX.NO</span> <span vid="116">03-GYRO</span></li>
+                        <li vid="117"><span vid="118">RENDER</span> <span vid="119">CSS.TRANSFORM</span></li>
+                        <li vid="120"><span vid="121">MODE</span> <span vid="122">LINEAR</span></li>
+                        <li vid="123"><span vid="124">VECTORS</span> <span vid="125">MULTIPLE</span></li>
+                    </ul>
+                </div>
+                <div style="margin-top: auto;" vid="126">
+                    <p class="text-micro" style="line-height: 1.6; color: var(--text-dim);" vid="127">
+                        Continuous multi-axis rotation of nested geometric boundaries creating intersecting wireframe moiré.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-right" vid="128">
+                <div class="exhibit-container" vid="129">
+                    <div class="ex-torsion" id="torsion-container" vid="130">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+        <div class="row" style="border-bottom: none;" vid="131">
+            <div class="col-left" style="padding: 2rem var(--pad);" vid="132">
+                 <span class="text-micro" vid="133">© 2024 KINETIC.ARCHIVE</span>
+            </div>
+            <div class="col-right" style="padding: 2rem var(--pad); display: flex; justify-content: space-between;" vid="134">
+                <span class="text-micro" vid="135">ALL SYSTEMS OPERATIONAL</span>
+                <span class="text-micro" style="color: var(--text-main);" vid="136">BACK TO TOP ↑</span>
+            </div>
+        </div>
+
+    </div>
+
+    <script vid="137">
+        
+        const lattice = document.getElementById('lattice-container');
+        
+        for(let i = 0; i < 100; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'lattice-dot';
+            
+            const row = Math.floor(i / 10);
+            const col = i % 10;
+            const delay = (row * 0.1) + (col * 0.1);
+            dot.style.animationDelay = `${delay}s`;
+            lattice.appendChild(dot);
+        }
+
+        
+        const torsion = document.getElementById('torsion-container');
+        for(let i = 0; i < 6; i++) {
+            const ring = document.createElement('div');
+            ring.className = 'ring';
+            ring.style.transform = `rotateX(${i * 30}deg) rotateY(${i * 15}deg)`;
+            torsion.appendChild(ring);
+        }
+    </script>
+
+</body></html>

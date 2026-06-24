@@ -1,0 +1,637 @@
+<html lang="zh-CN" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">城镇网格化基层治理平台</title>
+    <script src="https://cdn.tailwindcss.com/3.4.17" vid="5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" vid="6"></script>
+    <style vid="7">
+        
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&display=swap');
+        
+        body {
+            background-color: #020813;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            overflow: hidden;
+            
+            background-image: radial-gradient(circle at 50% 50%, #0a1930 0%, #020813 60%);
+        }
+
+        .font-tech {
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        
+        .tech-panel {
+            background: linear-gradient(180deg, rgba(11, 25, 56, 0.4) 0%, rgba(5, 14, 33, 0.6) 100%);
+            border: 1px solid rgba(30, 69, 141, 0.5);
+            backdrop-filter: blur(4px);
+            position: relative;
+        }
+
+        
+        .tech-panel::before, .tech-panel::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border: 2px solid #00d4ff;
+            pointer-events: none;
+        }
+        .tech-panel::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+        .tech-panel::after { top: -1px; right: -1px; border-left: none; border-bottom: none; }
+        
+        .tech-panel-bottom-corners {
+            position: absolute;
+            bottom: -1px; left: -1px; right: -1px; height: 12px;
+            pointer-events: none;
+        }
+        .tech-panel-bottom-corners::before {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 12px; height: 12px; border: 2px solid #00d4ff; border-right: none; border-top: none;
+        }
+        .tech-panel-bottom-corners::after {
+            content: ''; position: absolute; bottom: 0; right: 0; width: 12px; height: 12px; border: 2px solid #00d4ff; border-left: none; border-top: none;
+        }
+
+        
+        .digit-box {
+            background: linear-gradient(180deg, rgba(10, 35, 80, 0.8) 0%, rgba(5, 20, 50, 0.9) 100%);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            box-shadow: inset 0 0 10px rgba(0, 212, 255, 0.2);
+        }
+
+        
+        @keyframes flow {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        .progress-bar-glow {
+            background: linear-gradient(90deg, #1e458d, #00d4ff, #1e458d);
+            background-size: 200% 100%;
+            animation: flow 3s linear infinite;
+        }
+
+        
+        .spin-slow {
+            animation: spin 30s linear infinite;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #1e458d; border-radius: 2px; }
+
+        
+        .header-bg {
+            background: url('data:image/svg+xml;utf8,<svg width="1920" height="80" xmlns="http://www.w3.org/2000/svg"><path d="M0,0 L1920,0 L1920,40 L1300,40 L1260,70 L660,70 L620,40 L0,40 Z" fill="rgba(10,25,60,0.6)" stroke="rgba(0,212,255,0.4)" stroke-width="1"/></svg>') no-repeat top center;
+        }
+    </style>
+</head>
+<body class="w-[1920px] h-[1080px] flex flex-col relative select-none" vid="8">
+
+    
+    <header class="h-[90px] w-full flex justify-between items-start px-8 pt-4 header-bg relative z-20" vid="9">
+        
+        <div class="flex items-center gap-3 text-cyan-400 font-tech text-lg pt-2 w-[300px]" vid="10">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" vid="11"><path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18.75a.75.75 0 01.75.75V21.75a.75.75 0 01-1.5 0V19.5a.75.75 0 01.75-.75zM6.166 18.894a.75.75 0 001.06 1.06l1.59-1.591a.75.75 0 10-1.061-1.06l-1.59 1.591zM4.5 12a.75.75 0 01-.75-.75H1.5a.75.75 0 010 1.5h2.25a.75.75 0 01.75-.75zM6.166 6.166a.75.75 0 00-1.06 1.06l1.591 1.59a.75.75 0 101.06-1.061l-1.591-1.59z" vid="12"></path></svg>
+            <span vid="13">晴</span>
+            <span vid="14">17~28°C</span>
+        </div>
+
+        
+        <div class="flex-1 flex justify-center items-center mt-[-10px] relative" vid="15">
+            <h1 class="text-[42px] font-bold tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-b from-white to-cyan-300 drop-shadow-[0_0_10px_rgba(0,212,255,0.8)]" vid="16">
+                城镇网格化基层治理平台
+            </h1>
+            
+            <div class="absolute -bottom-2 w-[400px] h-[2px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent shadow-[0_0_8px_#00d4ff]" vid="17"></div>
+        </div>
+
+        
+        <div class="flex items-center justify-end text-cyan-400 font-tech text-xl pt-2 w-[300px] tracking-wider" vid="18">
+            2022-12-22 20:50:56
+        </div>
+    </header>
+
+    
+    <main class="flex-1 flex px-6 pb-6 gap-6 relative z-10" vid="19">
+        
+        
+        <div class="w-[420px] flex flex-col gap-5 h-full" vid="20">
+            
+            
+            <div class="tech-panel flex-1 rounded-sm p-5 flex flex-col" vid="21">
+                <div class="tech-panel-bottom-corners" vid="22"></div>
+                
+                <div class="flex items-center mb-6" vid="23">
+                    <span class="text-cyan-400 mr-2 text-xl italic font-bold tracking-tighter" vid="24">»</span>
+                    <h2 class="text-lg font-bold text-white tracking-widest" vid="25">实时动态</h2>
+                </div>
+                
+                <div class="flex justify-between items-center flex-1 px-2" vid="26">
+                    
+                    <div class="flex flex-col items-center gap-3" vid="27">
+                        <div class="relative w-20 h-20 rounded-full border border-blue-600/50 flex items-center justify-center bg-[radial-gradient(circle_at_center,rgba(0,212,255,0.1)_0%,transparent_70%)] shadow-[inset_0_0_15px_rgba(30,69,141,0.5)]" vid="28">
+                            <svg class="absolute inset-0 w-full h-full text-cyan-500/30" viewBox="0 0 100 100" vid="29"><circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="4 4" vid="30"></circle></svg>
+                            <svg class="w-8 h-8 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" vid="31"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" vid="32"></path></svg>
+                        </div>
+                        <span class="text-blue-200 text-sm" vid="33">今年受理量</span>
+                        <div class="text-2xl font-tech font-bold text-white shadow-cyan-500/50 drop-shadow-md" vid="34">24512<span class="text-xs text-blue-400 ml-1" vid="35">件</span></div>
+                    </div>
+                    
+                    <div class="flex flex-col items-center gap-3" vid="36">
+                        <div class="relative w-20 h-20 rounded-full border border-blue-600/50 flex items-center justify-center bg-[radial-gradient(circle_at_center,rgba(0,212,255,0.1)_0%,transparent_70%)] shadow-[inset_0_0_15px_rgba(30,69,141,0.5)]" vid="37">
+                            <svg class="absolute inset-0 w-full h-full text-cyan-500/30" viewBox="0 0 100 100" vid="38"><circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="4 4" vid="39"></circle></svg>
+                            <svg class="w-8 h-8 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" vid="40"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" vid="41"></path></svg>
+                        </div>
+                        <span class="text-blue-200 text-sm" vid="42">今年办结量</span>
+                        <div class="text-2xl font-tech font-bold text-white shadow-cyan-500/50 drop-shadow-md" vid="43">24512<span class="text-xs text-blue-400 ml-1" vid="44">件</span></div>
+                    </div>
+                    
+                    <div class="flex flex-col items-center gap-3" vid="45">
+                        <div class="relative w-20 h-20 rounded-full border border-blue-600/50 flex items-center justify-center bg-[radial-gradient(circle_at_center,rgba(0,212,255,0.1)_0%,transparent_70%)] shadow-[inset_0_0_15px_rgba(30,69,141,0.5)]" vid="46">
+                            
+                            <svg class="absolute inset-0 w-full h-full transform -rotate-90" viewBox="0 0 100 100" vid="47">
+                                <circle cx="50" cy="50" r="46" fill="none" stroke="rgba(30,69,141,0.5)" stroke-width="4" vid="48"></circle>
+                                <circle cx="50" cy="50" r="46" fill="none" stroke="#00d4ff" stroke-width="4" stroke-dasharray="289" stroke-dashoffset="80" vid="49"></circle>
+                            </svg>
+                            <div class="text-lg font-tech font-bold text-cyan-400" vid="50">72.6<span class="text-xs" vid="51">%</span></div>
+                        </div>
+                        <span class="text-blue-200 text-sm" vid="52">调解成功率</span>
+                        <div class="h-6" vid="53"></div> 
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="tech-panel flex-1 rounded-sm p-5 flex flex-col" vid="54">
+                <div class="tech-panel-bottom-corners" vid="55"></div>
+                <div class="flex items-center justify-between mb-4" vid="56">
+                    <div class="flex items-center" vid="57">
+                        <span class="text-cyan-400 mr-2 text-xl italic font-bold tracking-tighter" vid="58">»</span>
+                        <h2 class="text-lg font-bold text-white tracking-widest" vid="59">本月排名</h2>
+                    </div>
+                </div>
+                
+                <div class="flex text-xs mb-4 border border-blue-800/50 rounded overflow-hidden" vid="60">
+                    <button class="flex-1 py-1.5 bg-blue-600/40 text-cyan-200 border-r border-blue-800/50 text-center" vid="61">矛盾纠纷事项受理排行</button>
+                    <button class="flex-1 py-1.5 bg-transparent text-gray-400 text-center hover:bg-blue-900/30" vid="62">矛盾纠纷事项办结率</button>
+                </div>
+                
+                <div class="flex flex-col gap-4 flex-1 justify-center" vid="63">
+                    
+                    <div class="flex items-center text-sm" vid="64">
+                        <span class="text-cyan-400 font-tech w-10 italic font-bold" vid="65">No.1</span>
+                        <span class="text-white w-14" vid="66">朝阳区</span>
+                        <div class="flex-1 h-1.5 bg-[#0a1930] mx-3 relative" vid="67">
+                            <div class="absolute top-0 left-0 h-full w-[90%] progress-bar-glow shadow-[0_0_8px_#00d4ff]" vid="68"></div>
+                            <div class="absolute top-1/2 -translate-y-1/2 right-[10%] w-2 h-2 rounded-full bg-white shadow-[0_0_5px_#fff]" vid="69"></div>
+                        </div>
+                        <span class="text-cyan-400 font-tech w-[60px] text-right font-bold tracking-wider" vid="70">1245<span class="text-xs text-blue-400 font-normal" vid="71">件</span></span>
+                    </div>
+                    
+                    <div class="flex items-center text-sm" vid="72">
+                        <span class="text-blue-300 font-tech w-10 italic font-bold" vid="73">No.2</span>
+                        <span class="text-white w-14" vid="74">东城区</span>
+                        <div class="flex-1 h-1.5 bg-[#0a1930] mx-3 relative" vid="75">
+                            <div class="absolute top-0 left-0 h-full w-[75%] progress-bar-glow opacity-80" vid="76"></div>
+                            <div class="absolute top-1/2 -translate-y-1/2 right-[25%] w-2 h-2 rounded-full bg-blue-200" vid="77"></div>
+                        </div>
+                        <span class="text-cyan-400 font-tech w-[60px] text-right font-bold tracking-wider" vid="78">1034<span class="text-xs text-blue-400 font-normal" vid="79">件</span></span>
+                    </div>
+                    
+                    <div class="flex items-center text-sm" vid="80">
+                        <span class="text-blue-400 font-tech w-10 italic font-bold" vid="81">No.3</span>
+                        <span class="text-white w-14" vid="82">西城区</span>
+                        <div class="flex-1 h-1.5 bg-[#0a1930] mx-3 relative" vid="83">
+                            <div class="absolute top-0 left-0 h-full w-[65%] bg-gradient-to-r from-[#1e458d] to-[#00a8e8]" vid="84"></div>
+                            <div class="absolute top-1/2 -translate-y-1/2 right-[35%] w-2 h-2 rounded-full bg-blue-300" vid="85"></div>
+                        </div>
+                        <span class="text-cyan-400 font-tech w-[60px] text-right font-bold tracking-wider" vid="86">956<span class="text-xs text-blue-400 font-normal" vid="87">件</span></span>
+                    </div>
+                    
+                    <div class="flex items-center text-sm" vid="88">
+                        <span class="text-gray-400 font-tech w-10 italic" vid="89">No.4</span>
+                        <span class="text-white w-14" vid="90">海淀区</span>
+                        <div class="flex-1 h-1.5 bg-[#0a1930] mx-3 relative" vid="91">
+                            <div class="absolute top-0 left-0 h-full w-[55%] bg-gradient-to-r from-[#1e458d] to-[#0088cc]" vid="92"></div>
+                            <div class="absolute top-1/2 -translate-y-1/2 right-[45%] w-2 h-2 rounded-full bg-blue-400" vid="93"></div>
+                        </div>
+                        <span class="text-cyan-400 font-tech w-[60px] text-right font-bold tracking-wider" vid="94">806<span class="text-xs text-blue-400 font-normal" vid="95">件</span></span>
+                    </div>
+                    
+                    <div class="flex items-center text-sm" vid="96">
+                        <span class="text-gray-400 font-tech w-10 italic" vid="97">No.5</span>
+                        <span class="text-white w-14" vid="98">通州区</span>
+                        <div class="flex-1 h-1.5 bg-[#0a1930] mx-3 relative" vid="99">
+                            <div class="absolute top-0 left-0 h-full w-[45%] bg-gradient-to-r from-[#1e458d] to-[#0077b3]" vid="100"></div>
+                            <div class="absolute top-1/2 -translate-y-1/2 right-[55%] w-2 h-2 rounded-full bg-blue-500" vid="101"></div>
+                        </div>
+                        <span class="text-cyan-400 font-tech w-[60px] text-right font-bold tracking-wider" vid="102">738<span class="text-xs text-blue-400 font-normal" vid="103">件</span></span>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="tech-panel flex-[1.2] rounded-sm p-5 flex flex-col" vid="104">
+                <div class="tech-panel-bottom-corners" vid="105"></div>
+                <div class="flex items-center mb-2" vid="106">
+                    <span class="text-cyan-400 mr-2 text-xl italic font-bold tracking-tighter" vid="107">»</span>
+                    <h2 class="text-lg font-bold text-white tracking-widest" vid="108">矛盾纠纷办理趋势</h2>
+                </div>
+                <div class="flex-1 relative w-full h-full mt-2" vid="109">
+                    <canvas id="leftTrendChart" vid="110"></canvas>
+                </div>
+            </div>
+
+        </div>
+
+        
+        <div class="flex-1 flex flex-col relative" vid="111">
+            
+            
+            <div class="h-[120px] flex justify-center gap-20 pt-4 relative z-20" vid="112">
+                
+                <div class="flex flex-col items-center" vid="113">
+                    <div class="text-blue-200 text-sm mb-3 tracking-widest" vid="114">今日受理量</div>
+                    <div class="flex items-end gap-1.5" vid="115">
+                        <div class="digit-box w-[38px] h-[52px] rounded text-3xl font-tech font-bold text-cyan-400 flex items-center justify-center" vid="116">0</div>
+                        <div class="text-cyan-600 pb-1 font-bold" vid="117">,</div>
+                        <div class="digit-box w-[38px] h-[52px] rounded text-3xl font-tech font-bold text-cyan-400 flex items-center justify-center" vid="118">0</div>
+                        <div class="digit-box w-[38px] h-[52px] rounded text-3xl font-tech font-bold text-cyan-400 flex items-center justify-center" vid="119">2</div>
+                        <div class="digit-box w-[38px] h-[52px] rounded text-3xl font-tech font-bold text-cyan-400 flex items-center justify-center" vid="120">1</div>
+                        <span class="text-blue-300 ml-1 pb-1 text-sm" vid="121">件</span>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col items-center" vid="122">
+                    <div class="text-blue-200 text-sm mb-3 tracking-widest" vid="123">今日办结量</div>
+                    <div class="flex items-end gap-1.5" vid="124">
+                        <div class="digit-box w-[38px] h-[52px] rounded text-3xl font-tech font-bold text-cyan-400 flex items-center justify-center" vid="125">0</div>
+                        <div class="text-cyan-600 pb-1 font-bold" vid="126">,</div>
+                        <div class="digit-box w-[38px] h-[52px] rounded text-3xl font-tech font-bold text-cyan-400 flex items-center justify-center" vid="127">2</div>
+                        <div class="digit-box w-[38px] h-[52px] rounded text-3xl font-tech font-bold text-cyan-400 flex items-center justify-center" vid="128">1</div>
+                        <div class="digit-box w-[38px] h-[52px] rounded text-3xl font-tech font-bold text-cyan-400 flex items-center justify-center" vid="129">8</div>
+                        <span class="text-blue-300 ml-1 pb-1 text-sm" vid="130">件</span>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="absolute inset-0 top-[120px] bottom-[80px] flex justify-center items-center pointer-events-none overflow-hidden" vid="131">
+                
+                
+                <svg class="absolute w-[900px] h-[900px] opacity-30 spin-slow" viewBox="0 0 100 100" vid="132">
+                    <circle cx="50" cy="50" r="48" fill="none" stroke="#1e458d" stroke-width="0.2" stroke-dasharray="1 3" vid="133"></circle>
+                    <circle cx="50" cy="50" r="38" fill="none" stroke="#00d4ff" stroke-width="0.1" stroke-dasharray="4 2" vid="134"></circle>
+                    <circle cx="50" cy="50" r="28" fill="none" stroke="#1e458d" stroke-width="0.3" vid="135"></circle>
+                </svg>
+
+                
+                <div class="relative w-[760px] h-[600px] bg-gradient-to-b from-[#06142e] to-[#030914] border border-blue-800/60 rounded-xl shadow-[0_0_80px_rgba(0,150,255,0.1)_inset,_0_0_30px_rgba(0,0,0,0.8)] backdrop-blur-md flex flex-col items-center justify-center z-10 pointer-events-auto" vid="136">
+                    
+                    
+                    <div class="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyOCIgaGVpZ2h0PSI0OSIgdmlld0JveD0iMCAwIDI4IDQ5Ij48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0xMy45OSAxMS4yTDExIDkuNWwtMi45OSAxLjVWMTQuMWwyLjk5IDEuN0wxMy45OSAxNC4xdi0yLjl6IiBzdHJva2U9IiMwMGQ0ZmYiIHN0cm9rZS13aWR0aD0iMSIvPjwvZz48L3N2Zz4=')]" vid="137"></div>
+                    
+                    
+                    <div class="absolute top-[30%] left-[25%] w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_10px_#00d4ff] animate-pulse" vid="138"></div>
+                    <div class="absolute top-[45%] right-[30%] w-3 h-3 rounded-full bg-blue-500 shadow-[0_0_15px_#3b82f6]" vid="139"></div>
+                    <div class="absolute bottom-[35%] left-[40%] w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_#fff]" vid="140"></div>
+
+                    <div class="w-24 h-24 mb-6 border-2 border-cyan-500/30 rounded-full flex items-center justify-center bg-cyan-900/20 shadow-[0_0_30px_rgba(0,212,255,0.2)]" vid="141">
+                        <svg class="w-10 h-10 text-cyan-400 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor" vid="142"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" vid="143"></path></svg>
+                    </div>
+                    <div class="text-cyan-400/60 text-2xl font-bold tracking-[0.4em] border-b border-cyan-500/20 pb-2" vid="144">
+                        深蓝色占位块
+                    </div>
+                    <div class="text-blue-300/40 text-sm mt-3 tracking-widest uppercase" vid="145">
+                        Map Area Placeholder
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-6 z-20" vid="146">
+                
+                <button class="px-8 py-2.5 bg-[#0a1930]/80 border border-blue-700/50 rounded flex items-center gap-2 text-blue-200 hover:text-cyan-400 hover:border-cyan-500/50 transition-colors backdrop-blur-sm relative overflow-hidden group" vid="147">
+                    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-500/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" vid="148"></div>
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" vid="149"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" vid="150"></path></svg>
+                    <span class="tracking-widest" vid="151">数据总览</span>
+                </button>
+                
+                <button class="px-8 py-2.5 bg-[#0a1930]/80 border border-blue-700/50 rounded flex items-center gap-2 text-blue-200 hover:text-cyan-400 hover:border-cyan-500/50 transition-colors backdrop-blur-sm relative overflow-hidden group" vid="152">
+                    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-500/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" vid="153"></div>
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" vid="154"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" vid="155"></path></svg>
+                    <span class="tracking-widest" vid="156">事件办理</span>
+                </button>
+                
+                <button class="px-8 py-2.5 bg-gradient-to-r from-[#0a1930] to-[#1e458d]/60 border border-cyan-400/80 rounded flex items-center gap-2 text-white shadow-[0_0_15px_rgba(0,212,255,0.3)] backdrop-blur-sm relative overflow-hidden" vid="157">
+                    <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPjxyZWN0IHdpZHRoPSI0IiBoZWlnaHQ9IjQiIGZpbGw9InJnYmEoMCwyMTIsMjU1LDAuMSkiLz48L3N2Zz4=')] opacity-50" vid="158"></div>
+                    <svg class="w-5 h-5 text-cyan-300 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" vid="159"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" vid="160"></path></svg>
+                    <span class="tracking-widest relative z-10 font-bold" vid="161">纠纷调解</span>
+                </button>
+            </div>
+        </div>
+
+        
+        <div class="w-[420px] flex flex-col gap-5 h-full" vid="162">
+            
+            
+            <div class="tech-panel flex-1 rounded-sm p-5 flex flex-col" vid="163">
+                <div class="tech-panel-bottom-corners" vid="164"></div>
+                <div class="flex items-center mb-2" vid="165">
+                    <span class="text-cyan-400 mr-2 text-xl italic font-bold tracking-tighter" vid="166">»</span>
+                    <h2 class="text-lg font-bold text-white tracking-widest" vid="167">预测预警</h2>
+                </div>
+                <div class="flex-1 relative flex items-center justify-center" vid="168">
+                    
+                    
+                    <div class="absolute inset-0 grid grid-cols-2 grid-rows-2 p-2" vid="169">
+                        
+                        <div class="flex flex-col justify-center items-start pl-4" vid="170">
+                            <div class="flex items-center gap-2 mb-1" vid="171">
+                                <div class="w-2 h-2 bg-red-400 rounded-sm rotate-45" vid="172"></div>
+                                <span class="text-blue-200 text-sm" vid="173">重大矛盾纠纷</span>
+                            </div>
+                            <div class="text-xl font-tech font-bold text-white pl-4" vid="174">1543 <span class="text-xs text-blue-400 font-normal" vid="175">件</span></div>
+                        </div>
+                        
+                        <div class="flex flex-col justify-center items-end pr-4 text-right" vid="176">
+                            <div class="flex items-center gap-2 mb-1 justify-end" vid="177">
+                                <span class="text-blue-200 text-sm" vid="178">疑难矛盾纠纷</span>
+                                <div class="w-2 h-2 bg-orange-400 rounded-sm rotate-45" vid="179"></div>
+                            </div>
+                            <div class="text-xl font-tech font-bold text-white pr-4" vid="180">4415 <span class="text-xs text-blue-400 font-normal" vid="181">件</span></div>
+                        </div>
+                        
+                        <div class="flex flex-col justify-center items-start pl-4" vid="182">
+                            <div class="flex items-center gap-2 mb-1" vid="183">
+                                <svg class="w-3.5 h-3.5 text-blue-400" fill="currentColor" viewBox="0 0 20 20" vid="184"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" vid="185"></path></svg>
+                                <span class="text-blue-200 text-sm" vid="186">重点关注人</span>
+                            </div>
+                            <div class="text-xl font-tech font-bold text-white pl-5.5" vid="187">3561 <span class="text-xs text-blue-400 font-normal" vid="188">件</span></div>
+                        </div>
+                        
+                        <div class="flex flex-col justify-center items-end pr-4 text-right" vid="189">
+                            <div class="flex items-center gap-2 mb-1 justify-end" vid="190">
+                                <span class="text-blue-200 text-sm" vid="191">重点关注企业</span>
+                                <svg class="w-3.5 h-3.5 text-blue-400" fill="currentColor" viewBox="0 0 20 20" vid="192"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z" clip-rule="evenodd" vid="193"></path></svg>
+                            </div>
+                            <div class="text-xl font-tech font-bold text-white pr-5.5" vid="194">26 <span class="text-xs text-blue-400 font-normal" vid="195">件</span></div>
+                        </div>
+                    </div>
+
+                    
+                    <div class="w-20 h-20 rounded-full border-2 border-cyan-500/50 bg-[#0a1930] flex items-center justify-center z-10 shadow-[0_0_20px_rgba(0,212,255,0.4)] relative" vid="196">
+                        <div class="absolute inset-0 rounded-full border border-cyan-400/30 animate-ping" style="animation-duration: 3s;" vid="197"></div>
+                        <svg class="w-8 h-8 text-cyan-400 drop-shadow-[0_0_5px_rgba(0,212,255,1)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" vid="198">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" vid="199"></path>
+                        </svg>
+                    </div>
+
+                    
+                    <svg class="absolute inset-0 w-full h-full pointer-events-none opacity-20" viewBox="0 0 100 100" preserveAspectRatio="none" vid="200">
+                        <path d="M50 50 L20 25" stroke="#00d4ff" stroke-width="0.5" vid="201"></path>
+                        <path d="M50 50 L80 25" stroke="#00d4ff" stroke-width="0.5" vid="202"></path>
+                        <path d="M50 50 L20 75" stroke="#00d4ff" stroke-width="0.5" vid="203"></path>
+                        <path d="M50 50 L80 75" stroke="#00d4ff" stroke-width="0.5" vid="204"></path>
+                    </svg>
+                </div>
+            </div>
+
+            
+            <div class="tech-panel flex-1 rounded-sm p-5 flex flex-col" vid="205">
+                <div class="tech-panel-bottom-corners" vid="206"></div>
+                <div class="flex items-center mb-4" vid="207">
+                    <span class="text-cyan-400 mr-2 text-xl italic font-bold tracking-tighter" vid="208">»</span>
+                    <h2 class="text-lg font-bold text-white tracking-widest" vid="209">高频纠纷类型</h2>
+                </div>
+                <div class="grid grid-cols-2 gap-3 flex-1" vid="210">
+                    
+                    <div class="bg-gradient-to-r from-blue-900/40 to-transparent border border-blue-800/50 rounded flex items-center p-3 gap-3 relative overflow-hidden group hover:border-cyan-500/50 transition-colors" vid="211">
+                        <div class="w-10 h-10 rounded border border-blue-600/50 bg-[#06142e] flex items-center justify-center shrink-0" vid="212">
+                            <svg class="w-5 h-5 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" vid="213"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" vid="214"></path></svg>
+                        </div>
+                        <div class="flex flex-col" vid="215">
+                            <span class="text-blue-200 text-sm" vid="216">民事纠纷</span>
+                            <span class="text-white font-tech text-lg font-bold" vid="217">7262 <span class="text-xs text-blue-500 font-normal" vid="218">件</span></span>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gradient-to-r from-blue-900/40 to-transparent border border-blue-800/50 rounded flex items-center p-3 gap-3 relative overflow-hidden hover:border-cyan-500/50 transition-colors" vid="219">
+                        <div class="w-10 h-10 rounded border border-blue-600/50 bg-[#06142e] flex items-center justify-center shrink-0" vid="220">
+                            <svg class="w-5 h-5 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" vid="221"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" vid="222"></path></svg>
+                        </div>
+                        <div class="flex flex-col" vid="223">
+                            <span class="text-blue-200 text-sm" vid="224">集体上访</span>
+                            <span class="text-white font-tech text-lg font-bold" vid="225">7262 <span class="text-xs text-blue-500 font-normal" vid="226">件</span></span>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gradient-to-r from-blue-900/40 to-transparent border border-blue-800/50 rounded flex items-center p-3 gap-3 relative overflow-hidden hover:border-cyan-500/50 transition-colors" vid="227">
+                        <div class="w-10 h-10 rounded border border-blue-600/50 bg-[#06142e] flex items-center justify-center shrink-0" vid="228">
+                            <svg class="w-5 h-5 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" vid="229"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" vid="230"></path></svg>
+                        </div>
+                        <div class="flex flex-col" vid="231">
+                            <span class="text-blue-200 text-sm" vid="232">涉法涉诉纠纷</span>
+                            <span class="text-white font-tech text-lg font-bold" vid="233">7262 <span class="text-xs text-blue-500 font-normal" vid="234">件</span></span>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gradient-to-r from-blue-900/40 to-transparent border border-blue-800/50 rounded flex items-center p-3 gap-3 relative overflow-hidden hover:border-cyan-500/50 transition-colors" vid="235">
+                        <div class="w-10 h-10 rounded border border-blue-600/50 bg-[#06142e] flex items-center justify-center shrink-0" vid="236">
+                            <svg class="w-5 h-5 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" vid="237"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" vid="238"></path></svg>
+                        </div>
+                        <div class="flex flex-col" vid="239">
+                            <span class="text-blue-200 text-sm" vid="240">群体性事件</span>
+                            <span class="text-white font-tech text-lg font-bold" vid="241">7262 <span class="text-xs text-blue-500 font-normal" vid="242">件</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="tech-panel flex-[1.2] rounded-sm p-5 flex flex-col" vid="243">
+                <div class="tech-panel-bottom-corners" vid="244"></div>
+                <div class="flex items-center mb-2" vid="245">
+                    <span class="text-cyan-400 mr-2 text-xl italic font-bold tracking-tighter" vid="246">»</span>
+                    <h2 class="text-lg font-bold text-white tracking-widest" vid="247">案件办理趋势</h2>
+                </div>
+                <div class="flex-1 relative w-full h-full mt-2" vid="248">
+                    <canvas id="rightTrendChart" vid="249"></canvas>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    
+    <script vid="250">
+        
+        Chart.defaults.color = 'rgba(147, 197, 253, 0.6)'; 
+        Chart.defaults.font.family = "'Rajdhani', sans-serif";
+        
+        const commonOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    align: 'end',
+                    labels: {
+                        boxWidth: 8,
+                        boxHeight: 8,
+                        usePointStyle: true,
+                        pointStyle: 'rect',
+                        color: '#fff',
+                        font: { size: 11, family: 'sans-serif' }
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(11, 25, 56, 0.9)',
+                    titleColor: '#00d4ff',
+                    borderColor: 'rgba(30, 69, 141, 0.8)',
+                    borderWidth: 1
+                }
+            },
+            scales: {
+                x: {
+                    grid: { display: false, drawBorder: false },
+                    ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 8 }
+                },
+                y: {
+                    grid: { color: 'rgba(30, 69, 141, 0.3)', borderDash: [5, 5], drawBorder: false },
+                    beginAtZero: true
+                }
+            },
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
+        };
+
+        const years = ['2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022'];
+
+        
+        const ctxLeft = document.getElementById('leftTrendChart').getContext('2d');
+        
+        
+        const gradLeft1 = ctxLeft.createLinearGradient(0, 0, 0, 200);
+        gradLeft1.addColorStop(0, 'rgba(0, 212, 255, 0.4)');
+        gradLeft1.addColorStop(1, 'rgba(0, 212, 255, 0)');
+        
+        const gradLeft2 = ctxLeft.createLinearGradient(0, 0, 0, 200);
+        gradLeft2.addColorStop(0, 'rgba(251, 146, 60, 0.3)'); 
+        gradLeft2.addColorStop(1, 'rgba(251, 146, 60, 0)');
+
+        new Chart(ctxLeft, {
+            type: 'line',
+            data: {
+                labels: years,
+                datasets: [
+                    {
+                        label: '受理量',
+                        data: [150, 280, 200, 320, 180, 250, 210, 310],
+                        borderColor: '#00d4ff',
+                        backgroundColor: gradLeft1,
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: '办结率',
+                        data: [180, 120, 250, 190, 280, 150, 260, 200],
+                        borderColor: '#fb923c', 
+                        backgroundColor: gradLeft2,
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: '调解成功率',
+                        data: [60, 75, 65, 85, 70, 90, 80, 95], 
+                        borderColor: '#ffffff',
+                        borderWidth: 1.5,
+                        borderDash: [5, 5],
+                        tension: 0.4,
+                        pointBackgroundColor: '#ffffff',
+                        pointRadius: 2,
+                        fill: false,
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                ...commonOptions,
+                scales: {
+                    ...commonOptions.scales,
+                    y: {
+                        ...commonOptions.scales.y,
+                        max: 400,
+                        ticks: { stepSize: 94 } 
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        grid: { drawOnChartArea: false },
+                        max: 100,
+                        ticks: { stepSize: 25, callback: function(value) { return value + '%'; } }
+                    }
+                }
+            }
+        });
+
+        
+        const ctxRight = document.getElementById('rightTrendChart').getContext('2d');
+        
+        new Chart(ctxRight, {
+            type: 'line',
+            data: {
+                labels: years,
+                datasets: [
+                    {
+                        label: '信访',
+                        data: [120, 180, 150, 250, 140, 300, 180, 280],
+                        borderColor: '#00d4ff',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        pointRadius: 0
+                    },
+                    {
+                        label: '调解',
+                        data: [160, 140, 220, 180, 260, 190, 280, 220],
+                        borderColor: '#fb923c', 
+                        borderWidth: 2,
+                        tension: 0.4,
+                        pointRadius: 0
+                    },
+                    {
+                        label: '诉讼案件',
+                        data: [200, 250, 180, 220, 290, 210, 240, 190],
+                        borderColor: '#9ca3af', 
+                        borderWidth: 2,
+                        tension: 0.4,
+                        pointRadius: 0
+                    }
+                ]
+            },
+            options: {
+                ...commonOptions,
+                scales: {
+                    ...commonOptions.scales,
+                    y: {
+                        ...commonOptions.scales.y,
+                        max: 400,
+                        ticks: { stepSize: 94 }
+                    }
+                }
+            }
+        });
+    </script>
+
+</body></html>

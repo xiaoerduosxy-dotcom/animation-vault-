@@ -1,0 +1,406 @@
+<html lang="zh-CN" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">信号与系统 - 课程模块</title>
+    <script src="https://cdn.tailwindcss.com/3.4.17" vid="5"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet" vid="6">
+    <style vid="7">
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #030613;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        
+        #canvas-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: radial-gradient(circle at center, #0B1021 0%, #020308 100%);
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .content-layer {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 3rem;
+            box-sizing: border-box;
+        }
+
+        .header {
+            margin-bottom: 4rem;
+        }
+
+        .glow-text {
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 500;
+            font-size: 2.25rem;
+            letter-spacing: 0.3em;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.8), 
+                         0 0 30px rgba(180, 210, 255, 0.6);
+        }
+
+        .subtitle {
+            color: rgba(180, 210, 255, 0.7);
+            font-size: 1rem;
+            letter-spacing: 0.2em;
+            margin-top: 0.5rem;
+        }
+
+        .module-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .module-card {
+            position: relative;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 2rem;
+            height: 280px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .module-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(150, 180, 255, 0.4);
+            transform: translateY(-8px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 
+                        0 0 20px rgba(100, 150, 255, 0.2);
+        }
+
+        .module-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(150, 180, 255, 0.8), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .module-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .orbital-icon {
+            width: 60px;
+            height: 60px;
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .orbital-circle {
+            position: absolute;
+            border: 1px dashed rgba(180, 210, 255, 0.4);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .dot {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #fff;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            color: #fff;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-desc {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.5);
+            line-height: 1.6;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            margin-top: 1.5rem;
+            border-radius: 1px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4f46e5, #93c5fd);
+            box-shadow: 0 0 10px rgba(147, 197, 253, 0.5);
+        }
+
+        .back-nav {
+            position: absolute;
+            top: 3rem;
+            right: 3rem;
+            color: rgba(255, 255, 255, 0.6);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .back-nav:hover {
+            color: #fff;
+        }
+    </style>
+</head>
+<body vid="8">
+
+    <div id="canvas-container" vid="9">
+        <canvas id="nebulaCanvas" vid="10"></canvas>
+    </div>
+
+    <div class="content-layer" vid="11">
+        <div class="back-nav" vid="12">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" vid="13">
+                <path d="M19 12H5M12 19l-7-7 7-7" vid="14"></path>
+            </svg>
+            <span vid="15">返回主页</span>
+        </div>
+
+        <div class="header text-center" vid="16">
+            <h1 class="glow-text" vid="17">信号与系统</h1>
+            <p class="subtitle" vid="18">SIGNALS AND SYSTEMS • MODULE SELECT</p>
+        </div>
+
+        <div class="module-grid" vid="19">
+            
+            <div class="module-card" vid="20">
+                <div vid="21">
+                    <div class="orbital-icon" vid="22">
+                        <div class="orbital-circle" style="width: 40px; height: 40px; animation: spin 8s linear infinite;" vid="23">
+                            <div class="dot" style="top: 0; left: 50%; transform: translateX(-50%);" vid="24"></div>
+                        </div>
+                        <div class="orbital-circle" style="width: 25px; height: 25px; border-style: solid; opacity: 0.3;" vid="25"></div>
+                    </div>
+                    <h3 class="card-title" vid="26">傅里叶变换</h3>
+                    <p class="card-desc" vid="27">从时域到频域的跨越，探索信号的频谱本质。包括连续与离散变换。</p>
+                </div>
+                <div vid="28">
+                    <div class="flex justify-between text-[10px] text-blue-300/60 mb-1" vid="29">
+                        <span vid="30">已完成 85%</span>
+                        <span vid="31">12/14 课时</span>
+                    </div>
+                    <div class="progress-bar" vid="32">
+                        <div class="progress-fill" style="width: 85%;" vid="33"></div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="module-card" vid="34">
+                <div vid="35">
+                    <div class="orbital-icon" vid="36">
+                        <div class="orbital-circle" style="width: 50px; height: 50px; animation: spin 12s linear infinite reverse;" vid="37">
+                            <div class="dot" style="top: 50%; right: 0; transform: translateY(-50%);" vid="38"></div>
+                        </div>
+                        <div class="orbital-circle" style="width: 30px; height: 30px; border-style: dotted;" vid="39"></div>
+                    </div>
+                    <h3 class="card-title" vid="40">拉普拉斯变换</h3>
+                    <p class="card-desc" vid="41">复频域分析方法，解决线性时不变系统的微分方程与稳定性分析。</p>
+                </div>
+                <div vid="42">
+                    <div class="flex justify-between text-[10px] text-blue-300/60 mb-1" vid="43">
+                        <span vid="44">已完成 40%</span>
+                        <span vid="45">4/10 课时</span>
+                    </div>
+                    <div class="progress-bar" vid="46">
+                        <div class="progress-fill" style="width: 40%;" vid="47"></div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="module-card" vid="48">
+                <div vid="49">
+                    <div class="orbital-icon" vid="50">
+                        <div class="orbital-circle" style="width: 45px; height: 45px; animation: spin 6s linear infinite;" vid="51">
+                            <div class="dot" style="bottom: 0; left: 50%; transform: translateX(-50%);" vid="52"></div>
+                        </div>
+                        <div class="orbital-circle" style="width: 15px; height: 15px; background: rgba(255,255,255,0.1);" vid="53"></div>
+                    </div>
+                    <h3 class="card-title" vid="54">卷积积分</h3>
+                    <p class="card-desc" vid="55">时域分析的核心，通过系统单位冲激响应求解零状态响应的数学运算。</p>
+                </div>
+                <div vid="56">
+                    <div class="flex justify-between text-[10px] text-blue-300/60 mb-1" vid="57">
+                        <span vid="58">未开始</span>
+                        <span vid="59">0/8 课时</span>
+                    </div>
+                    <div class="progress-bar" vid="60">
+                        <div class="progress-fill" style="width: 0%;" vid="61"></div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="module-card" vid="62">
+                <div vid="63">
+                    <div class="orbital-icon" vid="64">
+                        <div class="orbital-circle" style="width: 55px; height: 55px; border-color: rgba(147, 197, 253, 0.2);" vid="65"></div>
+                        <div class="orbital-circle" style="width: 35px; height: 35px; animation: spin 15s linear infinite;" vid="66">
+                            <div class="dot" style="top: 50%; left: 0; transform: translateY(-50%);" vid="67"></div>
+                        </div>
+                    </div>
+                    <h3 class="card-title" vid="68">Z 变换</h3>
+                    <p class="card-desc" vid="69">离散时间信号处理的基石，连接差分方程与系统函数的重要工具。</p>
+                </div>
+                <div vid="70">
+                    <div class="flex justify-between text-[10px] text-blue-300/60 mb-1" vid="71">
+                        <span vid="72">未开始</span>
+                        <span vid="73">0/12 课时</span>
+                    </div>
+                    <div class="progress-bar" vid="74">
+                        <div class="progress-fill" style="width: 0%;" vid="75"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style vid="76">
+        @keyframes spin {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+    </style>
+
+    <script vid="77">
+        const canvas = document.getElementById('nebulaCanvas');
+        const ctx = canvas.getContext('2d', { alpha: false }); 
+        
+        let width, height, cx, cy;
+        let particles = [];
+        const PARTICLE_COUNT = 1500; 
+        let time = 0;
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            cx = width / 2;
+            cy = height / 2;
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() {
+                this.init();
+                this.angle = Math.random() * Math.PI * 2;
+            }
+
+            init() {
+                const distanceBias = Math.pow(Math.random(), 2.5);
+                this.radius = distanceBias * (width * 0.7); 
+                this.angle = Math.random() * Math.PI * 2;
+                this.baseSpeed = (Math.random() * 0.001 + 0.0003) * (1000 / (this.radius + 200));
+                this.speed = this.baseSpeed;
+                this.baseSize = Math.random() * 0.8 + 0.1;
+                
+                const colorType = Math.random();
+                let r, g, b;
+                if (colorType < 0.7) {
+                    r = 255; g = 255; b = 255;
+                } else if (colorType < 0.9) {
+                    r = 160; g = 190; b = 255;
+                } else {
+                    r = 120; g = 140; b = 255;
+                }
+                const alpha = Math.random() * 0.4 + 0.2;
+                this.color = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+            }
+
+            update() {
+                this.angle += this.speed;
+            }
+
+            draw() {
+                const twist = this.radius * 0.002;
+                const a = this.angle + twist;
+                const x = Math.cos(a) * this.radius;
+                const z = Math.sin(a) * this.radius;
+                const warp = Math.sin(this.angle * 2) * (this.radius * 0.2);
+                const tilt = 0.15;
+                const y = z * tilt + warp;
+
+                const drawX = cx + x;
+                const drawY = cy + y;
+
+                if (drawX > 0 && drawX < width && drawY > 0 && drawY < height) {
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    ctx.arc(drawX, drawY, this.baseSize, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+        }
+
+        for (let i = 0; i < PARTICLE_COUNT; i++) {
+            particles.push(new Particle());
+        }
+
+        function drawCentralGlow() {
+            const coreGradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, 300);
+            coreGradient.addColorStop(0, 'rgba(20, 30, 80, 0.4)');
+            coreGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            ctx.globalCompositeOperation = 'lighter';
+            ctx.fillStyle = coreGradient;
+            ctx.fillRect(cx - 400, cy - 400, 800, 800);
+        }
+
+        function animate() {
+            time += 0.005;
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.fillStyle = '#030613';
+            ctx.fillRect(0, 0, width, height);
+
+            ctx.globalCompositeOperation = 'lighter';
+            drawCentralGlow();
+
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+
+</body></html>

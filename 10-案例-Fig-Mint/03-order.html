@@ -1,0 +1,379 @@
+<html lang="en" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">Order Fig Mint</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" vid="5">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" vid="6">
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&amp;family=VT323&amp;display=swap" rel="stylesheet" vid="7">
+    <style vid="8">
+        :root {
+            --beige-light: #F0EDE0;
+            --beige-main: #E0DCCF;
+            --beige-dark: #C4C0B3;
+            --ink-black: #0f0f0f;
+            --paper-white: #faf9f5;
+            --font-serif: 'EB Garamond', serif;
+            --font-mono: 'VT323', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #f4f1e6;
+            font-family: var(--font-serif);
+            color: var(--ink-black);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            overflow-x: hidden;
+        }
+
+        .checkout-container {
+            width: 100%;
+            max-width: 1100px;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        
+        .order-form-sheet {
+            background: var(--paper-white);
+            padding: 4rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.05);
+            position: relative;
+            border: 1px solid #e0ddd3;
+        }
+
+        .order-form-sheet::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 10px;
+            background: repeating-linear-gradient(90deg, #d1ccc0, #d1ccc0 10px, transparent 10px, transparent 20px);
+        }
+
+        .form-header {
+            margin-bottom: 3rem;
+            border-bottom: 2px solid var(--ink-black);
+            padding-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .form-header h2 {
+            font-size: 2.5rem;
+            font-weight: 500;
+            font-style: italic;
+        }
+
+        .form-header .form-id {
+            font-family: var(--font-mono);
+            font-size: 1.2rem;
+            opacity: 0.6;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .input-group label {
+            display: block;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .input-group input {
+            width: 100%;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            background: transparent;
+            font-family: var(--font-mono);
+            font-size: 1.25rem;
+            padding: 0.5rem 0;
+            outline: none;
+            color: #333;
+        }
+
+        .input-group input:focus {
+            border-bottom-color: var(--ink-black);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        
+        .receipt-card {
+            background: #fff;
+            padding: 2rem;
+            border: 1px solid #eee;
+            box-shadow: 5px 5px 0 rgba(0,0,0,0.05);
+            transform: rotate(2deg);
+            font-family: var(--font-mono);
+            position: relative;
+        }
+
+        .receipt-card::after {
+            content: '';
+            position: absolute;
+            bottom: -10px; left: 0; right: 0;
+            height: 10px;
+            background-image: linear-gradient(-45deg, transparent 5px, #fff 5px), linear-gradient(45deg, transparent 5px, #fff 5px);
+            background-size: 10px 10px;
+        }
+
+        .receipt-header {
+            text-align: center;
+            border-bottom: 1px dashed #ccc;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+        }
+
+        .receipt-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .receipt-total {
+            border-top: 1px solid #000;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            font-size: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .hand-drawn-circle {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 80px;
+            height: 80px;
+            border: 2px solid #8B0000;
+            border-radius: 50% 45% 55% 48%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8B0000;
+            transform: rotate(15deg);
+            font-weight: bold;
+            font-family: var(--font-serif);
+        }
+
+        .btn-submit {
+            display: block;
+            width: 100%;
+            background: var(--ink-black);
+            color: #f4f1e6;
+            padding: 1.25rem;
+            font-size: 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 2rem;
+            font-family: var(--font-serif);
+            transition: transform 0.1s;
+        }
+
+        .btn-submit:active {
+            transform: translateY(2px);
+        }
+
+        
+        #confirmation-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(244, 241, 230, 0.98);
+            z-index: 100;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .typewriter-box {
+            background: #222529;
+            color: #33ff00;
+            font-family: var(--font-mono);
+            padding: 3rem;
+            border-radius: 8px;
+            max-width: 600px;
+            width: 100%;
+            font-size: 1.5rem;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .typewriter-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
+            background-size: 100% 4px;
+            pointer-events: none;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 12px;
+            height: 24px;
+            background: #33ff00;
+            animation: blink 1s step-end infinite;
+            vertical-align: middle;
+            margin-left: 4px;
+        }
+
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        .back-link {
+            position: absolute;
+            top: 4rem;
+            left: 4rem;
+            text-decoration: none;
+            color: var(--ink-black);
+            font-family: var(--font-mono);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+    </style>
+</head>
+<body vid="9">
+
+    <a href="#" class="back-link" vid="10">← RETURN TO SPECS</a>
+
+    <div class="checkout-container" vid="11">
+        <form class="order-form-sheet" id="orderForm" vid="12" onsubmit="event.preventDefault(); showConfirmation();">
+            <div class="form-header" vid="13">
+                <h2 vid="14">Purchase Order</h2>
+                <div class="form-id" vid="15">NO. FM-84-001</div>
+            </div>
+
+            <div class="input-group" vid="16">
+                <label vid="17">Full Name</label>
+                <input type="text" placeholder="JONATHAN APPLESEED" required="" vid="18">
+            </div>
+
+            <div class="input-group" vid="19">
+                <label vid="20">Shipping Address</label>
+                <input type="text" placeholder="123 COMPUTING WAY, SILICON VALLEY" required="" vid="21">
+            </div>
+
+            <div class="grid-2" vid="22">
+                <div class="input-group" vid="23">
+                    <label vid="24">City</label>
+                    <input type="text" placeholder="CUPERTINO" required="" vid="25">
+                </div>
+                <div class="input-group" vid="26">
+                    <label vid="27">Zip Code</label>
+                    <input type="text" placeholder="95014" required="" vid="28">
+                </div>
+            </div>
+
+            <div class="input-group" vid="29" style="margin-top: 2rem;">
+                <label vid="30">Payment (Card Number)</label>
+                <input type="text" placeholder="XXXX XXXX XXXX XXXX" required="" vid="31">
+            </div>
+
+            <div class="grid-2" vid="32">
+                <div class="input-group" vid="33">
+                    <label vid="34">Expiry</label>
+                    <input type="text" placeholder="MM / YY" required="" vid="35">
+                </div>
+                <div class="input-group" vid="36">
+                    <label vid="37">CVV</label>
+                    <input type="text" placeholder="123" required="" vid="38">
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit" vid="39">Authorize Payment</button>
+        </form>
+
+        <div class="sidebar-receipt" vid="40">
+            <div class="receipt-card" vid="41">
+                <div class="hand-drawn-circle" vid="42">ORIGINAL</div>
+                <div class="receipt-header" vid="43">
+                    <div style="font-size: 1.2rem; font-weight: bold;" vid="44">FIG MINT CORP.</div>
+                    <div vid="45">EST. 1984</div>
+                </div>
+                <div class="receipt-row" vid="46">
+                    <span vid="47">1x FIG MINT UNIT</span>
+                    <span vid="48">$2,495.00</span>
+                </div>
+                <div class="receipt-row" vid="49">
+                    <span vid="50">NEURAL ENGINE UPGRADE</span>
+                    <span vid="51">INCLUDED</span>
+                </div>
+                <div class="receipt-row" vid="52">
+                    <span vid="53">FLOPPY STARTER KIT</span>
+                    <span vid="54">$0.00</span>
+                </div>
+                <div class="receipt-row" vid="55">
+                    <span vid="56">SHIPPING &amp; HANDLING</span>
+                    <span vid="57">$45.00</span>
+                </div>
+                <div class="receipt-total" vid="58">
+                    <span vid="59">TOTAL</span>
+                    <span vid="60">$2,540.00</span>
+                </div>
+                <div style="margin-top: 2rem; font-size: 0.7rem; text-align: center; opacity: 0.7;" vid="61">
+                    THANK YOU FOR CHOOSING THE FUTURE.
+                </div>
+            </div>
+            
+            <p style="margin-top: 3rem; font-size: 0.9rem; line-height: 1.4; font-style: italic; opacity: 0.8;" vid="62">
+                Orders are processed by hand and delivered via premium courier. Expect arrival within 4-6 business weeks.
+            </p>
+        </div>
+    </div>
+
+    <div id="confirmation-overlay" vid="63">
+        <div class="typewriter-box" vid="64">
+            <div id="confirm-text" vid="65"></div><span class="cursor" id="confirm-cursor" vid="66"></span>
+        </div>
+        <a href="#" onclick="location.reload()" style="margin-top: 2rem; color: var(--ink-black); font-family: var(--font-mono);" vid="67">PRINT ANOTHER FORM</a>
+    </div>
+
+    <script vid="68">
+        function showConfirmation() {
+            const overlay = document.getElementById('confirmation-overlay');
+            const target = document.getElementById('confirm-text');
+            overlay.style.display = 'flex';
+            
+            const message = "ORDER CONFIRMED.\n\nTHANK YOU, JONATHAN. WE ARE CURRENTLY SPINNING UP YOUR NEURAL ENGINE. YOUR FIG MINT WILL BE DISPATCHED TO SILICON VALLEY SHORTLY.\n\nWELCOME TO THE FUTURE OF COMPUTING.";
+            let i = 0;
+            target.innerHTML = "";
+
+            function type() {
+                if (i < message.length) {
+                    if (message.charAt(i) === "\n") {
+                        target.innerHTML += "<br>";
+                    } else {
+                        target.innerHTML += message.charAt(i);
+                    }
+                    i++;
+                    setTimeout(type, 40 + Math.random() * 40);
+                }
+            }
+            type();
+        }
+    </script>
+
+
+</body></html>

@@ -1,0 +1,354 @@
+<html lang="en" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">Quantum Data Matrix</title>
+    <style vid="5">
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #030304;
+            
+        }
+        canvas {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body vid="6">
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" vid="7"></script>
+    <script vid="8">
+        
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x030304);
+        
+        scene.fog = new THREE.Fog(0x030304, 50, 120);
+
+        
+        const frustumSize = 45;
+        const aspect = window.innerWidth / window.innerHeight;
+        const camera = new THREE.OrthographicCamera(
+            frustumSize * aspect / -2, frustumSize * aspect / 2,
+            frustumSize / 2, frustumSize / -2,
+            1, 200
+        );
+        camera.position.set(50, 40, 50); 
+        camera.lookAt(0, 0, 0);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: "high-performance" });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); 
+        document.body.appendChild(renderer.domElement);
+
+        
+        const GRID_SIZE = 33; 
+        const CUBE_SIZE = 0.9;
+        const SPACING = 1.0;
+        const OFFSET = (GRID_SIZE * SPACING) / 2 - (SPACING / 2);
+
+        
+        const geometry = new THREE.BoxGeometry(CUBE_SIZE, 1.0, CUBE_SIZE);
+        
+        geometry.translate(0, 0.5, 0);
+
+        
+        const material = new THREE.ShaderMaterial({
+            uniforms: {
+                uTime: { value: 0 },
+                uScanPos: { value: -OFFSET * 2 }, 
+                uColorBg: { value: new THREE.Color(0x0d0d12) },
+                uColorActive: { value: new THREE.Color(0xe0e3e8) },
+                uColorScan: { value: new THREE.Color(0x00f3ff) } 
+            },
+            vertexShader: `
+                attribute float aState; // 0.0 or 1.0 representing binary data
+                attribute float aTargetState;
+                attribute float aTransitionOffset; // Random offset for staggered animation
+                
+                uniform float uTime;
+                
+                varying vec3 vWorldPos;
+                varying float vState;
+                varying float vHeight;
+
+                void main() {
+                    // Smooth transition between states based on time and individual offset
+                    float transitionSpeed = 3.0;
+                    // Calculate a local time that loops, creating a transition window
+                    float localTime = mod(uTime + aTransitionOffset, 4.0); 
+                    
+                    // Interpolate state
+                    float currentState = mix(aState, aTargetState, clamp(localTime * transitionSpeed, 0.0, 1.0));
+                    vState = currentState;
+
+                    // Active blocks are tall pillars, inactive are low bumps
+                    float targetScaleY = mix(0.1, 2.5, currentState);
+                    vHeight = targetScaleY;
+                    
+                    vec3 transformed = position;
+                    transformed.y *= targetScaleY;
+
+                    vec4 worldPosition = instanceMatrix * vec4(transformed, 1.0);
+                    vWorldPos = worldPosition.xyz;
+                    gl_Position = projectionMatrix * viewMatrix * worldPosition;
+                }
+            `,
+            fragmentShader: `
+                uniform float uScanPos;
+                uniform vec3 uColorBg;
+                uniform vec3 uColorActive;
+                uniform vec3 uColorScan;
+
+                varying vec3 vWorldPos;
+                varying float vState;
+                varying float vHeight;
+
+                void main() {
+                    // Base color based on binary state
+                    vec3 baseColor = mix(uColorBg, uColorActive, vState);
+
+                    // Artificial ambient occlusion at the base
+                    float ao = clamp(vWorldPos.y / vHeight, 0.2, 1.0);
+                    baseColor *= ao;
+
+                    // Edge highlighting for architectural feel (faked via world position)
+                    vec2 gridPos = fract(vWorldPos.xz);
+                    float edge = max(step(0.9, gridPos.x), step(0.9, gridPos.y));
+                    baseColor = mix(baseColor, baseColor * 0.5, edge * 0.5);
+
+                    // The Scanning Beam
+                    // Calculate distance to the scanning plane along the X+Z diagonal
+                    float scanAxis = (vWorldPos.x + vWorldPos.z) * 0.5;
+                    float distToScan = abs(scanAxis - uScanPos);
+                    
+                    // Sharp laser core
+                    float core = exp(-distToScan * 15.0);
+                    // Softer bloom area
+                    float glow = exp(-distToScan * 2.0) * 0.3;
+                    
+                    float scanIntensity = core + glow;
+
+                    // Add scan emission. Higher blocks catch more light.
+                    vec3 finalColor = baseColor + (uColorScan * scanIntensity * (0.5 + vState * 1.5));
+
+                    gl_FragColor = vec4(finalColor, 1.0);
+                }
+            `
+        });
+
+        
+        const count = GRID_SIZE * GRID_SIZE;
+        const instancedMesh = new THREE.InstancedMesh(geometry, material, count);
+        scene.add(instancedMesh);
+
+        
+        const stateArray = new Float32Array(count);
+        const targetStateArray = new Float32Array(count);
+        const transitionOffsetArray = new Float32Array(count);
+
+        const dummy = new THREE.Object3D();
+
+        
+        function getQRState(x, z, size) {
+            const checkMarker = (mx, mz) => {
+                const dx = x - mx;
+                const dz = z - mz;
+                if (dx >= 0 && dx < 7 && dz >= 0 && dz < 7) {
+                    if (dx >= 1 && dx < 6 && dz >= 1 && dz < 6) {
+                        if (dx >= 2 && dx < 5 && dz >= 2 && dz < 5) return 1; 
+                        return 0; 
+                    }
+                    return 1; 
+                }
+                return -1;
+            };
+
+            
+            let state = checkMarker(0, 0);
+            if (state !== -1) return state;
+            state = checkMarker(size - 7, 0);
+            if (state !== -1) return state;
+            state = checkMarker(0, size - 7);
+            if (state !== -1) return state;
+
+            
+            if ((x === 6 && z > 7 && z < size - 7) || (z === 6 && x > 7 && x < size - 7)) {
+                return (x + z) % 2 === 0 ? 1 : 0;
+            }
+
+            
+            return Math.random() > 0.45 ? 1 : 0; 
+        }
+
+        
+        let i = 0;
+        for (let x = 0; x < GRID_SIZE; x++) {
+            for (let z = 0; z < GRID_SIZE; z++) {
+                dummy.position.set(
+                    x * SPACING - OFFSET,
+                    0,
+                    z * SPACING - OFFSET
+                );
+                dummy.updateMatrix();
+                instancedMesh.setMatrixAt(i, dummy.matrix);
+
+                const initialState = getQRState(x, z, GRID_SIZE);
+                stateArray[i] = initialState;
+                targetStateArray[i] = initialState;
+                
+                transitionOffsetArray[i] = Math.random() * 2.0; 
+
+                i++;
+            }
+        }
+
+        instancedMesh.instanceMatrix.needsUpdate = true;
+        
+        geometry.setAttribute('aState', new THREE.InstancedBufferAttribute(stateArray, 1));
+        geometry.setAttribute('aTargetState', new THREE.InstancedBufferAttribute(targetStateArray, 1));
+        geometry.setAttribute('aTransitionOffset', new THREE.InstancedBufferAttribute(transitionOffsetArray, 1));
+
+        
+        
+        const renderTarget = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, {
+            minFilter: THREE.LinearFilter,
+            magFilter: THREE.LinearFilter,
+            format: THREE.RGBAFormat,
+        });
+
+        const postCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+        const postScene = new THREE.Scene();
+        const postMaterial = new THREE.ShaderMaterial({
+            uniforms: {
+                tDiffuse: { value: renderTarget.texture },
+                uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) }
+            },
+            vertexShader: `
+                varying vec2 vUv;
+                void main() {
+                    vUv = uv;
+                    gl_Position = vec4(position, 1.0);
+                }
+            `,
+            fragmentShader: `
+                uniform sampler2D tDiffuse;
+                uniform vec2 uResolution;
+                varying vec2 vUv;
+
+                // Static WebGL Noise (Strict Constraint)
+                float hash(vec2 p) {
+                    vec3 p3  = fract(vec3(p.xyx) * .1031);
+                    p3 += dot(p3, p3.yzx + 33.33);
+                    return fract((p3.x + p3.y) * p3.z);
+                }
+
+                void main() {
+                    vec4 texColor = texture2D(tDiffuse, vUv);
+                    
+                    // Apply strictly static noise based on fragment coordinate
+                    float noise = hash(gl_FragCoord.xy) * 0.08 - 0.04;
+                    
+                    // Dark, cinematic vignette
+                    vec2 center = vUv - 0.5;
+                    float dist = length(center);
+                    // Center is bright, edges fall off rapidly into black
+                    float vignette = smoothstep(0.85, 0.2, dist);
+                    
+                    vec3 finalColor = (texColor.rgb * vignette) + noise;
+                    
+                    gl_FragColor = vec4(finalColor, 1.0);
+                }
+            `
+        });
+        const postQuad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), postMaterial);
+        postScene.add(postQuad);
+
+
+        
+        const clock = new THREE.Clock();
+        
+        
+        const SCAN_SPEED = 12.0;
+        const SCAN_RANGE = OFFSET * 1.5;
+        let scanDirection = 1;
+
+        
+        let lastGenerationTime = 0;
+        const GENERATION_INTERVAL = 4.0; 
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const elapsedTime = clock.getElapsedTime();
+            const delta = clock.getDelta();
+
+            
+            let currentScanPos = material.uniforms.uScanPos.value;
+            currentScanPos += SCAN_SPEED * scanDirection * 0.016; 
+            
+            if (currentScanPos > SCAN_RANGE) {
+                currentScanPos = SCAN_RANGE;
+                scanDirection = -1;
+            } else if (currentScanPos < -SCAN_RANGE) {
+                currentScanPos = -SCAN_RANGE;
+                scanDirection = 1;
+            }
+            material.uniforms.uScanPos.value = currentScanPos;
+            material.uniforms.uTime.value = elapsedTime;
+
+            
+            if (elapsedTime - lastGenerationTime > GENERATION_INTERVAL) {
+                lastGenerationTime = elapsedTime;
+                
+                
+                const states = geometry.attributes.aState.array;
+                const targets = geometry.attributes.aTargetState.array;
+                
+                let idx = 0;
+                for (let x = 0; x < GRID_SIZE; x++) {
+                    for (let z = 0; z < GRID_SIZE; z++) {
+                        states[idx] = targets[idx]; 
+                        
+                        
+                        targets[idx] = getQRState(x, z, GRID_SIZE);
+                        idx++;
+                    }
+                }
+                
+                geometry.attributes.aState.needsUpdate = true;
+                geometry.attributes.aTargetState.needsUpdate = true;
+            }
+
+            
+            
+            renderer.setRenderTarget(renderTarget);
+            renderer.render(scene, camera);
+
+            
+            renderer.setRenderTarget(null);
+            renderer.render(postScene, postCamera);
+        }
+
+        
+        window.addEventListener('resize', onWindowResize, false);
+        function onWindowResize() {
+            const aspect = window.innerWidth / window.innerHeight;
+            
+            camera.left = -frustumSize * aspect / 2;
+            camera.right = frustumSize * aspect / 2;
+            camera.top = frustumSize / 2;
+            camera.bottom = -frustumSize / 2;
+            camera.updateProjectionMatrix();
+
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderTarget.setSize(window.innerWidth, window.innerHeight);
+            postMaterial.uniforms.uResolution.value.set(window.innerWidth, window.innerHeight);
+        }
+
+        animate();
+    </script>
+
+</body></html>

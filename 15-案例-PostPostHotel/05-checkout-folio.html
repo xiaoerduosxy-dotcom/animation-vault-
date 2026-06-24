@@ -1,0 +1,195 @@
+<html lang="en" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">Post Post Hotel - Checkout Folio</title>
+    <script src="https://cdn.tailwindcss.com/3.4.17" vid="5"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" vid="6">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" vid="7">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&amp;family=Courier+Prime:wght@400;700&amp;family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&amp;display=swap" rel="stylesheet" vid="8">
+    <style vid="9">
+        :root {
+            --color-mustard: #FFC233;
+            --color-terracotta: #C65D3B;
+            --color-warm-gray: #D1D1C9;
+            --color-ink: #1F1F1F;
+            --color-paper: #F4F1EA;
+        }
+        
+        body {
+            background-color: var(--color-paper);
+            color: var(--color-ink);
+            font-family: 'Cormorant Garamond', serif;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+        }
+
+        .font-typewriter {
+            font-family: 'Courier Prime', monospace;
+        }
+
+        .paper-texture {
+            position: relative;
+            overflow: hidden;
+        }
+        .paper-texture::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' fill='white'/%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.15'/%3E%3C/svg%3E");
+            opacity: 0.4;
+            pointer-events: none;
+            mix-blend-mode: multiply;
+        }
+
+        .perforated-line {
+            background-image: radial-gradient(circle, #D1D1C9 2px, transparent 2px);
+            background-size: 12px 100%;
+            background-repeat: repeat-x;
+            height: 4px;
+            width: 100%;
+        }
+
+        .text-vertical {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+        }
+
+        @keyframes slide-up {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .animate-folio {
+            animation: slide-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    </style>
+</head>
+<body class="w-full h-screen flex flex-col lg:flex-row overflow-hidden selection:bg-[#C65D3B] selection:text-white" vid="10">
+
+    <aside class="w-full lg:w-1/4 h-auto lg:h-screen border-r border-[#D1D1C9]/50 flex flex-col justify-between p-8 lg:p-12 z-20 bg-[#F4F1EA]" vid="11">
+        <div class="flex flex-col gap-8" vid="12">
+            <div class="flex items-center gap-3 cursor-pointer group" onclick="window.history.back()" vid="13">
+                <div class="w-10 h-10 border border-current rounded-full flex items-center justify-center group-hover:bg-[#1F1F1F] group-hover:text-[#F4F1EA] transition-all" vid="14">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-6 h-6" vid="15">
+                        <path d="M4 12h16M4 12l6-6m-6 6l6 6" vid="16"></path>
+                    </svg>
+                </div>
+                <span class="font-typewriter uppercase tracking-widest text-xs" vid="17">Back to Key</span>
+            </div>
+
+            <div class="space-y-4 mt-8" vid="18">
+                <h1 class="text-5xl lg:text-7xl font-ital font-light leading-[0.9]" vid="19">Post<br vid="20"><span class="ml-8 italic" vid="21">Post</span></h1>
+                <p class="font-typewriter text-sm max-w-[200px] leading-relaxed opacity-80" vid="22">
+                    Departure Folio<br vid="23">
+                    Guest No. 8821<br vid="24">
+                    Autumn Season
+                </p>
+            </div>
+        </div>
+
+        <nav class="hidden lg:flex flex-col gap-4 mt-auto" vid="25">
+            <a href="#" class="font-typewriter uppercase text-xs tracking-widest hover:text-[#C65D3B] transition-colors opacity-50" vid="26">My Wallet</a>
+            <a href="#" class="font-typewriter uppercase text-xs tracking-widest hover:text-[#C65D3B] transition-colors flex items-center gap-2" vid="27">
+                <div class="w-1.5 h-1.5 bg-[#C65D3B] rounded-full" vid="28"></div>
+                Final Account
+            </a>
+            <a href="#" class="font-typewriter uppercase text-xs tracking-widest hover:text-[#C65D3B] transition-colors opacity-50" vid="29">Request Shuttle</a>
+            <a href="#" class="font-typewriter uppercase text-xs tracking-widest hover:text-[#C65D3B] transition-colors opacity-50" vid="30">Feedback</a>
+        </nav>
+    </aside>
+
+    <main class="flex-1 w-full h-full relative overflow-y-auto bg-[#D1D1C9]/20 flex items-center justify-center p-6 lg:p-12" vid="31">
+        
+        <div class="animate-folio w-full max-w-2xl bg-white shadow-2xl paper-texture relative flex flex-col" vid="32">
+            
+            <div class="absolute left-6 top-0 bottom-0 h-full flex items-center justify-center border-r border-black/5 pr-4 hidden md:flex" vid="33">
+                <span class="text-vertical font-typewriter text-[9px] tracking-[0.3em] uppercase opacity-30" vid="34">P.P. HOTEL TERMINAL ID: 44921-A</span>
+            </div>
+
+            <div class="p-8 md:p-16 flex flex-col h-full md:pl-24 relative" vid="35">
+                
+                <div class="flex justify-between items-start mb-12" vid="36">
+                    <div class="space-y-1" vid="37">
+                        <h2 class="font-serif text-3xl italic" vid="38">Elena V. Rostova</h2>
+                        <p class="font-typewriter text-[10px] uppercase tracking-widest opacity-60" vid="39">Room 204 • Oct 24 — Oct 28</p>
+                    </div>
+                    <div class="text-right" vid="40">
+                        <div class="w-16 h-16 border-2 border-[#C65D3B] rounded-full flex items-center justify-center mb-2 mx-auto lg:mr-0" vid="41">
+                            <span class="font-serif text-[#C65D3B] text-xl italic font-bold" vid="42">Paid</span>
+                        </div>
+                        <p class="font-typewriter text-[10px] uppercase tracking-tighter opacity-40" vid="43">Folio #992-B</p>
+                    </div>
+                </div>
+
+                <div class="space-y-6 mb-12" vid="44">
+                    <div class="grid grid-cols-12 gap-4 border-b border-black/5 pb-2" vid="45">
+                        <div class="col-span-8 font-typewriter text-[10px] uppercase tracking-widest opacity-40" vid="46">Description</div>
+                        <div class="col-span-4 font-typewriter text-[10px] uppercase tracking-widest opacity-40 text-right" vid="47">Amount (EUR)</div>
+                    </div>
+                    
+                    <div class="grid grid-cols-12 gap-4 items-end" vid="48">
+                        <div class="col-span-8" vid="49">
+                            <p class="font-serif text-lg" vid="50">Accommodation (4 Nights)</p>
+                            <p class="font-typewriter text-[9px] opacity-50 uppercase tracking-wider" vid="51">Standard Suite - River View</p>
+                        </div>
+                        <div class="col-span-4 text-right font-typewriter text-lg" vid="52">1,120.00</div>
+                    </div>
+
+                    <div class="grid grid-cols-12 gap-4 items-end" vid="53">
+                        <div class="col-span-8" vid="54">
+                            <p class="font-serif text-lg" vid="55">Spa Treatment</p>
+                            <p class="font-typewriter text-[9px] opacity-50 uppercase tracking-wider" vid="56">Alpine Herbal Massage - 60min</p>
+                        </div>
+                        <div class="col-span-4 text-right font-typewriter text-lg" vid="57">145.00</div>
+                    </div>
+
+                    <div class="grid grid-cols-12 gap-4 items-end" vid="58">
+                        <div class="col-span-8" vid="59">
+                            <p class="font-serif text-lg" vid="60">In-Room Dining</p>
+                            <p class="font-typewriter text-[9px] opacity-50 uppercase tracking-wider" vid="61">Oct 26 - Midnight Platter &amp; Wine</p>
+                        </div>
+                        <div class="col-span-4 text-right font-typewriter text-lg" vid="62">84.50</div>
+                    </div>
+
+                    <div class="grid grid-cols-12 gap-4 items-end" vid="63">
+                        <div class="col-span-8" vid="64">
+                            <p class="font-serif text-lg" vid="65">City Tax</p>
+                            <p class="font-typewriter text-[9px] opacity-50 uppercase tracking-wider" vid="66">Tourism Levy - Bad Hofgastein</p>
+                        </div>
+                        <div class="col-span-4 text-right font-typewriter text-lg" vid="67">12.00</div>
+                    </div>
+                </div>
+
+                <div class="border-t-2 border-black pt-6 flex justify-between items-baseline mb-16" vid="68">
+                    <span class="font-serif text-3xl" vid="69">Total Amount Paid</span>
+                    <div class="text-right" vid="70">
+                        <span class="font-typewriter text-3xl font-bold" vid="71">1,361.50</span>
+                        <p class="font-typewriter text-[10px] opacity-50 uppercase tracking-widest mt-1" vid="72">Visa •••• 4242</p>
+                    </div>
+                </div>
+
+                <div class="perforated-line mb-12" vid="73"></div>
+
+                <div class="flex flex-col items-center text-center space-y-4" vid="74">
+                    <div class="w-12 h-12 bg-[#FFC233] rounded-full flex items-center justify-center mb-2" vid="75">
+                        <svg class="w-6 h-6 text-[#1F1F1F]" viewBox="0 0 24 24" fill="currentColor" vid="76">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" vid="77"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-serif text-4xl italic" vid="78">Thank you for your stay</h3>
+                    <p class="font-typewriter text-xs leading-relaxed opacity-60 max-w-sm" vid="79">
+                        It was a pleasure hosting you at Post Post. We hope the mountain air stays with you until your next visit. Safe travels back to Vienna.
+                    </p>
+                    
+                    <div class="pt-8 flex gap-4" vid="80">
+                        <button class="bg-[#1F1F1F] text-[#F4F1EA] font-typewriter text-[10px] uppercase tracking-[0.2em] px-8 py-3 hover:bg-[#C65D3B] transition-colors" vid="81">Download PDF</button>
+                        <button class="border border-black/20 font-typewriter text-[10px] uppercase tracking-[0.2em] px-8 py-3 hover:bg-black/5 transition-colors" vid="82">Email Folio</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="h-2 w-full bg-[#FFC233]" vid="83"></div>
+        </div>
+    </main>
+
+    <div class="fixed inset-0 pointer-events-none opacity-[0.03] z-50" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E');" vid="84"></div>
+
+</body></html>

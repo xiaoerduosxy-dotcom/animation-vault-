@@ -1,0 +1,481 @@
+<html lang="en" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">Case Studies | FoxTrove Operations Intelligence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" vid="5">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" vid="6">
+    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet" vid="7">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" vid="8"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" vid="9"></script>
+    
+    <style vid="10">
+        :root {
+            --bg: #1D1818;
+            --clay: #FAD9D3;
+            --acid: #FFFFFF;
+            --text-main: #E8E4E3;
+            --text-muted: #959190;
+            --grid-line: rgba(255, 255, 255, 0.05);
+            --grid-line-strong: rgba(255, 255, 255, 0.15);
+            --surface: #332E2D;
+            --surface-accent: #3d3635;
+            
+            --font-display: 'DotGothic16', monospace;
+            --font-body: 'Inter', sans-serif;
+            
+            --container-padding: 4vw;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .system-grid {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 1;
+            background-size: 24px 24px;
+            background-image: radial-gradient(circle, var(--grid-line-strong) 1px, transparent 1px);
+        }
+
+        nav {
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            padding: 2rem var(--container-padding);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: linear-gradient(to bottom, var(--bg) 0%, transparent 100%);
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--text-main);
+        }
+
+        .meta-label {
+            font-family: var(--font-body);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        main {
+            position: relative;
+            z-index: 10;
+            padding-top: 15vh;
+        }
+
+        .case-header {
+            padding: 0 var(--container-padding) 5vh;
+        }
+
+        .case-header h1 {
+            font-family: var(--font-display);
+            font-size: clamp(3rem, 8vw, 10rem);
+            line-height: 0.9;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+        }
+
+        .case-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            padding: 0 var(--container-padding) 10vh;
+        }
+
+        .case-card {
+            background: var(--surface);
+            border: 1px solid var(--grid-line-strong);
+            border-radius: 40px;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+        }
+
+        .case-card:hover {
+            border-color: var(--clay);
+            transform: translateY(-5px);
+        }
+
+        .card-summary {
+            padding: 4rem;
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 2rem;
+            cursor: pointer;
+        }
+
+        .card-summary .info {
+            grid-column: span 8;
+        }
+
+        .card-summary .metrics {
+            grid-column: span 4;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-left: 1px solid var(--grid-line-strong);
+            padding-left: 3rem;
+        }
+
+        .case-title {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 4vw, 4.5rem);
+            text-transform: uppercase;
+            line-height: 1;
+            margin: 1.5rem 0;
+        }
+
+        .stat-large {
+            font-family: var(--font-display);
+            font-size: 5rem;
+            color: var(--clay);
+            line-height: 1;
+        }
+
+        .case-content {
+            height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .case-card.active .case-content {
+            height: auto;
+            opacity: 1;
+            padding: 0 4rem 4rem;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 3rem;
+            padding-top: 3rem;
+            border-top: 1px solid var(--grid-line-strong);
+        }
+
+        .system-preview {
+            grid-column: span 7;
+            background: var(--bg);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid var(--grid-line-strong);
+            position: relative;
+        }
+
+        .mock-ui {
+            width: 100%;
+            height: 300px;
+            background: var(--surface-accent);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--grid-line-strong);
+        }
+
+        .timeline {
+            grid-column: span 5;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 2rem;
+            border-left: 1px solid var(--clay);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -4px;
+            top: 0;
+            width: 7px;
+            height: 7px;
+            background: var(--clay);
+            border-radius: 50%;
+        }
+
+        .star-motif {
+            width: 24px;
+            height: 24px;
+        }
+
+        .btn-close {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-family: var(--font-display);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            display: none;
+        }
+
+        .case-card.active .btn-close {
+            display: block;
+        }
+
+        .comparison-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(250, 217, 211, 0.1);
+            color: var(--clay);
+            padding: 0.5rem 1rem;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        
+        .ui-header { height: 20px; background: #4a4443; margin-bottom: 15px; }
+        .ui-row { height: 10px; background: #3d3635; margin-bottom: 8px; width: 80%; }
+        .ui-chart { height: 100px; background: #3d3635; margin-top: 20px; display: flex; align-items: flex-end; gap: 4px; padding: 10px; }
+        .chart-bar { background: var(--clay); width: 100%; }
+
+        @media (max-width: 1024px) {
+            .card-summary { grid-template-columns: 1fr; }
+            .card-summary .metrics { border-left: none; border-top: 1px solid var(--grid-line-strong); padding: 2rem 0 0; }
+            .content-grid { grid-template-columns: 1fr; }
+            .system-preview, .timeline { grid-column: span 1; }
+        }
+    </style>
+</head>
+<body vid="11">
+
+    <div class="system-grid" vid="12"></div>
+
+    <nav vid="13">
+        <a href="/" class="logo" vid="14">FOXTROVE</a>
+        <div class="nav-status" vid="15">
+            <span class="meta-label" vid="16">REPORTS // ARCHIVE_04</span>
+        </div>
+    </nav>
+
+    <main vid="17">
+        <section class="case-header" vid="18">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;" vid="19">
+                <svg class="star-motif" style="color: var(--clay);" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" vid="20">
+                    <path d="M12 0L13.5 10.5L24 12L13.5 13.5L12 24L10.5 13.5L0 12L10.5 10.5L12 0Z" fill="currentColor" vid="21"></path>
+                </svg>
+                <span class="meta-label" vid="22">System Efficacy Reports</span>
+            </div>
+            <h1 vid="23">CASE<br vid="24">STUDIES</h1>
+            <p class="meta-label" style="max-width: 400px; color: var(--text-main)" vid="25">Documented proof of operational leverage across high-stakes industries.</p>
+        </section>
+
+        <div class="case-stack" vid="26">
+            
+            
+            <div class="case-card" onclick="toggleCase(this)" vid="27">
+                <button class="btn-close" vid="28">Collapse [x]</button>
+                <div class="card-summary" vid="29">
+                    <div class="info" vid="30">
+                        <span class="meta-label" vid="31">[SEC. 01] INDUSTRY: INFRASTRUCTURE</span>
+                        <h2 class="case-title" vid="32">Recovering Margin in Mid-Cap Construction</h2>
+                        <p class="meta-label" style="color: var(--text-muted); text-transform: none;" vid="33">Enterprise-wide audit revealed 8.2% margin leakage through unbilled change orders and manual invoice matching.</p>
+                    </div>
+                    <div class="metrics" vid="34">
+                        <span class="meta-label" vid="35">Annual Recovery</span>
+                        <div class="stat-large" vid="36">$2.1M</div>
+                        <div class="comparison-badge" vid="37">↑ 14% Margin Stability</div>
+                    </div>
+                </div>
+                <div class="case-content" vid="38">
+                    <div class="content-grid" vid="39">
+                        <div class="system-preview" vid="40">
+                            <span class="meta-label" style="margin-bottom: 1rem; display: block;" vid="41">Build: Automated Reconciliation Engine</span>
+                            <div class="mock-ui" vid="42">
+                                <div class="ui-header" vid="43"></div>
+                                <div style="padding: 20px;" vid="44">
+                                    <div class="ui-row" style="width: 40%" vid="45"></div>
+                                    <div class="ui-row" style="width: 60%" vid="46"></div>
+                                    <div class="ui-chart" vid="47">
+                                        <div class="chart-bar" style="height: 30%" vid="48"></div>
+                                        <div class="chart-bar" style="height: 45%" vid="49"></div>
+                                        <div class="chart-bar" style="height: 25%" vid="50"></div>
+                                        <div class="chart-bar" style="height: 80%" vid="51"></div>
+                                        <div class="chart-bar" style="height: 65%" vid="52"></div>
+                                        <div class="chart-bar" style="height: 95%" vid="53"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="timeline" vid="54">
+                            <div class="timeline-item" vid="55">
+                                <span class="meta-label" vid="56">Week 01-02: Audit</span>
+                                <p style="font-size: 0.9rem; margin-top: 0.5rem;" vid="57">Identified fragmentation in field-to-office data flow.</p>
+                            </div>
+                            <div class="timeline-item" vid="58">
+                                <span class="meta-label" vid="59">Week 03-05: Playbook</span>
+                                <p style="font-size: 0.9rem; margin-top: 0.5rem;" vid="60">Mapped 14 key leakage points in the procurement cycle.</p>
+                            </div>
+                            <div class="timeline-item" vid="61">
+                                <span class="meta-label" vid="62">Week 06-12: Build</span>
+                                <p style="font-size: 0.9rem; margin-top: 0.5rem;" vid="63">Deployed automated matching system for all vendor billing.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="case-card" onclick="toggleCase(this)" vid="64">
+                <button class="btn-close" vid="65">Collapse [x]</button>
+                <div class="card-summary" vid="66">
+                    <div class="info" vid="67">
+                        <span class="meta-label" vid="68">[SEC. 02] INDUSTRY: PRIVATE EQUITY</span>
+                        <h2 class="case-title" vid="69">Compressing Reporting Cycles for Portfolio Ops</h2>
+                        <p class="meta-label" style="color: var(--text-muted); text-transform: none;" vid="70">Replacing 47-day manual roll-up processes with a unified real-time intelligence layer for 12 portfolio companies.</p>
+                    </div>
+                    <div class="metrics" vid="71">
+                        <span class="meta-label" vid="72">Time to Intel</span>
+                        <div class="stat-large" vid="73">03<span style="font-size: 0.4em" vid="74">Days</span></div>
+                        <div class="comparison-badge" vid="75">↓ 93% Reduction in Drag</div>
+                    </div>
+                </div>
+                <div class="case-content" vid="76">
+                    <div class="content-grid" vid="77">
+                        <div class="system-preview" vid="78">
+                            <span class="meta-label" style="margin-bottom: 1rem; display: block;" vid="79">Build: Multi-Entity Intelligence Dashboard</span>
+                            <div class="mock-ui" vid="80">
+                                <div style="display: flex; gap: 10px; padding: 20px;" vid="81">
+                                    <div style="flex: 1; height: 100px; background: #3d3635; border: 1px solid var(--clay);" vid="82"></div>
+                                    <div style="flex: 1; height: 100px; background: #3d3635;" vid="83"></div>
+                                    <div style="flex: 1; height: 100px; background: #3d3635;" vid="84"></div>
+                                </div>
+                                <div style="padding: 0 20px;" vid="85">
+                                    <div class="ui-row" vid="86"></div>
+                                    <div class="ui-row" vid="87"></div>
+                                    <div class="ui-row" style="width: 30%" vid="88"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="timeline" vid="89">
+                            <div class="timeline-item" vid="90">
+                                <span class="meta-label" vid="91">Week 01-03: Audit</span>
+                                <p style="font-size: 0.9rem; margin-top: 0.5rem;" vid="92">Discovery of inconsistent data schemas across portfolio assets.</p>
+                            </div>
+                            <div class="timeline-item" vid="93">
+                                <span class="meta-label" vid="94">Week 04-06: Playbook</span>
+                                <p style="font-size: 0.9rem; margin-top: 0.5rem;" vid="95">Unified KPI framework and data normalization strategy.</p>
+                            </div>
+                            <div class="timeline-item" vid="96">
+                                <span class="meta-label" vid="97">Week 07-16: Build</span>
+                                <p style="font-size: 0.9rem; margin-top: 0.5rem;" vid="98">Custom data connectors and live visualization suite.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="case-card" onclick="toggleCase(this)" vid="99">
+                <button class="btn-close" vid="100">Collapse [x]</button>
+                <div class="card-summary" vid="101">
+                    <div class="info" vid="102">
+                        <span class="meta-label" vid="103">[SEC. 03] INDUSTRY: LOGISTICS &amp; SERVICES</span>
+                        <h2 class="case-title" vid="104">Scaling Support Without Adding Headcount</h2>
+                        <p class="meta-label" style="color: var(--text-muted); text-transform: none;" vid="105">Automating coordination for 40+ field locations to eliminate manual status reporting and scheduling friction.</p>
+                    </div>
+                    <div class="metrics" vid="106">
+                        <span class="meta-label" vid="107">Capacity Unlocked</span>
+                        <div class="stat-large" vid="108">340<span style="font-size: 0.4em" vid="109">hrs/mo</span></div>
+                        <div class="comparison-badge" vid="110">↑ 400% Scale Potential</div>
+                    </div>
+                </div>
+                <div class="case-content" vid="111">
+                    <div class="content-grid" vid="112">
+                        <div class="system-preview" vid="113">
+                            <span class="meta-label" style="margin-bottom: 1rem; display: block;" vid="114">Build: Agentic Scheduling Layer</span>
+                            <div class="mock-ui" style="display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 15px;" vid="115">
+                                <div style="width: 80%; height: 2px; background: var(--grid-line-strong);" vid="116"></div>
+                                <div style="display: flex; gap: 40px;" vid="117">
+                                    <div style="width: 40px; height: 40px; border: 1px solid var(--clay); transform: rotate(45deg);" vid="118"></div>
+                                    <div style="width: 40px; height: 40px; border: 1px solid var(--acid); transform: rotate(45deg);" vid="119"></div>
+                                    <div style="width: 40px; height: 40px; border: 1px solid var(--clay); transform: rotate(45deg);" vid="120"></div>
+                                </div>
+                                <div style="width: 80%; height: 2px; background: var(--grid-line-strong);" vid="121"></div>
+                            </div>
+                        </div>
+                        <div class="timeline" vid="122">
+                            <div class="timeline-item" vid="123">
+                                <span class="meta-label" vid="124">Phase 01</span>
+                                <p style="font-size: 0.9rem; margin-top: 0.5rem;" vid="125">Audit pinpointed "Status Drag" — humans calling humans for updates.</p>
+                            </div>
+                            <div class="timeline-item" vid="126">
+                                <span class="meta-label" vid="127">Phase 02</span>
+                                <p style="font-size: 0.9rem; margin-top: 0.5rem;" vid="128">Playbook designed automated data-capture triggers for field agents.</p>
+                            </div>
+                            <div class="timeline-item" vid="129">
+                                <span class="meta-label" vid="130">Phase 03</span>
+                                <p style="font-size: 0.9rem; margin-top: 0.5rem;" vid="131">Build deployed a production-ready auto-scheduler for 400+ technicians.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script vid="132">
+        function toggleCase(card) {
+            const isActive = card.classList.contains('active');
+            
+            
+            document.querySelectorAll('.case-card').forEach(c => {
+                c.classList.remove('active');
+            });
+
+            if (!isActive) {
+                card.classList.add('active');
+                
+                
+                setTimeout(() => {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 300);
+            }
+        }
+
+        
+        document.querySelectorAll('.case-content').forEach(content => {
+            content.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+        });
+
+        
+        gsap.from('.case-card', {
+            y: 50,
+            opacity: 0,
+            duration: 1,
+            stagger: 0.2,
+            ease: "power3.out",
+            delay: 0.2
+        });
+    </script>
+
+</body></html>

@@ -1,0 +1,253 @@
+<html lang="en" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">Post Post Hotel - Hotel Guide</title>
+    <script src="https://cdn.tailwindcss.com/3.4.17" vid="5"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" vid="6">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" vid="7">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&amp;family=Courier+Prime:wght@400;700&amp;family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&amp;display=swap" rel="stylesheet" vid="8">
+    <script src="https://unpkg.com/phosphor-icons" vid="9"></script>
+    <style vid="10">
+        :root {
+            --color-mustard: #FFC233;
+            --color-terracotta: #C65D3B;
+            --color-warm-gray: #D1D1C9;
+            --color-ink: #1F1F1F;
+            --color-paper: #F4F1EA;
+        }
+        
+        body {
+            background-color: var(--color-paper);
+            color: var(--color-ink);
+            font-family: 'Cormorant Garamond', serif;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+        }
+
+        .font-typewriter {
+            font-family: 'Courier Prime', monospace;
+        }
+
+        .font-sans-modern {
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .paper-texture {
+            position: relative;
+            overflow: hidden;
+        }
+        .paper-texture::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' fill='white'/%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.15'/%3E%3C/svg%3E");
+            opacity: 0.4;
+            pointer-events: none;
+            mix-blend-mode: multiply;
+        }
+
+        .brochure-fold {
+            box-shadow: inset -20px 0 30px -20px rgba(0,0,0,0.1), inset 20px 0 30px -20px rgba(0,0,0,0.1);
+        }
+
+        @keyframes rotate-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .spin-slow {
+            animation: rotate-slow 20s linear infinite;
+        }
+
+        .text-vertical {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+        }
+
+        .squiggly-border {
+             filter: url('#wavy'); 
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D1D1C9;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="w-full min-h-screen flex flex-col lg:flex-row overflow-hidden selection:bg-[#C65D3B] selection:text-white" vid="11">
+
+    <svg class="absolute w-0 h-0" vid="12">
+        <filter id="wavy" vid="13">
+            <feTurbulence x="0" y="0" baseFrequency="0.02" numOctaves="5" seed="2" vid="14"></feTurbulence>
+            <feDisplacementMap in="SourceGraphic" scale="2" vid="15"></feDisplacementMap>
+        </filter>
+    </svg>
+
+    <aside class="w-full lg:w-1/4 h-auto lg:h-screen border-r border-[#D1D1C9]/50 flex flex-col justify-between p-8 lg:p-12 z-20 bg-[#F4F1EA]" vid="16">
+        <div class="flex flex-col gap-8" vid="17">
+            <div class="flex items-center gap-3" vid="18">
+                <a href="#" class="w-10 h-10 border border-current rounded-full flex items-center justify-center hover:bg-[#1F1F1F] hover:text-[#F4F1EA] transition-all" vid="19">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-6 h-6" vid="20">
+                        <path d="M4 12h16M4 12l6-6m-6 6l6 6" vid="21"></path>
+                    </svg>
+                </a>
+                <span class="font-typewriter uppercase tracking-widest text-xs" vid="22">Back to Digital Key</span>
+            </div>
+
+            <div class="space-y-4 mt-8" vid="23">
+                <h1 class="text-5xl lg:text-7xl font-ital font-light leading-[0.9]" vid="24">Post<br vid="25"><span class="ml-8 italic" vid="26">Post</span></h1>
+                <p class="font-typewriter text-sm max-w-[200px] leading-relaxed opacity-80" vid="27">
+                    Est. 1924<br vid="28">
+                    Bad Hofgastein<br vid="29">
+                    Austria
+                </p>
+            </div>
+        </div>
+
+        <nav class="hidden lg:flex flex-col gap-4 mt-auto" vid="30">
+            <a href="#" class="font-typewriter uppercase text-xs tracking-widest hover:text-[#C65D3B] transition-colors opacity-50" vid="31">My Wallet</a>
+            <a href="#" class="font-typewriter uppercase text-xs tracking-widest hover:text-[#C65D3B] transition-colors flex items-center gap-2" vid="32">
+                <div class="w-1.5 h-1.5 bg-[#C65D3B] rounded-full" vid="33"></div>
+                Hotel Guide
+            </a>
+            <a href="#" class="font-typewriter uppercase text-xs tracking-widest hover:text-[#C65D3B] transition-colors opacity-50" vid="34">Room Service</a>
+            <a href="#" class="font-typewriter uppercase text-xs tracking-widest hover:text-[#C65D3B] transition-colors opacity-50" vid="35">Concierge</a>
+        </nav>
+    </aside>
+
+    <main class="flex-1 w-full h-full relative overflow-y-auto lg:overflow-hidden p-6 lg:p-12" vid="36">
+        <div class="max-w-6xl mx-auto h-full flex flex-col" vid="37">
+            
+            <header class="mb-12 flex justify-between items-end" vid="38">
+                <div vid="39">
+                    <span class="font-typewriter uppercase text-xs tracking-[0.3em] opacity-50" vid="40">In-House Directory</span>
+                    <h2 class="text-4xl font-serif italic mt-2" vid="41">The Guest's Compass</h2>
+                </div>
+                <div class="hidden md:block" vid="42">
+                    <span class="font-typewriter text-[10px] uppercase tracking-widest border border-[#D1D1C9] px-4 py-2" vid="43">Issue No. 102 — Autumn 2024</span>
+                </div>
+            </header>
+
+            <div class="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-0 shadow-2xl rounded-sm overflow-hidden brochure-fold border border-black/5" vid="44">
+                
+                
+                <div class="paper-texture bg-[#D1D1C9]/30 p-10 flex flex-col border-r border-black/5" vid="45">
+                    <div class="mb-12" vid="46">
+                        <div class="w-12 h-12 border border-black/20 rounded-full flex items-center justify-center mb-6" vid="47">
+                             <svg class="w-6 h-6 opacity-60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" vid="48"><path d="M12 21a9 9 0 100-18 9 9 0 000 18zM8 11h8M10 15h4" vid="49"></path></svg>
+                        </div>
+                        <h3 class="font-serif text-3xl mb-1" vid="50">Sanatorium</h3>
+                        <h3 class="font-serif text-3xl italic" vid="51">&amp; Alpentherme</h3>
+                    </div>
+
+                    <div class="space-y-10 font-typewriter text-sm" vid="52">
+                        <div vid="53">
+                            <p class="uppercase tracking-widest opacity-40 text-[10px] mb-2" vid="54">Thermal Waters</p>
+                            <p class="mb-1" vid="55">Daily: 07:00 — 22:00</p>
+                            <p class="opacity-70 leading-relaxed italic" vid="56">Natural radon-rich waters from the Graukogel mountain springs.</p>
+                        </div>
+                        <div vid="57">
+                            <p class="uppercase tracking-widest opacity-40 text-[10px] mb-2" vid="58">Sauna Village</p>
+                            <p class="mb-1" vid="59">Daily: 11:00 — 21:00</p>
+                            <p class="opacity-70 leading-relaxed italic" vid="60">Pine wood infusions and ice-cold plunges in the mountain air.</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-auto pt-10" vid="61">
+                         <div class="border-2 border-dashed border-[#C65D3B]/40 rounded-lg p-6 flex flex-col items-center text-center transform -rotate-1" vid="62">
+                             <span class="font-typewriter text-[9px] uppercase tracking-tighter mb-2 opacity-60" vid="63">Verified Amenity</span>
+                             <span class="font-serif italic text-xl text-[#C65D3B]" vid="64">Relaxation awaits</span>
+                         </div>
+                    </div>
+                </div>
+
+                
+                <div class="paper-texture bg-[#F4F1EA] p-10 flex flex-col border-r border-black/5" vid="65">
+                    <div class="mb-12" vid="66">
+                         <div class="w-12 h-12 border border-[#C65D3B]/30 rounded-full flex items-center justify-center mb-6" vid="67">
+                             <svg class="w-6 h-6 text-[#C65D3B]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" vid="68"><path d="M18 8a3 3 0 01-3 3H5a3 3 0 01-3-3V7a3 3 0 013-3h10a3 3 0 013 3v1zM10 11v10M14 11v10" vid="69"></path></svg>
+                        </div>
+                        <h3 class="font-serif text-3xl mb-1" vid="70">The Dining</h3>
+                        <h3 class="font-serif text-3xl italic" vid="71">Chambers</h3>
+                    </div>
+
+                    <div class="space-y-10 font-typewriter text-sm" vid="72">
+                        <div vid="73">
+                            <p class="uppercase tracking-widest opacity-40 text-[10px] mb-2" vid="74">Breakfast Atelier</p>
+                            <p class="mb-1" vid="75">Daily: 07:00 — 11:00</p>
+                            <p class="opacity-70 leading-relaxed" vid="76">Artisanal breads, local alpine cheeses, and preserves.</p>
+                        </div>
+                        <div vid="77">
+                            <p class="uppercase tracking-widest opacity-40 text-[10px] mb-2" vid="78">The Post Hall (Dinner)</p>
+                            <p class="mb-1" vid="79">Mon — Sat: 18:30 — 22:00</p>
+                            <p class="opacity-70 leading-relaxed mb-4" vid="80">Modern interpretation of classic Austrian tavern fare.</p>
+                            <button class="bg-[#1F1F1F] text-[#F4F1EA] px-4 py-2 text-[10px] uppercase tracking-[0.2em] hover:bg-[#C65D3B] transition-colors" vid="81">Book a Table</button>
+                        </div>
+                    </div>
+
+                    <div class="mt-auto pt-10" vid="82">
+                         <div class="w-24 h-24 mx-auto border border-black/10 rounded-full flex items-center justify-center opacity-30" vid="83">
+                             <svg class="w-full h-full p-4 spin-slow" viewBox="0 0 100 100" vid="84">
+                                <path id="curve-dir" d="M 50, 50 m -35, 0 a 35,35 0 1,1 70,0 a 35,35 0 1,1 -70,0" fill="transparent" vid="85"></path>
+                                <text class="font-typewriter text-[7px] uppercase tracking-widest" vid="86">
+                                    <textPath xlink:href="#curve-dir" vid="87">bon appétit • guten appetit • </textPath>
+                                </text>
+                             </svg>
+                         </div>
+                    </div>
+                </div>
+
+                
+                <div class="paper-texture bg-[#FFC233] p-10 flex flex-col" vid="88">
+                    <div class="mb-12" vid="89">
+                         <div class="w-12 h-12 border border-black/20 rounded-full flex items-center justify-center mb-6" vid="90">
+                             <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" vid="91"><path d="M13 18l5-5-5-5M6 13l5 5-5-5z" vid="92"></path></svg>
+                        </div>
+                        <h3 class="font-serif text-3xl mb-1" vid="93">Physical</h3>
+                        <h3 class="font-serif text-3xl italic" vid="94">Endeavors</h3>
+                    </div>
+
+                    <div class="space-y-10 font-typewriter text-sm" vid="95">
+                        <div vid="96">
+                            <p class="uppercase tracking-widest opacity-40 text-[10px] mb-2" vid="97">The Iron Room (Gym)</p>
+                            <p class="mb-1" vid="98">24 Hours</p>
+                            <p class="opacity-70 leading-relaxed" vid="99">Essential weights and cardio overlooking the valley peaks.</p>
+                        </div>
+                        <div vid="100">
+                            <p class="uppercase tracking-widest opacity-40 text-[10px] mb-2" vid="101">Ski &amp; Boot Depot</p>
+                            <p class="mb-1" vid="102">Daily: 08:00 — 19:00</p>
+                            <p class="opacity-70 leading-relaxed" vid="103">Heated lockers available in the lower basement level.</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-auto relative" vid="104">
+                        <div class="absolute -bottom-4 -right-4 w-32 h-32 opacity-10 pointer-events-none" vid="105">
+                            <svg viewBox="0 0 100 100" fill="currentColor" vid="106">
+                                <circle cx="50" cy="50" r="40" vid="107"></circle>
+                            </svg>
+                        </div>
+                        <div class="border-t border-black/10 pt-6" vid="108">
+                             <p class="text-[10px] opacity-60 leading-tight" vid="109">For guided hiking tours or ski school arrangements, please consult the concierge desk in the lobby.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="mt-12 flex flex-col md:flex-row justify-between items-center opacity-60 font-typewriter text-[10px] uppercase tracking-widest" vid="110">
+                <div vid="111">Post Post Hotel © 1924-2024</div>
+                <div class="flex gap-8 mt-4 md:mt-0" vid="112">
+                    <a href="#" class="hover:text-[#C65D3B] transition-colors" vid="113">House Rules</a>
+                    <a href="#" class="hover:text-[#C65D3B] transition-colors" vid="114">Contact Desk</a>
+                    <a href="#" class="hover:text-[#C65D3B] transition-colors" vid="115">History</a>
+                </div>
+            </footer>
+        </div>
+    </main>
+
+    <div class="fixed inset-0 pointer-events-none opacity-[0.03] z-50" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E');" vid="116"></div>
+
+</body></html>

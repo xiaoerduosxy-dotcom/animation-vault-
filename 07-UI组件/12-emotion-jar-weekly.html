@@ -1,0 +1,168 @@
+<html lang="zh-CN" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">情绪周报 - 情绪收藏罐</title>
+    <script src="https://cdn.tailwindcss.com/3.4.17" vid="5"></script>
+    <style vid="6">
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500&display=swap');
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #E5E5E5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        @keyframes float1 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(5px, -15px) rotate(5deg); }
+            66% { transform: translate(-5px, -10px) rotate(-5deg); }
+        }
+        @keyframes float-subtle {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes blob-pulse {
+            0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+            50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+        }
+
+        .animate-float-1 { animation: float1 6s ease-in-out infinite; }
+        .animate-float-subtle { animation: float-subtle 4s ease-in-out infinite; }
+        .animate-blob { animation: blob-pulse 8s ease-in-out infinite; }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.02);
+        }
+
+        .chart-fill-light { background: linear-gradient(180deg, #FDE68A 0%, #FBBF24 100%); }
+        .chart-fill-quiet { background: linear-gradient(180deg, #BFDBFE 0%, #60A5FA 100%); }
+        .chart-fill-stuck { background: linear-gradient(180deg, #FFEDD5 0%, #FB923C 100%); }
+        .chart-fill-overload { background: linear-gradient(180deg, #F3E8FF 0%, #C084FC 100%); }
+
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body vid="7">
+
+    <div id="app-container" class="w-[400px] h-[867px] relative overflow-hidden bg-[#FAFAF7] text-stone-800 rounded-[20px] shadow-2xl" vid="8">
+
+        
+        <div id="screen-reflection" class="absolute inset-0 z-10 overflow-y-auto hide-scrollbar pb-32" vid="9">
+            
+            
+            <div class="px-8 pt-16 pb-8" vid="10">
+                <div class="flex justify-between items-center" vid="11">
+                    <span class="text-[10px] tracking-[0.2em] text-stone-400 font-medium uppercase" vid="12">第 12 周回顾</span>
+                    <button class="text-stone-300 hover:text-stone-500 transition-colors" vid="13">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" vid="14"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" vid="15"></path></svg>
+                    </button>
+                </div>
+                <h1 class="text-2xl font-light text-stone-700 mt-4 tracking-wide leading-relaxed" vid="16">这一周，<br vid="17">你的情绪在微光中漫步。</h1>
+                <p class="text-stone-400 text-xs mt-4 font-light leading-relaxed" vid="18">共捕捉到了 28 个情绪碎片，<br vid="19">平静的比例最高，像一池不起波澜的秋水。</p>
+            </div>
+
+            
+            <div class="px-6 space-y-6" vid="20">
+                
+                
+                <div class="relative w-full h-[240px] glass-card rounded-[40px] flex items-center justify-center overflow-hidden" vid="21">
+                    
+                    <div class="absolute w-48 h-48 chart-fill-quiet opacity-20 blur-3xl animate-blob" style="top: 10%; left: 10%;" vid="22"></div>
+                    <div class="absolute w-40 h-40 chart-fill-light opacity-30 blur-2xl animate-blob" style="bottom: 10%; right: 5%; animation-delay: -2s;" vid="23"></div>
+                    <div class="absolute w-32 h-32 chart-fill-stuck opacity-15 blur-2xl animate-blob" style="top: 20%; right: 20%; animation-delay: -4s;" vid="24"></div>
+                    
+                    
+                    <div class="relative z-10 flex flex-col items-center" vid="25">
+                        <div class="w-16 h-16 bg-white rounded-full shadow-sm flex items-center justify-center text-2xl animate-float-subtle" vid="26">🌊</div>
+                        <span class="mt-4 text-[11px] text-stone-500 font-medium tracking-[0.3em]" vid="27">平静主基调</span>
+                    </div>
+                </div>
+
+                
+                <div class="px-2 space-y-5" vid="28">
+                    <h2 class="text-[10px] text-stone-400 font-medium tracking-widest uppercase mb-4" vid="29">分布统计</h2>
+                    
+                    
+                    <div class="space-y-2" vid="30">
+                        <div class="flex justify-between items-end text-[11px]" vid="31">
+                            <span class="text-stone-600" vid="32">安静罐</span>
+                            <span class="text-stone-400" vid="33">45%</span>
+                        </div>
+                        <div class="w-full h-1.5 bg-stone-100 rounded-full overflow-hidden" vid="34">
+                            <div class="h-full chart-fill-quiet w-[45%] rounded-full" vid="35"></div>
+                        </div>
+                    </div>
+
+                    
+                    <div class="space-y-2" vid="36">
+                        <div class="flex justify-between items-end text-[11px]" vid="37">
+                            <span class="text-stone-600" vid="38">发光罐</span>
+                            <span class="text-stone-400" vid="39">30%</span>
+                        </div>
+                        <div class="w-full h-1.5 bg-stone-100 rounded-full overflow-hidden" vid="40">
+                            <div class="h-full chart-fill-light w-[30%] rounded-full" vid="41"></div>
+                        </div>
+                    </div>
+
+                    
+                    <div class="space-y-2" vid="42">
+                        <div class="flex justify-between items-end text-[11px]" vid="43">
+                            <span class="text-stone-600" vid="44">卡住罐</span>
+                            <span class="text-stone-400" vid="45">15%</span>
+                        </div>
+                        <div class="w-full h-1.5 bg-stone-100 rounded-full overflow-hidden" vid="46">
+                            <div class="h-full chart-fill-stuck w-[15%] rounded-full" vid="47"></div>
+                        </div>
+                    </div>
+
+                    
+                    <div class="space-y-2" vid="48">
+                        <div class="flex justify-between items-end text-[11px]" vid="49">
+                            <span class="text-stone-600" vid="50">过载罐</span>
+                            <span class="text-stone-400" vid="51">10%</span>
+                        </div>
+                        <div class="w-full h-1.5 bg-stone-100 rounded-full overflow-hidden" vid="52">
+                            <div class="h-full chart-fill-overload w-[10%] rounded-full" vid="53"></div>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div class="mt-10" vid="54">
+                    <button class="w-full text-left p-6 bg-white border border-stone-100 rounded-[32px] shadow-sm hover:shadow-md transition-shadow group" vid="55">
+                        <div class="flex items-center gap-3 mb-3" vid="56">
+                            <div class="w-8 h-8 rounded-full bg-[#F5F7EB] flex items-center justify-center text-stone-400 group-hover:text-stone-600 transition-colors" vid="57">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" vid="58"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" vid="59"></path></svg>
+                            </div>
+                            <span class="text-sm font-medium text-stone-600 tracking-wide" vid="60">添加本周感悟</span>
+                        </div>
+                        <p class="text-xs text-stone-400 font-light leading-relaxed pl-1" vid="61">为过去这七天写下一句总结吧，哪怕只是关于今天天气的一点感受。</p>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 w-[280px] h-14 bg-white/80 backdrop-blur-xl border border-stone-100 shadow-[0_8px_30px_rgb(0,0,0,0.06)] rounded-[28px] px-6 flex items-center justify-between z-40" id="bottom-nav" vid="62">
+            <button class="w-12 h-12 flex items-center justify-center text-stone-400" vid="63">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" vid="64"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" vid="65"></path></svg>
+            </button>
+            <button class="w-12 h-12 flex items-center justify-center text-stone-800" vid="66">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" vid="67"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" vid="68"></path></svg>
+            </button>
+            <button class="w-12 h-12 flex items-center justify-center text-stone-400" vid="69">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" vid="70"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" vid="71"></path></svg>
+            </button>
+        </div>
+
+    </div>
+
+</body></html>

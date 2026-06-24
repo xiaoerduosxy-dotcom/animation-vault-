@@ -1,0 +1,234 @@
+<html lang="en" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">Post Post Hotel - Concierge &amp; Attractions</title>
+    <script src="https://cdn.tailwindcss.com/3.4.17" vid="5"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" vid="6">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" vid="7">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&amp;family=Courier+Prime:wght@400;700&amp;family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&amp;display=swap" rel="stylesheet" vid="8">
+    <style vid="9">
+        :root {
+            --color-mustard: #FFC233;
+            --color-terracotta: #C65D3B;
+            --color-warm-gray: #D1D1C9;
+            --color-ink: #1F1F1F;
+            --color-paper: #F4F1EA;
+            --color-pine: #2D4031;
+        }
+        
+        body {
+            background-color: var(--color-paper);
+            color: var(--color-ink);
+            font-family: 'Cormorant Garamond', serif;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+        }
+
+        .font-typewriter { font-family: 'Courier Prime', monospace; }
+        .font-sans-modern { font-family: 'DM Sans', sans-serif; }
+        
+        .paper-texture {
+            position: relative;
+            overflow: hidden;
+        }
+        .paper-texture::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' fill='white'/%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.15'/%3E%3C/svg%3E");
+            opacity: 0.4;
+            pointer-events: none;
+            mix-blend-mode: multiply;
+        }
+
+        .poster-card {
+            transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+            cursor: pointer;
+        }
+        .poster-card:hover {
+            transform: translateY(-8px) rotate(1deg);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .stamp-effect {
+            mask-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)'/%3E%3C/svg%3E");
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .float-animation { animation: float 6s ease-in-out infinite; }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #D1D1C9; border-radius: 3px; }
+    </style>
+</head>
+<body class="w-full h-[960px] flex overflow-hidden selection:bg-[#C65D3B] selection:text-white" vid="10">
+
+    
+    <aside class="w-1/4 h-full border-r border-[#D1D1C9]/50 flex flex-col justify-between p-12 z-20 bg-[#F4F1EA]" vid="11">
+        <div class="flex flex-col gap-8" vid="12">
+            <div class="flex items-center gap-3 cursor-pointer group" vid="13">
+                <div class="w-10 h-10 border border-current rounded-full flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all" vid="14">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-6 h-6" vid="15">
+                        <path d="M4 12h16M4 12l6-6m-6 6l6 6" vid="16"></path>
+                    </svg>
+                </div>
+                <span class="font-typewriter uppercase tracking-widest text-xs" vid="17">Digital Key</span>
+            </div>
+
+            <div class="space-y-4 mt-8" vid="18">
+                <h1 class="text-7xl font-ital font-light leading-[0.9]" vid="19">Local<br vid="20"><span class="ml-8 italic" vid="21">Guide</span></h1>
+                <p class="font-typewriter text-sm max-w-[200px] leading-relaxed opacity-80" vid="22">
+                    Vol. 04 / 2024<br vid="23">
+                    Bad Hofgastein<br vid="24">
+                    Attractions
+                </p>
+            </div>
+        </div>
+
+        <nav class="flex flex-col gap-6 mt-auto" vid="25">
+            <a href="#" class="font-typewriter uppercase text-xs tracking-widest opacity-50 hover:opacity-100 transition-opacity" vid="26">My Wallet</a>
+            <a href="#" class="font-typewriter uppercase text-xs tracking-widest flex items-center gap-2" vid="27">
+                <div class="w-1.5 h-1.5 bg-[#C65D3B] rounded-full" vid="28"></div>
+                Hotel Guide
+            </a>
+            <a href="#" class="font-typewriter uppercase text-xs tracking-widest opacity-50 hover:opacity-100 transition-opacity" vid="29">Room Service</a>
+            <a href="#" class="font-typewriter uppercase text-xs tracking-widest opacity-100 text-[#C65D3B]" vid="30">Concierge</a>
+        </nav>
+    </aside>
+
+    
+    <main class="flex-1 h-full relative overflow-y-auto bg-[#F4F1EA] p-16" vid="31">
+        
+        
+        <div class="flex justify-between items-end mb-16 border-b border-black/10 pb-8" vid="32">
+            <div vid="33">
+                <span class="font-typewriter text-xs uppercase tracking-[0.3em] opacity-40 block mb-2" vid="34">Selected Curations</span>
+                <h2 class="font-serif text-4xl italic" vid="35">Bad Hofgastein Wonders</h2>
+            </div>
+            <div class="text-right" vid="36">
+                <span class="font-typewriter text-xs uppercase tracking-widest opacity-40 block" vid="37">Temp: 14°C</span>
+                <span class="font-serif text-lg" vid="38">Crisp Alpine Air</span>
+            </div>
+        </div>
+
+        
+        <div class="grid grid-cols-3 gap-10" vid="39">
+            
+            
+            <div class="poster-card paper-texture bg-[#D1D1C9] p-4 shadow-lg border border-black/5 flex flex-col" style="transform: rotate(-1deg);" vid="40">
+                <div class="relative flex-1 bg-[#F4F1EA] overflow-hidden border border-black/10 flex flex-col" vid="41">
+                    <div class="p-6 text-center" vid="42">
+                        <h3 class="font-serif text-3xl uppercase tracking-tighter" vid="43">Alpentherme</h3>
+                        <div class="w-12 h-px bg-black/20 mx-auto my-2" vid="44"></div>
+                        <p class="font-typewriter text-[10px] tracking-[0.2em] uppercase" vid="45">Mineral Waters &amp; Steam</p>
+                    </div>
+                    
+                    <div class="flex-1 relative flex items-center justify-center p-8" vid="46">
+                        <svg viewBox="0 0 200 200" class="w-48 h-48 opacity-80" vid="47">
+                            <path d="M40,150 Q100,130 160,150" fill="none" stroke="#C65D3B" stroke-width="2" vid="48"></path>
+                            <path d="M40,165 Q100,145 160,165" fill="none" stroke="#C65D3B" stroke-width="2" vid="49"></path>
+                            <circle cx="100" cy="80" r="40" fill="none" stroke="#C65D3B" stroke-width="1" stroke-dasharray="4 2" vid="50"></circle>
+                            <path d="M90,70 L110,90 M110,70 L90,90" stroke="#C65D3B" stroke-width="2" vid="51"></path>
+                        </svg>
+                    </div>
+                    
+                    <div class="mt-auto p-6 bg-[#C65D3B] text-[#F4F1EA] text-center" vid="52">
+                        <span class="font-serif italic text-xl" vid="53">Relaxation Awaits</span>
+                    </div>
+                </div>
+                <div class="pt-4 flex justify-between items-center px-2" vid="54">
+                    <span class="font-typewriter text-[9px] uppercase tracking-widest opacity-60" vid="55">0.8km from hotel</span>
+                    <button class="font-typewriter text-[9px] uppercase tracking-widest border-b border-black/30 hover:border-black transition-all" vid="56">View Route</button>
+                </div>
+            </div>
+
+            
+            <div class="poster-card paper-texture bg-[#FFC233] p-4 shadow-lg border border-black/5 flex flex-col" style="transform: rotate(1.5deg);" vid="57">
+                <div class="relative flex-1 bg-[#F4F1EA] overflow-hidden border border-black/10 flex flex-col" vid="58">
+                    <div class="p-6 text-center" vid="59">
+                        <h3 class="font-serif text-3xl uppercase tracking-tighter" vid="60">Schlossalm</h3>
+                        <div class="w-12 h-px bg-black/20 mx-auto my-2" vid="61"></div>
+                        <p class="font-typewriter text-[10px] tracking-[0.2em] uppercase" vid="62">The Peak of Gastein</p>
+                    </div>
+                    
+                    <div class="flex-1 relative flex items-center justify-center p-8" vid="63">
+                        <svg viewBox="0 0 200 200" class="w-48 h-48 opacity-90" vid="64">
+                            <path d="M20,160 L70,60 L100,110 L140,40 L180,160 Z" fill="#2D4031" vid="65"></path>
+                            <path d="M70,60 L85,90 L60,85 Z" fill="white" opacity="0.4" vid="66"></path>
+                            <circle cx="150" cy="60" r="15" fill="#FFC233" vid="67"></circle>
+                        </svg>
+                    </div>
+                    
+                    <div class="mt-auto p-6 bg-[#2D4031] text-[#F4F1EA] text-center" vid="68">
+                        <span class="font-serif italic text-xl" vid="69">Altitude &amp; Spirit</span>
+                    </div>
+                </div>
+                <div class="pt-4 flex justify-between items-center px-2" vid="70">
+                    <span class="font-typewriter text-[9px] uppercase tracking-widest opacity-60" vid="71">Cable Car Station</span>
+                    <button class="font-typewriter text-[9px] uppercase tracking-widest border-b border-black/30 hover:border-black transition-all" vid="72">Explore Trails</button>
+                </div>
+            </div>
+
+            
+            <div class="poster-card paper-texture bg-[#F4F1EA] p-4 shadow-lg border border-black/10 flex flex-col" style="transform: rotate(-0.5deg);" vid="73">
+                <div class="relative flex-1 bg-[#1F1F1F] overflow-hidden border border-black/10 flex flex-col" vid="74">
+                    <div class="p-6 text-center text-[#F4F1EA]" vid="75">
+                        <h3 class="font-serif text-3xl uppercase tracking-tighter" vid="76">Sportgastein</h3>
+                        <div class="w-12 h-px bg-[#F4F1EA]/20 mx-auto my-2" vid="77"></div>
+                        <p class="font-typewriter text-[10px] tracking-[0.2em] uppercase" vid="78">Powder &amp; Performance</p>
+                    </div>
+                    
+                    <div class="flex-1 relative flex items-center justify-center p-8" vid="79">
+                        <svg viewBox="0 0 200 200" class="w-48 h-48" vid="80">
+                            <path d="M30,50 L170,150" stroke="#FFC233" stroke-width="4" stroke-dasharray="10 5" vid="81"></path>
+                            <path d="M40,40 L180,140" stroke="#FFC233" stroke-width="1" vid="82"></path>
+                            <rect x="80" y="90" width="40" height="20" fill="none" stroke="#F4F1EA" stroke-width="1.5" transform="rotate(30 100 100)" vid="83"></rect>
+                        </svg>
+                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-10" vid="84">
+                            <svg class="w-32 h-32 animate-spin-slow" style="animation-duration: 20s;" viewBox="0 0 100 100" vid="85">
+                                <circle cx="50" cy="50" r="45" fill="none" stroke="white" stroke-width="0.5" stroke-dasharray="2 2" vid="86"></circle>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-auto p-6 bg-[#FFC233] text-[#1F1F1F] text-center" vid="87">
+                        <span class="font-serif italic text-xl" vid="88">Glacial Beauty</span>
+                    </div>
+                </div>
+                <div class="pt-4 flex justify-between items-center px-2" vid="89">
+                    <span class="font-typewriter text-[9px] uppercase tracking-widest opacity-60" vid="90">High Alpine Area</span>
+                    <button class="font-typewriter text-[9px] uppercase tracking-widest border-b border-black/30 hover:border-black transition-all" vid="91">Ski Pass Info</button>
+                </div>
+            </div>
+
+        </div>
+
+        
+        <div class="mt-20 flex items-center justify-between opacity-40 border-t border-black/10 pt-8" vid="92">
+            <div class="flex items-center gap-4" vid="93">
+                <div class="w-12 h-12 rounded-full border border-current flex items-center justify-center font-typewriter text-[10px]" vid="94">
+                    EST<br vid="95">1924
+                </div>
+                <p class="font-typewriter text-[10px] uppercase tracking-widest" vid="96">
+                    All distances measured from the lobby fountain.<br vid="97">
+                    Concierge available via dial 0.
+                </p>
+            </div>
+            
+            <div class="relative transform rotate-12" vid="98">
+                <div class="border-2 border-dashed border-current p-2 rounded-sm" vid="99">
+                    <p class="font-typewriter text-[10px] font-bold uppercase tracking-widest" vid="100">Verified Local Guide</p>
+                    <p class="font-serif italic text-center text-xs" vid="101">Post Post Approved</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    
+    <div class="fixed inset-0 pointer-events-none opacity-[0.03] z-50" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E');" vid="102"></div>
+
+</body></html>

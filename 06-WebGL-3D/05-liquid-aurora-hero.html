@@ -1,0 +1,370 @@
+<html lang="en" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">Liquid Aurora WebGL Shader</title>
+    <script src="https://cdn.tailwindcss.com/3.4.17" vid="5"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web" vid="6"></script>
+    <style vid="7">
+        
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #000;
+        }
+    </style>
+</head>
+<body class="w-screen h-screen overflow-hidden antialiased font-sans text-white" vid="8">
+
+    
+    <div class="absolute inset-0 w-full h-full z-0 overflow-hidden" vid="9">
+        <canvas id="aurora-canvas" class="w-full h-full block" vid="10"></canvas>
+    </div>
+
+    
+    <header class="absolute top-0 left-0 w-full z-50 px-8 py-6 flex justify-between items-center pointer-events-none" vid="11">
+        <div class="flex items-center gap-3 pointer-events-auto cursor-pointer group" vid="12">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-teal-400 to-purple-500 shadow-[0_0_20px_rgba(45,212,191,0.4)] flex items-center justify-center group-hover:shadow-[0_0_30px_rgba(45,212,191,0.7)] transition-shadow duration-500" vid="13">
+                <i class="ph ph-waves text-white text-xl" vid="14"></i>
+            </div>
+            <span class="text-xl font-black tracking-widest uppercase text-white drop-shadow-md" vid="15">Nexus</span>
+        </div>
+        <nav class="hidden md:flex gap-10 text-xs font-bold tracking-[0.2em] uppercase pointer-events-auto" vid="16">
+            <a href="#" class="text-white/70 hover:text-teal-300 transition-colors duration-300 hover:drop-shadow-[0_0_10px_rgba(45,212,191,0.8)]" vid="17">Lab</a>
+            <a href="#" class="text-white/70 hover:text-purple-300 transition-colors duration-300 hover:drop-shadow-[0_0_10px_rgba(192,132,252,0.8)]" vid="18">Showcase</a>
+            <a href="#" class="text-white/70 hover:text-teal-300 transition-colors duration-300 hover:drop-shadow-[0_0_10px_rgba(45,212,191,0.8)]" vid="19">About</a>
+        </nav>
+        <div class="pointer-events-auto hidden md:block" vid="20">
+            <button class="px-7 py-3 rounded-full bg-white/5 border border-white/20 text-white text-xs font-bold tracking-[0.15em] uppercase hover:bg-white/15 hover:border-white/40 transition-all duration-300 backdrop-blur-xl" vid="21">
+                Get Access
+            </button>
+        </div>
+    </header>
+
+    
+    <main class="relative z-10 w-full h-full flex flex-col items-center justify-center p-6 pointer-events-none" vid="22">
+        <div class="pointer-events-auto relative w-full max-w-6xl rounded-[3rem] bg-[#050B14]/20 border border-white/10 shadow-[0_30px_80px_-15px_rgba(0,0,0,0.8)] backdrop-blur-2xl overflow-hidden p-12 sm:p-16 md:p-24 flex flex-col items-center text-center group" vid="23">
+            
+            
+            <div class="absolute -top-40 -right-40 w-96 h-96 bg-teal-500/15 blur-[120px] rounded-full pointer-events-none transition-transform duration-1000 group-hover:translate-x-10 group-hover:translate-y-10" vid="24"></div>
+            <div class="absolute -bottom-40 -left-40 w-96 h-96 bg-purple-600/15 blur-[120px] rounded-full pointer-events-none transition-transform duration-1000 group-hover:-translate-x-10 group-hover:-translate-y-10" vid="25"></div>
+            <div class="absolute inset-0 bg-gradient-to-b from-white/[0.08] via-transparent to-black/20 pointer-events-none" vid="26"></div>
+            
+            <div class="relative z-20 flex flex-col items-center" vid="27">
+                
+                <div class="inline-flex items-center gap-3 px-6 py-2.5 rounded-full bg-black/50 border border-white/10 text-[11px] font-bold tracking-[0.25em] uppercase text-teal-300 mb-12 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),0_0_20px_rgba(0,0,0,0.5)] backdrop-blur-md" vid="28">
+                    <span class="relative flex h-2.5 w-2.5" vid="29">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75" vid="30"></span>
+                        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-teal-400 shadow-[0_0_10px_rgba(45,212,191,1)]" vid="31"></span>
+                    </span>
+                    Live Shader Engine Active
+                </div>
+                
+                
+                <h1 class="text-6xl sm:text-7xl md:text-8xl lg:text-[7rem] leading-[1.05] font-black tracking-tighter mb-8 text-transparent bg-clip-text bg-gradient-to-br from-white via-blue-100 to-purple-200 drop-shadow-2xl" vid="32">
+                    Liquid Metal
+                    <br vid="33">
+                    <span class="bg-clip-text bg-gradient-to-r from-teal-300 via-blue-400 to-purple-500" vid="34">Aurora</span>
+                </h1>
+                
+                
+                <p class="text-lg sm:text-xl md:text-2xl text-blue-50/70 font-light leading-relaxed max-w-4xl mx-auto mb-16 drop-shadow-lg" vid="35">
+                    Immerse yourself in a hypnotic convergence of deep blues, vibrant purples, and ethereal teals. Driven by domain-warped Perlin noise to simulate complex fluid dynamics and magnetic atmospheres.
+                </p>
+                
+                
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-6 w-full sm:w-auto" vid="36">
+                    <button class="w-full sm:w-auto px-12 py-5 rounded-full bg-white text-black text-sm font-black tracking-[0.15em] uppercase hover:bg-teal-50 hover:scale-[1.02] active:scale-95 transition-all duration-300 shadow-[0_0_40px_rgba(255,255,255,0.25)] flex items-center justify-center gap-3" vid="37">
+                        Launch Experience
+                        <i class="ph-bold ph-arrow-right text-lg" vid="38"></i>
+                    </button>
+                    <button class="w-full sm:w-auto px-12 py-5 rounded-full bg-black/30 text-white text-sm font-bold tracking-[0.15em] uppercase border border-white/20 hover:bg-white/10 hover:border-white/50 hover:scale-[1.02] active:scale-95 transition-all duration-300 backdrop-blur-xl flex items-center justify-center gap-3" vid="39">
+                        <i class="ph ph-code text-xl" vid="40"></i>
+                        View Source
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 opacity-60 hover:opacity-100 transition-opacity duration-500 pointer-events-auto cursor-pointer group" vid="41">
+            <span class="text-[10px] tracking-[0.3em] uppercase font-bold text-white drop-shadow-md" vid="42">Scroll to explore</span>
+            <div class="w-8 h-14 rounded-full border-2 border-white/20 flex justify-center p-1.5 backdrop-blur-md group-hover:border-white/40 transition-colors" vid="43">
+                <div class="w-1.5 h-3 bg-white rounded-full animate-bounce mt-1 shadow-[0_0_10px_rgba(255,255,255,0.8)]" vid="44"></div>
+            </div>
+        </div>
+    </main>
+
+    
+    <footer class="absolute bottom-0 left-0 w-full px-8 py-8 flex justify-between items-end pointer-events-none hidden md:flex z-50" vid="45">
+        <div class="flex gap-4 pointer-events-auto" vid="46">
+            <a href="#" class="w-12 h-12 rounded-full bg-black/30 border border-white/10 flex items-center justify-center text-white/70 hover:bg-white/10 hover:text-teal-400 hover:border-teal-500/30 transition-all duration-300 backdrop-blur-md shadow-lg" vid="47">
+                <i class="ph-fill ph-twitter-logo text-xl" vid="48"></i>
+            </a>
+            <a href="#" class="w-12 h-12 rounded-full bg-black/30 border border-white/10 flex items-center justify-center text-white/70 hover:bg-white/10 hover:text-purple-400 hover:border-purple-500/30 transition-all duration-300 backdrop-blur-md shadow-lg" vid="49">
+                <i class="ph-fill ph-github-logo text-xl" vid="50"></i>
+            </a>
+            <a href="#" class="w-12 h-12 rounded-full bg-black/30 border border-white/10 flex items-center justify-center text-white/70 hover:bg-white/10 hover:text-blue-400 hover:border-blue-500/30 transition-all duration-300 backdrop-blur-md shadow-lg" vid="51">
+                <i class="ph-fill ph-discord-logo text-xl" vid="52"></i>
+            </a>
+        </div>
+        <div class="text-right pointer-events-auto flex flex-col items-end gap-1.5" vid="53">
+            <div class="px-3 py-1 rounded bg-black/40 border border-white/5 backdrop-blur-sm inline-block" vid="54">
+                <p class="text-[9px] tracking-[0.25em] text-teal-300/80 uppercase font-bold" vid="55">Version 2.0</p>
+            </div>
+            <p class="text-[10px] tracking-[0.2em] text-white/40 uppercase font-semibold" vid="56">Creative Commons License © 2024</p>
+        </div>
+    </footer>
+
+    
+    <script vid="57">
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('aurora-canvas');
+            const gl = canvas.getContext('webgl', { alpha: false, antialias: false });
+
+            if (!gl) {
+                console.error('WebGL is not supported in this browser.');
+                return;
+            }
+
+            
+            const vsSource = `
+                attribute vec2 a_position;
+                void main() {
+                    gl_Position = vec4(a_position, 0.0, 1.0);
+                }
+            `;
+
+            
+            const fsSource = `
+                precision highp float;
+                
+                uniform vec2 u_resolution;
+                uniform float u_time;
+
+                // --------------------------------------------------------
+                // Simplex 3D Noise Implementation
+                // --------------------------------------------------------
+                vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+                vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+                vec4 permute(vec4 x) { return mod289(((x*34.0)+1.0)*x); }
+                vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
+
+                float snoise(vec3 v) {
+                    const vec2  C = vec2(1.0/6.0, 1.0/3.0) ;
+                    const vec4  D = vec4(0.0, 0.5, 1.0, 2.0);
+
+                    vec3 i  = floor(v + dot(v, C.yyy) );
+                    vec3 x0 = v - i + dot(i, C.xxx) ;
+
+                    vec3 g = step(x0.yzx, x0.xyz);
+                    vec3 l = 1.0 - g;
+                    vec3 i1 = min( g.xyz, l.zxy );
+                    vec3 i2 = max( g.xyz, l.zxy );
+
+                    vec3 x1 = x0 - i1 + C.xxx;
+                    vec3 x2 = x0 - i2 + C.yyy;
+                    vec3 x3 = x0 - D.yyy;
+
+                    i = mod289(i);
+                    vec4 p = permute( permute( permute(
+                                i.z + vec4(0.0, i1.z, i2.z, 1.0 ))
+                            + i.y + vec4(0.0, i1.y, i2.y, 1.0 ))
+                            + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));
+
+                    float n_ = 0.142857142857; 
+                    vec3  ns = n_ * D.wyz - D.xzx;
+
+                    vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
+
+                    vec4 x_ = floor(j * ns.z);
+                    vec4 y_ = floor(j - 7.0 * x_ );
+
+                    vec4 x = x_ *ns.x + ns.yyyy;
+                    vec4 y = y_ *ns.x + ns.yyyy;
+                    vec4 h = 1.0 - abs(x) - abs(y);
+
+                    vec4 b0 = vec4( x.xy, y.xy );
+                    vec4 b1 = vec4( x.zw, y.zw );
+
+                    vec4 s0 = floor(b0)*2.0 + 1.0;
+                    vec4 s1 = floor(b1)*2.0 + 1.0;
+                    vec4 sh = -step(h, vec4(0.0));
+
+                    vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy ;
+                    vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww ;
+
+                    vec3 p0 = vec3(a0.xy,h.x);
+                    vec3 p1 = vec3(a0.zw,h.y);
+                    vec3 p2 = vec3(a1.xy,h.z);
+                    vec3 p3 = vec3(a1.zw,h.w);
+
+                    vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3)));
+                    p0 *= norm.x;
+                    p1 *= norm.y;
+                    p2 *= norm.z;
+                    p3 *= norm.w;
+
+                    vec4 m = max(0.5 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
+                    m = m * m;
+                    return 105.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1),
+                                                dot(p2,x2), dot(p3,x3) ) );
+                }
+                // --------------------------------------------------------
+
+                void main() {
+                    // Coordinate setup mapping 0 to 1 with aspect ratio correction
+                    vec2 st = gl_FragCoord.xy / u_resolution.xy;
+                    st.x *= u_resolution.x / u_resolution.y;
+
+                    // Time variable mapped for slow, hypnotic animation
+                    float t = u_time * 0.04; 
+                    float scale = 1.3; // Base scale of structures
+
+                    // --- Domain Warping Iteration 1 ---
+                    vec2 q = vec2(0.0);
+                    q.x = snoise(vec3(st * scale, t));
+                    q.y = snoise(vec3(st * scale + vec2(5.2, 1.3), t));
+
+                    // --- Domain Warping Iteration 2 ---
+                    vec2 r = vec2(0.0);
+                    r.x = snoise(vec3(st * scale + 2.0 * q + vec2(1.7, 9.2), t * 1.2));
+                    r.y = snoise(vec3(st * scale + 2.0 * q + vec2(8.3, 2.8), t * 1.2));
+
+                    // Final noise value extraction
+                    float f = snoise(vec3(st * scale + 3.0 * r, t * 0.9));
+                    f = f * 0.5 + 0.5; // Map to [0,1]
+
+                    // --- Color Palettes ---
+                    vec3 colorDeep    = vec3(0.01, 0.02, 0.12); // Obsidian / Very dark blue
+                    vec3 colorBlue    = vec3(0.05, 0.15, 0.6);  // Saturated deep blue
+                    vec3 colorPurple  = vec3(0.35, 0.05, 0.45); // Deep magenta / purple
+                    vec3 colorTeal    = vec3(0.0, 0.8, 0.65);   // Luminous glowing teal
+
+                    // --- Color Mixing Strategy ---
+                    // Base transition from deep blue to vibrant blue
+                    vec3 color = mix(colorDeep, colorBlue, smoothstep(0.0, 0.7, f + r.x * 0.3));
+                    // Inject purple across the mid-tones
+                    color = mix(color, colorPurple, smoothstep(0.1, 0.8, q.x * 0.5 + f * 0.6));
+                    // Cap peaks with glowing teal
+                    color = mix(color, colorTeal, smoothstep(0.4, 1.2, r.y + q.y * 0.5 + f * 0.3));
+
+                    // --- Liquid Metal Specular Highlights ---
+                    // Hard highlight mimicking metallic reflection
+                    float highlight = smoothstep(0.85, 0.98, f + r.x * 0.2);
+                    vec3 specColor = vec3(0.85, 0.95, 1.0);
+                    color += specColor * highlight * 0.8;
+
+                    // Soft ambient rim glow on secondary ridges
+                    float highlightSoft = smoothstep(0.65, 0.9, f + r.y * 0.2);
+                    color += colorTeal * highlightSoft * 0.5;
+
+                    // --- Aurora Borealis Effect Overlay ---
+                    // Vertical, wave-like streaks migrating across the screen
+                    float aurora = snoise(vec3(st.x * 2.5 + sin(t * 1.5 + st.y), st.y * 1.2 - t * 1.8, t * 0.5));
+                    aurora = aurora * 0.5 + 0.5;
+                    
+                    // Constrain aurora to upper/mid region with smooth falloff
+                    float auroraMask = smoothstep(0.0, 0.6, st.y) * smoothstep(1.0, 0.4, st.y);
+                    
+                    // Add distinct aurora colors
+                    color += colorTeal * smoothstep(0.6, 0.95, aurora) * auroraMask * 0.8;
+                    color += colorPurple * smoothstep(0.7, 1.0, aurora) * auroraMask * 0.6;
+
+                    // --- Optical Vignette ---
+                    // Darken edges slightly for depth framing
+                    float vignette = 1.0 - smoothstep(0.4, 1.6, length(st - vec2(0.5 * u_resolution.x/u_resolution.y, 0.5)));
+                    color *= mix(0.6, 1.0, vignette);
+
+                    gl_FragColor = vec4(color, 1.0);
+                }
+            `;
+
+            
+            function compileShader(gl, type, source) {
+                const shader = gl.createShader(type);
+                gl.shaderSource(shader, source);
+                gl.compileShader(shader);
+                if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+                    console.error('Shader compile error:', gl.getShaderInfoLog(shader));
+                    gl.deleteShader(shader);
+                    return null;
+                }
+                return shader;
+            }
+
+            const vertexShader = compileShader(gl, gl.VERTEX_SHADER, vsSource);
+            const fragmentShader = compileShader(gl, gl.FRAGMENT_SHADER, fsSource);
+
+            
+            const program = gl.createProgram();
+            gl.attachShader(program, vertexShader);
+            gl.attachShader(program, fragmentShader);
+            gl.linkProgram(program);
+
+            if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+                console.error('Program link error:', gl.getProgramInfoLog(program));
+                return;
+            }
+
+            
+            const positionBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+            const positions = [
+                -1.0, -1.0,
+                 1.0, -1.0,
+                -1.0,  1.0,
+                -1.0,  1.0,
+                 1.0, -1.0,
+                 1.0,  1.0,
+            ];
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+
+            const positionLocation = gl.getAttribLocation(program, 'a_position');
+            gl.enableVertexAttribArray(positionLocation);
+            gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
+            
+            const resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
+            const timeLocation = gl.getUniformLocation(program, 'u_time');
+
+            
+            function resize() {
+                
+                const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+                const width = Math.floor(canvas.clientWidth * dpr);
+                const height = Math.floor(canvas.clientHeight * dpr);
+                
+                if (canvas.width !== width || canvas.height !== height) {
+                    canvas.width = width;
+                    canvas.height = height;
+                    gl.viewport(0, 0, width, height);
+                }
+            }
+
+            window.addEventListener('resize', resize);
+            resize(); 
+
+            
+            let startTime = performance.now();
+
+            function render(currentTime) {
+                const timeInSeconds = (currentTime - startTime) * 0.001;
+
+                gl.useProgram(program);
+
+                gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
+                gl.uniform1f(timeLocation, timeInSeconds);
+
+                gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+                requestAnimationFrame(render);
+            }
+
+            requestAnimationFrame(render);
+        });
+    </script>
+
+</body></html>

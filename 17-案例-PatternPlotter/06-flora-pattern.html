@@ -1,0 +1,771 @@
+<html lang="en" vid="0"><head vid="1">
+<meta charset="UTF-8" vid="2">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+<title vid="4">Pattern Plotter // FLORA_01</title>
+<style vid="5">
+    @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
+    :root {
+        --bg-app: #111111;
+        --bg-panel: #1A1A1A;
+        --text-main: #E0E0E0;
+        --text-dim: #888888;
+        --border-color: #333333;
+        --accent: #E84A5F;
+        
+        --canvas-bg: #F4F1EA;
+        --grid-minor: rgba(0,0,0,0.1);
+        --grid-major: rgba(0,0,0,0.6);
+        
+        --font-mono: 'Space Mono', 'Courier New', Courier, monospace;
+    }
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        background-color: var(--bg-app);
+        color: var(--text-main);
+        font-family: var(--font-mono);
+        font-size: 12px;
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        user-select: none;
+    }
+
+    
+    header {
+        height: 32px;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+        justify-content: space-between;
+        background: var(--bg-panel);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .status-group {
+        display: flex;
+        gap: 24px;
+    }
+
+    .status-item span:first-child {
+        color: var(--text-dim);
+        margin-right: 8px;
+    }
+
+    
+    main {
+        display: flex;
+        flex: 1;
+        height: calc(100vh - 32px);
+    }
+
+    
+    aside.left-panel {
+        width: 280px;
+        border-right: 1px solid var(--border-color);
+        display: flex;
+        flex-direction: column;
+        background: var(--bg-panel);
+    }
+
+    .panel-section {
+        border-bottom: 1px solid var(--border-color);
+        padding: 16px;
+    }
+
+    .panel-header {
+        color: var(--text-dim);
+        margin-bottom: 12px;
+        font-weight: 700;
+        letter-spacing: 1px;
+    }
+
+    
+    .palette-list {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    .palette-list::-webkit-scrollbar {
+        width: 4px;
+    }
+    .palette-list::-webkit-scrollbar-thumb {
+        background: var(--border-color);
+    }
+
+    .palette-item {
+        display: grid;
+        grid-template-columns: 20px 24px 1fr 40px;
+        align-items: center;
+        padding: 4px;
+        border: 1px solid transparent;
+        cursor: pointer;
+    }
+
+    .palette-item:hover, .palette-item.active {
+        border-color: var(--border-color);
+        background: rgba(255,255,255,0.02);
+    }
+
+    .color-swatch {
+        width: 12px;
+        height: 12px;
+        border: 1px solid #000;
+    }
+
+    .color-symbol {
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .color-name {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .color-count {
+        color: var(--text-dim);
+        text-align: right;
+    }
+
+    
+    .minimap-container {
+        width: 100%;
+        aspect-ratio: 1;
+        background: var(--bg-app);
+        border: 1px solid var(--border-color);
+        position: relative;
+        margin-top: 8px;
+    }
+    .minimap-viewbox {
+        position: absolute;
+        border: 1px solid var(--accent);
+        background: rgba(232, 74, 95, 0.1);
+        width: 40%;
+        height: 40%;
+        top: 30%;
+        left: 30%;
+        pointer-events: none;
+    }
+
+    
+    .canvas-container {
+        flex: 1;
+        background: #0a0a0a;
+        overflow: auto;
+        position: relative;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        padding: 40px; 
+    }
+
+    .canvas-container::-webkit-scrollbar {
+        width: 12px;
+        height: 12px;
+    }
+    .canvas-container::-webkit-scrollbar-corner {
+        background: var(--bg-panel);
+    }
+    .canvas-container::-webkit-scrollbar-track {
+        background: var(--bg-panel);
+        border-left: 1px solid var(--border-color);
+        border-top: 1px solid var(--border-color);
+    }
+    .canvas-container::-webkit-scrollbar-thumb {
+        background: #444;
+        border: 2px solid var(--bg-panel);
+    }
+
+    .canvas-wrapper {
+        position: relative;
+        background: var(--canvas-bg);
+        box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+
+    canvas {
+        display: block;
+        cursor: crosshair;
+    }
+
+    
+    .ruler-h {
+        position: absolute;
+        top: 20px;
+        left: 40px;
+        height: 20px;
+        background: var(--bg-panel);
+        color: var(--text-dim);
+        font-size: 10px;
+        border-bottom: 1px solid var(--border-color);
+        z-index: 10;
+        pointer-events: none;
+    }
+    .ruler-v {
+        position: absolute;
+        top: 40px;
+        left: 20px;
+        width: 20px;
+        background: var(--bg-panel);
+        color: var(--text-dim);
+        font-size: 10px;
+        border-right: 1px solid var(--border-color);
+        z-index: 10;
+        pointer-events: none;
+        writing-mode: vertical-rl;
+        text-align: center;
+    }
+
+    
+    aside.right-panel {
+        width: 240px;
+        border-left: 1px solid var(--border-color);
+        background: var(--bg-panel);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .inspector-readout {
+        font-size: 14px;
+        line-height: 1.8;
+    }
+    
+    .readout-row {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px dashed #333;
+        padding-bottom: 4px;
+        margin-bottom: 8px;
+    }
+
+    .readout-label {
+        color: var(--text-dim);
+    }
+
+    .readout-value {
+        color: #fff;
+    }
+
+    .inspector-preview {
+        width: 100%;
+        height: 120px;
+        background: var(--bg-app);
+        border: 1px solid var(--border-color);
+        margin-top: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    
+    .inspector-preview::before, .inspector-preview::after {
+        content: '';
+        position: absolute;
+        background: rgba(255,255,255,0.2);
+    }
+    .inspector-preview::before { width: 100%; height: 1px; top: 50%; }
+    .inspector-preview::after { height: 100%; width: 1px; left: 50%; }
+
+    #preview-symbol {
+        font-size: 48px;
+        font-weight: bold;
+        z-index: 2;
+        text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff; 
+    }
+
+    .btn {
+        background: transparent;
+        border: 1px solid var(--border-color);
+        color: var(--text-main);
+        font-family: inherit;
+        padding: 8px 12px;
+        cursor: pointer;
+        text-transform: uppercase;
+        width: 100%;
+        text-align: center;
+        transition: all 0.2s;
+    }
+
+    .btn:hover {
+        background: var(--text-main);
+        color: var(--bg-app);
+    }
+
+</style>
+</head>
+<body vid="6">
+
+<header vid="7">
+    <div class="status-group" vid="8">
+        <div class="status-item" vid="9">
+            <span vid="10">SYS:</span>
+            <span vid="11">TX_PLOTTER v4.2</span>
+        </div>
+        <div class="status-item" vid="12">
+            <span vid="13">FILE:</span>
+            <span vid="14">FLORA_GRASSLAND_01.ptn</span>
+        </div>
+    </div>
+    <div class="status-group" vid="15">
+        <div class="status-item" id="global-coords" vid="16">
+            <span vid="17">POS:</span>
+            <span vid="18">[000, 000]</span>
+        </div>
+    </div>
+</header>
+
+<main vid="19">
+    <aside class="left-panel" vid="20">
+        <div class="panel-section" vid="21">
+            <div class="panel-header" vid="22">INDEX: DMC_MAPPED</div>
+            <div class="palette-list" id="palette-container" vid="23">
+                
+            </div>
+        </div>
+        <div class="panel-section" style="flex:1;" vid="24">
+            <div class="panel-header" vid="25">OVERVIEW_MAP</div>
+            <div class="minimap-container" vid="26">
+                <canvas id="minimap-canvas" width="246" height="246" vid="27"></canvas>
+                <div class="minimap-viewbox" id="minimap-view" vid="28"></div>
+            </div>
+        </div>
+        <div class="panel-section" vid="29">
+            <button class="btn" vid="30">EXPORT .CHART</button>
+        </div>
+    </aside>
+
+    <div class="canvas-container" id="scroll-container" vid="31">
+        
+        <div class="canvas-wrapper" vid="32">
+            <canvas id="pattern-canvas" vid="33"></canvas>
+        </div>
+    </div>
+
+    <aside class="right-panel" vid="34">
+        <div class="panel-section" vid="35">
+            <div class="panel-header" vid="36">CELL_INSPECTOR</div>
+            
+            <div class="inspector-readout" vid="37">
+                <div class="readout-row" vid="38">
+                    <span class="readout-label" vid="39">COORD_X:</span>
+                    <span class="readout-value" id="insp-x" vid="40">--</span>
+                </div>
+                <div class="readout-row" vid="41">
+                    <span class="readout-label" vid="42">COORD_Y:</span>
+                    <span class="readout-value" id="insp-y" vid="43">--</span>
+                </div>
+                <div class="readout-row" vid="44">
+                    <span class="readout-label" vid="45">SYM_CHAR:</span>
+                    <span class="readout-value" id="insp-sym" vid="46">--</span>
+                </div>
+                <div class="readout-row" vid="47">
+                    <span class="readout-label" vid="48">HEX_VAL:</span>
+                    <span class="readout-value" id="insp-hex" vid="49">--</span>
+                </div>
+                <div class="readout-row" vid="50">
+                    <span class="readout-label" vid="51">THREAD_ID:</span>
+                    <span class="readout-value" id="insp-id" vid="52">--</span>
+                </div>
+            </div>
+
+            <div class="inspector-preview" id="preview-box" vid="53">
+                <span id="preview-symbol" vid="54"></span>
+            </div>
+        </div>
+        <div class="panel-section" style="flex:1;" vid="55">
+            <div class="panel-header" vid="56">LAYER_DATA</div>
+            <div style="color: var(--text-dim); margin-bottom: 8px;" vid="57">&gt; L1: BASE_TERRAIN [LOCKED]</div>
+            <div style="color: var(--text-dim); margin-bottom: 8px;" vid="58">&gt; L2: FLORA_SCATTER [ACTIVE]</div>
+            <div style="color: var(--text-dim); margin-bottom: 8px;" vid="59">&gt; L3: CONTOUR_LINES [AUTO]</div>
+        </div>
+    </aside>
+</main>
+
+<script vid="60">
+
+
+const CONFIG = {
+    cols: 100,
+    rows: 70,
+    cellSize: 18, 
+    canvasWidth: 0,
+    canvasHeight: 0
+};
+CONFIG.canvasWidth = CONFIG.cols * CONFIG.cellSize;
+CONFIG.canvasHeight = CONFIG.rows * CONFIG.cellSize;
+
+
+const PALETTE = {
+    sky_light:  { id: '820', hex: '#E0F0FA', sym: '-', name: 'Pale Azure', count: 0 },
+    sky_mid:    { id: '822', hex: '#BBDDF2', sym: '=', name: 'Sky Blue', count: 0 },
+    cloud:      { id: '001', hex: '#FFFFFF', sym: 'C', name: 'Titanium White', count: 0 },
+    
+    grass_pale: { id: '471', hex: '#D8D3B8', sym: '.', name: 'Avocado Light', count: 0 },
+    grass_mint: { id: '368', hex: '#A4D5B0', sym: 'v', name: 'Pistachio', count: 0 },
+    grass_mid:  { id: '319', hex: '#7A9151', sym: 'x', name: 'Fern Green', count: 0 },
+    grass_dark: { id: '895', hex: '#2A4B2C', sym: '+', name: 'Hunter Green', count: 0 },
+    
+    flower_pink:{ id: '602', hex: '#E84A5F', sym: 'O', name: 'Cranberry', count: 0 },
+    flower_gold:{ id: '725', hex: '#FFC408', sym: '*', name: 'Topaz', count: 0 },
+    flower_wht: { id: 'BLN', hex: '#FFF8E7', sym: 'W', name: 'Ecru', count: 0 },
+    
+    contour:    { id: '304', hex: '#A95C5C', sym: '', name: 'Oxblood Red', count: 0 } 
+};
+
+
+let mapData = []; 
+
+
+const canvas = document.getElementById('pattern-canvas');
+const ctx = canvas.getContext('2d', { alpha: false }); 
+const minimapCanvas = document.getElementById('minimap-canvas');
+const minimapCtx = minimapCanvas.getContext('2d');
+const scrollContainer = document.getElementById('scroll-container');
+const viewbox = document.getElementById('minimap-view');
+
+
+const elX = document.getElementById('insp-x');
+const elY = document.getElementById('insp-y');
+const elSym = document.getElementById('insp-sym');
+const elHex = document.getElementById('insp-hex');
+const elId = document.getElementById('insp-id');
+const previewBox = document.getElementById('preview-box');
+const previewSym = document.getElementById('preview-symbol');
+const globalCoords = document.getElementById('global-coords').lastElementChild;
+
+
+
+
+let seed = 1337;
+function random() {
+    let t = seed += 0x6D2B79F5;
+    t = Math.imul(t ^ t >>> 15, t | 1);
+    t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+}
+
+
+function noise(x, y) {
+    const dot = x * 12.9898 + y * 78.233;
+    return (Math.sin(dot) * 43758.5453) % 1;
+}
+
+function generatePattern() {
+    mapData = [];
+    
+    for (let r = 0; r < CONFIG.rows; r++) {
+        let rowData = [];
+        for (let c = 0; c < CONFIG.cols; c++) {
+            let key = '';
+            
+            
+            let elevation = r / CONFIG.rows; 
+            
+            
+            let horizonWave = Math.sin(c * 0.1) * 0.05;
+            let currentElevation = elevation + horizonWave;
+
+            if (currentElevation < 0.25) {
+                
+                let n = noise(c*0.2, r*0.2);
+                if (n > 0.8 && r > 2) key = 'cloud';
+                else if (currentElevation < 0.1) key = 'sky_mid';
+                else key = 'sky_light';
+            } else {
+                
+                
+                let dist1 = Math.sqrt(Math.pow(c - 20, 2) + Math.pow(r - 50, 2));
+                let dist2 = Math.sqrt(Math.pow(c - 80, 2) + Math.pow(r - 40, 2));
+                
+                let terrainVal = Math.sin(dist1 * 0.1) + Math.cos(dist2 * 0.1) + noise(c*0.1, r*0.1);
+                
+                if (terrainVal > 1.2) key = 'grass_dark';
+                else if (terrainVal > 0.2) key = 'grass_mid';
+                else if (terrainVal > -0.8) key = 'grass_mint';
+                else key = 'grass_pale';
+            }
+            
+            rowData.push(key);
+            PALETTE[key].count++;
+        }
+        mapData.push(rowData);
+    }
+
+    
+    for (let i = 0; i < 40; i++) {
+        let c = Math.floor(random() * (CONFIG.cols - 10)) + 5;
+        let r = Math.floor(random() * (CONFIG.rows - 20)) + 20; 
+        
+        
+        if (mapData[r][c].startsWith('sky') || r < Math.floor(CONFIG.rows * 0.25)) continue;
+
+        let type = random() > 0.5 ? 'pink' : 'gold';
+        
+        
+        if (type === 'pink') {
+            safeSet(r, c, 'flower_pink');
+            safeSet(r-1, c, 'flower_pink');
+            safeSet(r+1, c, 'flower_pink');
+            safeSet(r, c-1, 'flower_pink');
+            safeSet(r, c+1, 'flower_pink');
+            safeSet(r, c, 'flower_wht'); 
+        } else {
+            safeSet(r, c, 'flower_gold');
+            safeSet(r-1, c-1, 'flower_gold');
+            safeSet(r-1, c+1, 'flower_gold');
+            safeSet(r+1, c-1, 'flower_gold');
+            safeSet(r+1, c+1, 'flower_gold');
+            safeSet(r, c, 'flower_pink'); 
+        }
+    }
+}
+
+function safeSet(r, c, key) {
+    if (r >= 0 && r < CONFIG.rows && c >= 0 && c < CONFIG.cols) {
+        
+        let oldKey = mapData[r][c];
+        PALETTE[oldKey].count--;
+        mapData[r][c] = key;
+        PALETTE[key].count++;
+    }
+}
+
+
+
+function initCanvas() {
+    canvas.width = CONFIG.canvasWidth;
+    canvas.height = CONFIG.canvasHeight;
+    ctx.textBaseline = 'middle';
+    ctx.textAlign = 'center';
+    
+    
+}
+
+function renderPattern() {
+    
+    ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--canvas-bg');
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    const cs = CONFIG.cellSize;
+
+    
+    ctx.font = 'bold 10px "Space Mono", monospace';
+    
+    for (let r = 0; r < CONFIG.rows; r++) {
+        for (let c = 0; c < CONFIG.cols; c++) {
+            let key = mapData[r][c];
+            let pData = PALETTE[key];
+            let x = c * cs;
+            let y = r * cs;
+
+            
+            ctx.fillStyle = pData.hex;
+            ctx.fillRect(x, y, cs, cs);
+
+            
+            ctx.fillStyle = '#000000'; 
+            ctx.fillText(pData.sym, x + cs/2, y + cs/2 + 1); 
+        }
+    }
+
+    
+    ctx.beginPath();
+    ctx.strokeStyle = getComputedStyle(document.body).getPropertyValue('--grid-minor');
+    ctx.lineWidth = 1;
+    
+    
+    for(let i=0; i<=CONFIG.cols; i++) {
+        if(i%10 !== 0) {
+            ctx.moveTo(i*cs + 0.5, 0);
+            ctx.lineTo(i*cs + 0.5, canvas.height);
+        }
+    }
+    for(let i=0; i<=CONFIG.rows; i++) {
+        if(i%10 !== 0) {
+            ctx.moveTo(0, i*cs + 0.5);
+            ctx.lineTo(canvas.width, i*cs + 0.5);
+        }
+    }
+    ctx.stroke();
+
+    
+    ctx.beginPath();
+    ctx.strokeStyle = getComputedStyle(document.body).getPropertyValue('--grid-major');
+    ctx.lineWidth = 1.5;
+    for(let i=0; i<=CONFIG.cols; i+=10) {
+        ctx.moveTo(i*cs, 0);
+        ctx.lineTo(i*cs, canvas.height);
+    }
+    for(let i=0; i<=CONFIG.rows; i+=10) {
+        ctx.moveTo(0, i*cs);
+        ctx.lineTo(canvas.width, i*cs);
+    }
+    ctx.stroke();
+
+    
+    
+    ctx.beginPath();
+    ctx.strokeStyle = PALETTE.contour.hex;
+    ctx.lineWidth = 2;
+    
+    for (let r = 0; r < CONFIG.rows - 1; r++) {
+        for (let c = 0; c < CONFIG.cols - 1; c++) {
+            let current = mapData[r][c];
+            let right = mapData[r][c+1];
+            let bottom = mapData[r+1][c];
+            
+            
+            if (current === 'grass_mint' && right === 'grass_dark') {
+                ctx.moveTo((c+1)*cs, r*cs);
+                ctx.lineTo((c+1)*cs, (r+1)*cs);
+            }
+            if (current === 'grass_mint' && bottom === 'grass_dark') {
+                ctx.moveTo(c*cs, (r+1)*cs);
+                ctx.lineTo((c+1)*cs, (r+1)*cs);
+            }
+            
+            if (current.startsWith('sky') && bottom.startsWith('grass')) {
+                 ctx.moveTo(c*cs, (r+1)*cs);
+                 ctx.lineTo((c+1)*cs, (r+1)*cs);
+            }
+        }
+    }
+    ctx.stroke();
+    
+    
+    renderMinimap();
+}
+
+function renderMinimap() {
+    minimapCtx.clearRect(0,0, minimapCanvas.width, minimapCanvas.height);
+    
+    
+    let scaleX = minimapCanvas.width / CONFIG.cols;
+    let scaleY = minimapCanvas.height / CONFIG.rows;
+    
+    for (let r = 0; r < CONFIG.rows; r++) {
+        for (let c = 0; c < CONFIG.cols; c++) {
+            let key = mapData[r][c];
+            minimapCtx.fillStyle = PALETTE[key].hex;
+            minimapCtx.fillRect(c * scaleX, r * scaleY, scaleX, scaleY);
+        }
+    }
+}
+
+function populatePaletteUI() {
+    const container = document.getElementById('palette-container');
+    container.innerHTML = '';
+    
+    for (const [key, data] of Object.entries(PALETTE)) {
+        if (key === 'contour') continue;
+        
+        let div = document.createElement('div');
+        div.className = 'palette-item';
+        div.innerHTML = `
+            <div class="color-swatch" style="background-color: ${data.hex}"></div>
+            <div class="color-symbol">${data.sym}</div>
+            <div class="color-name">${data.id} - ${data.name}</div>
+            <div class="color-count">${data.count}</div>
+        `;
+        container.appendChild(div);
+    }
+}
+
+
+
+function formatCoord(num) {
+    return num.toString().padStart(3, '0');
+}
+
+canvas.addEventListener('mousemove', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    const col = Math.floor(x / CONFIG.cellSize);
+    const row = Math.floor(y / CONFIG.cellSize);
+
+    if (col >= 0 && col < CONFIG.cols && row >= 0 && row < CONFIG.rows) {
+        const key = mapData[row][col];
+        const pData = PALETTE[key];
+
+        
+        elX.textContent = formatCoord(col);
+        elY.textContent = formatCoord(row);
+        elSym.textContent = pData.sym === ' ' ? 'SPC' : pData.sym;
+        elHex.textContent = pData.hex.toUpperCase();
+        elId.textContent = pData.id;
+        
+        globalCoords.textContent = `[${formatCoord(col)}, ${formatCoord(row)}]`;
+
+        
+        previewBox.style.backgroundColor = pData.hex;
+        previewSym.textContent = pData.sym;
+        previewSym.style.color = '#000'; 
+    }
+});
+
+canvas.addEventListener('mouseleave', () => {
+    elX.textContent = '--';
+    elY.textContent = '--';
+    elSym.textContent = '--';
+    elHex.textContent = '--';
+    elId.textContent = '--';
+    previewBox.style.backgroundColor = 'var(--bg-app)';
+    previewSym.textContent = '';
+    globalCoords.textContent = `[---, ---]`;
+});
+
+
+scrollContainer.addEventListener('scroll', () => {
+    updateMinimapView();
+});
+window.addEventListener('resize', updateMinimapView);
+
+function updateMinimapView() {
+    const sTop = scrollContainer.scrollTop;
+    const sLeft = scrollContainer.scrollLeft;
+    
+    const wWidth = scrollContainer.clientWidth;
+    const wHeight = scrollContainer.clientHeight;
+    
+    const pWidth = canvas.width + 80; 
+    const pHeight = canvas.height + 80;
+
+    const pctLeft = sLeft / pWidth;
+    const pctTop = sTop / pHeight;
+    const pctW = wWidth / pWidth;
+    const pctH = wHeight / pHeight;
+
+    viewbox.style.left = (pctLeft * 100) + '%';
+    viewbox.style.top = (pctTop * 100) + '%';
+    viewbox.style.width = (pctW * 100) + '%';
+    viewbox.style.height = (pctH * 100) + '%';
+}
+
+
+generatePattern();
+initCanvas();
+renderPattern();
+populatePaletteUI();
+updateMinimapView();
+
+</script>
+
+</body></html>

@@ -1,0 +1,269 @@
+<html lang="en" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">FigOS 1.0 - Booting...</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" vid="5">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" vid="6">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&amp;display=swap" rel="stylesheet" vid="7">
+    <style vid="8">
+        :root {
+            --screen-black: #0a0b0d;
+            --crt-green: #33ff00;
+            --crt-green-dim: rgba(51, 255, 0, 0.2);
+            --font-mono: 'VT323', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--screen-black);
+            color: var(--crt-green);
+            font-family: var(--font-mono);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        
+        .crt-overlay {
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: 
+                linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%),
+                linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 3px, 3px 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .crt-flicker {
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: rgba(18, 16, 16, 0.1);
+            opacity: 0;
+            z-index: 101;
+            pointer-events: none;
+            animation: flicker 0.15s infinite;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0.1; }
+            50% { opacity: 0.02; }
+            100% { opacity: 0.08; }
+        }
+
+        .boot-container {
+            width: 800px;
+            max-width: 90%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            position: relative;
+        }
+
+        .boot-log {
+            height: 300px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            font-size: 1.5rem;
+            line-height: 1.2;
+            opacity: 0.9;
+        }
+
+        .log-line {
+            margin-bottom: 4px;
+        }
+
+        .progress-section {
+            border-top: 1px solid var(--crt-green-dim);
+            padding-top: 20px;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 30px;
+            border: 2px solid var(--crt-green);
+            padding: 4px;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--crt-green);
+            box-shadow: 0 0 15px var(--crt-green);
+            transition: width 0.1s linear;
+        }
+
+        .progress-text {
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+        }
+
+        .logo-container {
+            position: absolute;
+            top: -120px;
+            left: 50%;
+            transform: translateX(-50%) scale(0);
+            width: 60px;
+            height: 78px;
+            opacity: 0;
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .logo-container.show {
+            transform: translateX(-50%) scale(1.5);
+            opacity: 1;
+        }
+
+        .logo-badge {
+            width: 100%;
+            height: 100%;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            background: linear-gradient(180deg, #63B548 0%, #63B548 16.6%, #F6C829 16.6%, #F6C829 33.3%, #E57D25 33.3%, #E57D25 50%, #D83335 50%, #D83335 66.6%, #9C4595 66.6%, #9C4595 83.3%, #468CCF 83.3%, #468CCF 100%);
+            position: relative;
+            box-shadow: 0 0 20px rgba(255,255,255,0.2);
+        }
+
+        .logo-badge::before {
+            content: "";
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 18px;
+            background: #5a3e28;
+            border-radius: 2px;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 12px;
+            height: 20px;
+            background: var(--crt-green);
+            animation: blink 0.8s step-end infinite;
+            margin-left: 5px;
+            vertical-align: middle;
+        }
+
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        .os-header {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 8px var(--crt-green);
+        }
+    </style>
+</head>
+<body vid="9">
+    <div class="crt-overlay" vid="10"></div>
+    <div class="crt-flicker" vid="11"></div>
+
+    <div class="boot-container" vid="12">
+        <div class="logo-container" id="logo" vid="13">
+            <div class="logo-badge" vid="14"></div>
+        </div>
+
+        <div class="os-header" vid="15">FIG OS v1.0.0 (SYNAPSE KERNEL)</div>
+        
+        <div class="boot-log" id="log" vid="16">
+            
+        </div>
+
+        <div class="progress-section" vid="17">
+            <div class="progress-bar-container" vid="18">
+                <div class="progress-fill" id="progress" vid="19"></div>
+            </div>
+            <div class="progress-text" vid="20">
+                <span vid="21">LOADING NEURAL ENGINE...</span>
+                <span id="percent" vid="22">0%</span>
+            </div>
+        </div>
+    </div>
+
+    <script vid="23">
+        const logs = [
+            "> INITIALIZING FIG MINT HARDWARE...",
+            "> CHECKING NEURAL ENGINE INTEGRITY... OK",
+            "> ALLOCATING 512K SYNAPSE MEMORY... DONE",
+            "> MOUNTING FLOPPY DRIVE A:... READY",
+            "> LOADING KERNEL MODULES...",
+            "> INTROSPECTING WORKFLOW PATTERNS...",
+            "> STARTING MACHINE INTELLIGENCE SERVICES...",
+            "> BOOTING FIG OS GRAPHICAL ENVIRONMENT...",
+            "> SYNCING MEMO DRAFTER...",
+            "> OPTIMIZING FILE HIERARCHY...",
+            "> NEURAL SYNC ESTABLISHED.",
+            "> WELCOME BACK, USER."
+        ];
+
+        const logContainer = document.getElementById('log');
+        const progressFill = document.getElementById('progress');
+        const percentText = document.getElementById('percent');
+        const logo = document.getElementById('logo');
+
+        let currentLog = 0;
+        let progress = 0;
+
+        function addLogLine(text) {
+            const line = document.createElement('div');
+            line.className = 'log-line';
+            line.innerText = text;
+            logContainer.appendChild(line);
+            if (logContainer.childNodes.length > 8) {
+                logContainer.removeChild(logContainer.firstChild);
+            }
+        }
+
+        function updateBoot() {
+            if (progress < 100) {
+                progress += Math.random() * 1.5;
+                if (progress > 100) progress = 100;
+                
+                progressFill.style.width = progress + '%';
+                percentText.innerText = Math.floor(progress) + '%';
+
+                
+                if (currentLog < logs.length && progress > (currentLog + 1) * (100 / logs.length)) {
+                    addLogLine(logs[currentLog]);
+                    currentLog++;
+                }
+
+                requestAnimationFrame(updateBoot);
+            } else {
+                percentText.innerText = '100% COMPLETE';
+                addLogLine("> SYSTEM READY.");
+                const cursor = document.createElement('span');
+                cursor.className = 'cursor';
+                logContainer.lastChild.appendChild(cursor);
+                
+                setTimeout(() => {
+                    logo.classList.add('show');
+                }, 500);
+            }
+        }
+
+        
+        const initLine = document.createElement('div');
+        initLine.innerHTML = 'READY<span class="cursor"></span>';
+        logContainer.appendChild(initLine);
+
+        setTimeout(() => {
+            logContainer.innerHTML = '';
+            updateBoot();
+        }, 1000);
+    </script>
+</body></html>

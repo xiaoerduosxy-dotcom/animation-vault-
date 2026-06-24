@@ -1,0 +1,435 @@
+<html lang="en" vid="0"><head vid="1">
+<meta charset="UTF-8" vid="2">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+<title vid="4">Pattern Plotter // PALETTE_EDITOR</title>
+<style vid="5">
+    @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
+    :root {
+        --bg-app: #111111;
+        --bg-panel: #1A1A1A;
+        --bg-item: #222222;
+        --text-main: #E0E0E0;
+        --text-dim: #888888;
+        --border-color: #333333;
+        --accent: #E84A5F;
+        --font-mono: 'Space Mono', 'Courier New', Courier, monospace;
+    }
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        background-color: var(--bg-app);
+        color: var(--text-main);
+        font-family: var(--font-mono);
+        font-size: 12px;
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        user-select: none;
+    }
+
+    header {
+        height: 32px;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+        justify-content: space-between;
+        background: var(--bg-panel);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .status-group {
+        display: flex;
+        gap: 24px;
+    }
+
+    .status-item span:first-child {
+        color: var(--text-dim);
+        margin-right: 8px;
+    }
+
+    main {
+        display: flex;
+        flex: 1;
+        height: calc(100vh - 32px);
+    }
+
+    
+    aside.left-panel {
+        width: 380px;
+        border-right: 1px solid var(--border-color);
+        display: flex;
+        flex-direction: column;
+        background: var(--bg-panel);
+    }
+
+    
+    .editor-container {
+        flex: 1;
+        background: #0a0a0a;
+        overflow: auto;
+        padding: 40px;
+    }
+
+    
+    aside.right-panel {
+        width: 320px;
+        border-left: 1px solid var(--border-color);
+        background: var(--bg-panel);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .panel-section {
+        border-bottom: 1px solid var(--border-color);
+        padding: 16px;
+    }
+
+    .panel-header {
+        color: var(--text-dim);
+        margin-bottom: 12px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+
+    
+    .thread-list {
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    .thread-item {
+        display: flex;
+        align-items: center;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--border-color);
+        cursor: grab;
+        gap: 12px;
+        background: var(--bg-panel);
+        transition: background 0.1s;
+    }
+
+    .thread-item:hover {
+        background: var(--bg-item);
+    }
+
+    .thread-item.active {
+        background: rgba(232, 74, 95, 0.1);
+        border-left: 2px solid var(--accent);
+    }
+
+    .drag-handle {
+        color: #444;
+        cursor: grab;
+    }
+
+    .thread-swatch-small {
+        width: 16px;
+        height: 16px;
+        border: 1px solid #000;
+    }
+
+    .thread-meta {
+        flex: 1;
+    }
+
+    .thread-meta .id { font-weight: bold; }
+    .thread-meta .name { color: var(--text-dim); font-size: 10px; }
+
+    
+    .editor-card {
+        background: var(--bg-panel);
+        border: 1px solid var(--border-color);
+        padding: 24px;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .form-group {
+        margin-bottom: 24px;
+    }
+
+    .form-label {
+        display: block;
+        color: var(--text-dim);
+        margin-bottom: 8px;
+        font-size: 10px;
+        text-transform: uppercase;
+    }
+
+    .input-row {
+        display: flex;
+        gap: 12px;
+    }
+
+    input[type="text"], input[type="color"] {
+        background: var(--bg-app);
+        border: 1px solid var(--border-color);
+        color: var(--text-main);
+        padding: 10px;
+        font-family: var(--font-mono);
+        outline: none;
+    }
+
+    input[type="text"]:focus {
+        border-color: var(--accent);
+    }
+
+    input[type="color"] {
+        width: 50px;
+        height: 40px;
+        padding: 2px;
+        cursor: pointer;
+    }
+
+    .symbol-selector {
+        width: 40px;
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    
+    .stats-list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .chart-row {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .chart-label {
+        display: flex;
+        justify-content: space-between;
+        font-size: 10px;
+    }
+
+    .bar-bg {
+        height: 8px;
+        background: var(--bg-app);
+        width: 100%;
+        position: relative;
+    }
+
+    .bar-fill {
+        height: 100%;
+        background: var(--accent);
+    }
+
+    .btn {
+        background: transparent;
+        border: 1px solid var(--border-color);
+        color: var(--text-main);
+        font-family: inherit;
+        padding: 8px 12px;
+        cursor: pointer;
+        text-transform: uppercase;
+        font-size: 11px;
+        transition: all 0.2s;
+    }
+
+    .btn:hover {
+        background: var(--text-main);
+        color: var(--bg-app);
+    }
+
+    .btn-danger {
+        border-color: #632b31;
+        color: #e84a5f;
+    }
+
+    .btn-danger:hover {
+        background: #e84a5f;
+        color: #fff;
+    }
+
+    .btn-add {
+        width: 100%;
+        margin-top: 10px;
+        border-style: dashed;
+    }
+
+</style>
+</head>
+<body vid="6">
+
+<header vid="7">
+    <div class="status-group" vid="8">
+        <div class="status-item" vid="9">
+            <span vid="10">MODE:</span>
+            <span vid="11">PALETTE_EDITOR</span>
+        </div>
+        <div class="status-item" vid="12">
+            <span vid="13">FILE:</span>
+            <span vid="14">FLORA_GRASSLAND_01.ptn</span>
+        </div>
+    </div>
+    <div class="status-group" vid="15">
+        <div class="status-item" vid="16">
+            <span vid="17">TOTAL_STITCHES:</span>
+            <span vid="18">6,028</span>
+        </div>
+    </div>
+</header>
+
+<main vid="19">
+    <aside class="left-panel" vid="20">
+        <div class="panel-section" vid="21">
+            <div class="panel-header" vid="22">THREAD_INVENTORY</div>
+            <div class="thread-list" id="thread-list" vid="23">
+                
+            </div>
+            <button class="btn btn-add" onclick="addNewThread()" vid="24">+ ADD NEW THREAD</button>
+        </div>
+    </aside>
+
+    <div class="editor-container" vid="25">
+        <div class="editor-card" vid="26">
+            <div class="panel-header" id="editor-title" vid="27">EDIT THREAD // DMC 820</div>
+            
+            <div class="form-group" vid="28">
+                <label class="form-label" vid="29">DMC IDENTIFIER &amp; COLOR NAME</label>
+                <div class="input-row" vid="30">
+                    <input type="text" id="edit-id" style="width: 80px;" value="820" vid="31">
+                    <input type="text" id="edit-name" style="flex: 1;" value="Pale Azure" vid="32">
+                </div>
+            </div>
+
+            <div class="form-group" vid="33">
+                <label class="form-label" vid="34">HEX VALUE &amp; PATTERN SYMBOL</label>
+                <div class="input-row" vid="35">
+                    <input type="color" id="edit-hex" value="#E0F0FA" vid="36">
+                    <input type="text" id="edit-sym" class="symbol-selector" value="-" vid="37">
+                    <div style="flex:1" vid="38"></div>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 12px; margin-top: 40px;" vid="39">
+                <button class="btn" style="flex: 1;" onclick="saveChanges()" vid="40">SAVE CHANGES</button>
+                <button class="btn btn-danger" onclick="deleteThread()" vid="41">REMOVE</button>
+            </div>
+        </div>
+    </div>
+
+    <aside class="right-panel" vid="42">
+        <div class="panel-section" style="flex: 1;" vid="43">
+            <div class="panel-header" vid="44">LIVE_STITCH_DISTRIBUTION</div>
+            <div class="stats-list" id="stats-list" vid="45">
+                
+            </div>
+        </div>
+        <div class="panel-section" vid="46">
+            <button class="btn" style="width: 100%;" onclick="window.location.reload()" vid="47">RETURN TO PLOTTER</button>
+        </div>
+    </aside>
+</main>
+
+<script vid="48">
+    let threads = [
+        { id: '820', hex: '#E0F0FA', sym: '-', name: 'Pale Azure', count: 946 },
+        { id: '822', hex: '#BBDDF2', sym: '=', name: 'Sky Blue', count: 644 },
+        { id: '001', hex: '#FFFFFF', sym: 'C', name: 'Titanium White', count: 150 },
+        { id: '471', hex: '#D8D3B8', sym: '.', name: 'Avocado Light', count: 1209 },
+        { id: '368', hex: '#A4D5B0', sym: 'v', name: 'Pistachio', count: 1185 },
+        { id: '319', hex: '#7A9151', sym: 'x', name: 'Fern Green', count: 1473 },
+        { id: '895', hex: '#2A4B2C', sym: '+', name: 'Hunter Green', count: 1201 },
+        { id: '602', hex: '#E84A5F', sym: 'O', name: 'Cranberry', count: 91 },
+        { id: '725', hex: '#FFC408', sym: '*', name: 'Topaz', count: 84 },
+        { id: 'BLN', hex: '#FFF8E7', sym: 'W', name: 'Ecru', count: 17 }
+    ];
+
+    let activeIndex = 0;
+
+    function renderList() {
+        const list = document.getElementById('thread-list');
+        list.innerHTML = '';
+        threads.forEach((t, i) => {
+            const item = document.createElement('div');
+            item.className = `thread-item ${i === activeIndex ? 'active' : ''}`;
+            item.onclick = () => selectThread(i);
+            item.innerHTML = `
+                <div class="drag-handle">::</div>
+                <div class="thread-swatch-small" style="background: ${t.hex}"></div>
+                <div class="thread-meta">
+                    <div class="id">${t.id}</div>
+                    <div class="name">${t.name}</div>
+                </div>
+                <div style="font-weight: bold;">${t.sym}</div>
+            `;
+            list.appendChild(item);
+        });
+        renderStats();
+    }
+
+    function renderStats() {
+        const list = document.getElementById('stats-list');
+        list.innerHTML = '';
+        const total = threads.reduce((sum, t) => sum + t.count, 0);
+        
+        threads.slice().sort((a,b) => b.count - a.count).forEach(t => {
+            const pct = (t.count / total) * 100;
+            const row = document.createElement('div');
+            row.className = 'chart-row';
+            row.innerHTML = `
+                <div class="chart-label">
+                    <span>${t.id}</span>
+                    <span>${t.count} stitches (${pct.toFixed(1)}%)</span>
+                </div>
+                <div class="bar-bg">
+                    <div class="bar-fill" style="width: ${pct}%; background: ${t.hex}"></div>
+                </div>
+            `;
+            list.appendChild(row);
+        });
+    }
+
+    function selectThread(index) {
+        activeIndex = index;
+        const t = threads[index];
+        document.getElementById('editor-title').textContent = `EDIT THREAD // DMC ${t.id}`;
+        document.getElementById('edit-id').value = t.id;
+        document.getElementById('edit-name').value = t.name;
+        document.getElementById('edit-hex').value = t.hex;
+        document.getElementById('edit-sym').value = t.sym;
+        renderList();
+    }
+
+    function saveChanges() {
+        threads[activeIndex].id = document.getElementById('edit-id').value;
+        threads[activeIndex].name = document.getElementById('edit-name').value;
+        threads[activeIndex].hex = document.getElementById('edit-hex').value;
+        threads[activeIndex].sym = document.getElementById('edit-sym').value;
+        renderList();
+    }
+
+    function addNewThread() {
+        threads.push({ id: 'NEW', hex: '#888888', sym: '?', name: 'New Thread', count: 0 });
+        selectThread(threads.length - 1);
+    }
+
+    function deleteThread() {
+        if(threads.length <= 1) return;
+        threads.splice(activeIndex, 1);
+        activeIndex = 0;
+        selectThread(0);
+    }
+
+    
+    renderList();
+    selectThread(0);
+</script>
+
+</body></html>

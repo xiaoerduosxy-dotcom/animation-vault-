@@ -1,0 +1,731 @@
+<html lang="zh-CN" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">城镇网格化基层治理平台</title>
+    <script src="https://cdn.tailwindcss.com/3.4.17" vid="5"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web" vid="6"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" vid="7"></script>
+    <style vid="8">
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: #020813;
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(10, 35, 80, 0.4) 0%, rgba(2, 8, 19, 1) 70%),
+                linear-gradient(0deg, rgba(0, 20, 50, 0.2) 0%, transparent 1px),
+                linear-gradient(90deg, rgba(0, 20, 50, 0.2) 0%, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
+        }
+
+        
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 255, 255, 0.3);
+            border-radius: 2px;
+        }
+
+        
+        .glow-text {
+            text-shadow: 0 0 10px rgba(0, 200, 255, 0.5);
+        }
+
+        
+        .panel-bg {
+            background: linear-gradient(180deg, rgba(8, 25, 55, 0.8) 0%, rgba(4, 12, 28, 0.9) 100%);
+            border: 1px solid rgba(30, 80, 150, 0.5);
+            box-shadow: inset 0 0 20px rgba(0, 100, 255, 0.1);
+            position: relative;
+        }
+        .panel-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 10px;
+            height: 10px;
+            border-top: 2px solid #00f0ff;
+            border-left: 2px solid #00f0ff;
+        }
+        .panel-bg::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 10px;
+            height: 10px;
+            border-bottom: 2px solid #00f0ff;
+            border-right: 2px solid #00f0ff;
+        }
+
+        
+        .header-bg-shape {
+            clip-path: polygon(5% 0, 95% 0, 100% 100%, 0% 100%);
+            background: linear-gradient(180deg, rgba(20, 60, 120, 0.8) 0%, rgba(10, 30, 70, 0.4) 100%);
+            border-bottom: 2px solid #00f0ff;
+            box-shadow: inset 0 -10px 20px rgba(0, 240, 255, 0.2);
+        }
+
+        
+        .digit-box {
+            background: linear-gradient(180deg, rgba(15, 40, 80, 0.9) 0%, rgba(5, 15, 35, 0.9) 100%);
+            border: 1px solid rgba(0, 200, 255, 0.4);
+            box-shadow: inset 0 0 8px rgba(0, 255, 255, 0.2);
+            text-shadow: 0 0 10px #00f0ff;
+        }
+
+        
+        .map-glow {
+            filter: drop-shadow(0 0 20px rgba(0, 150, 255, 0.5));
+        }
+        .map-region {
+            background: rgba(20, 80, 180, 0.3);
+            border: 1px solid rgba(0, 200, 255, 0.4);
+            box-shadow: inset 0 0 20px rgba(0, 200, 255, 0.2);
+            transform: perspective(1000px) rotateX(45deg);
+        }
+        .map-pin-line {
+            position: absolute;
+            width: 1px;
+            background: linear-gradient(to top, rgba(0,255,255,0), rgba(0,255,255,0.8));
+        }
+    </style>
+</head>
+<body class="w-screen h-screen overflow-hidden text-white flex flex-col select-none" vid="9">
+
+    
+    <header class="h-[80px] w-full flex items-start justify-between px-6 pt-4 relative z-20 shrink-0" vid="10">
+        
+        <div class="absolute top-0 left-0 w-full h-full pointer-events-none" vid="11">
+            <div class="absolute top-0 left-0 w-[30%] h-[2px] bg-gradient-to-r from-transparent via-[#00f0ff] to-transparent opacity-50" vid="12"></div>
+            <div class="absolute top-0 right-0 w-[30%] h-[2px] bg-gradient-to-r from-transparent via-[#00f0ff] to-transparent opacity-50" vid="13"></div>
+        </div>
+
+        
+        <div class="w-[300px] flex items-center gap-3 text-[#a0c0e0] font-medium mt-2" vid="14">
+            <i class="ph ph-sun text-2xl text-[#00f0ff]" vid="15"></i>
+            <span class="text-lg" vid="16">晴</span>
+            <span class="text-lg tracking-wider" vid="17">17~28°C</span>
+        </div>
+
+        
+        <div class="flex-1 flex justify-center relative -mt-4" vid="18">
+            <div class="relative w-[600px] h-[70px] header-bg-shape flex justify-center items-center" vid="19">
+                
+                <div class="absolute left-[-20px] top-[20px] w-[30px] h-[20px] border-t-2 border-l-2 border-[#00f0ff] opacity-50 transform -skew-x-[30deg]" vid="20"></div>
+                <div class="absolute right-[-20px] top-[20px] w-[30px] h-[20px] border-t-2 border-r-2 border-[#00f0ff] opacity-50 transform skew-x-[30deg]" vid="21"></div>
+                
+                <h1 class="text-3xl font-bold tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-b from-white via-blue-100 to-[#00aaff] drop-shadow-[0_2px_4px_rgba(0,150,255,0.5)]" vid="22">
+                    城镇网格化基层治理平台
+                </h1>
+            </div>
+        </div>
+
+        
+        <div class="w-[300px] flex justify-end items-center text-[#a0c0e0] font-mono text-lg tracking-wider mt-2" vid="23">
+            2022-12-22 20:50:56
+        </div>
+    </header>
+
+    
+    <main class="flex-1 flex w-full p-4 gap-4 overflow-hidden relative z-10" vid="24">
+        
+        
+        <div class="w-[380px] h-full flex flex-col gap-4 shrink-0" vid="25">
+            
+            
+            <div class="panel-bg rounded-lg p-4 h-[180px] flex flex-col" vid="26">
+                <div class="flex items-center gap-2 mb-4" vid="27">
+                    <i class="ph-fill ph-caret-double-right text-[#00f0ff]" vid="28"></i>
+                    <h2 class="text-lg font-bold text-white tracking-wider glow-text" vid="29">实时动态</h2>
+                </div>
+                <div class="flex-1 flex justify-between items-center px-2" vid="30">
+                    
+                    <div class="flex flex-col items-center gap-2" vid="31">
+                        <div class="w-14 h-14 rounded-full border border-[rgba(0,150,255,0.4)] flex items-center justify-center bg-[rgba(10,30,70,0.5)] shadow-[inset_0_0_15px_rgba(0,100,255,0.3)] relative" vid="32">
+                            <i class="ph ph-folder-open text-2xl text-white" vid="33"></i>
+                            
+                            <svg class="absolute inset-0 w-full h-full transform -rotate-90" vid="34">
+                                <circle cx="28" cy="28" r="27" fill="none" stroke="#00f0ff" stroke-width="2" stroke-dasharray="170" stroke-dashoffset="40" class="opacity-70" vid="35"></circle>
+                            </svg>
+                        </div>
+                        <div class="text-[#a0c0e0] text-xs" vid="36">今年受理量</div>
+                        <div class="text-white font-bold text-lg font-mono" vid="37">24512<span class="text-[10px] text-gray-400 ml-1 font-sans" vid="38">件</span></div>
+                    </div>
+                    
+                    <div class="flex flex-col items-center gap-2" vid="39">
+                        <div class="w-14 h-14 rounded-full border border-[rgba(0,150,255,0.4)] flex items-center justify-center bg-[rgba(10,30,70,0.5)] shadow-[inset_0_0_15px_rgba(0,100,255,0.3)] relative" vid="40">
+                            <i class="ph ph-folder-notch text-2xl text-white" vid="41"></i>
+                            <svg class="absolute inset-0 w-full h-full transform -rotate-90" vid="42">
+                                <circle cx="28" cy="28" r="27" fill="none" stroke="#00f0ff" stroke-width="2" stroke-dasharray="170" stroke-dashoffset="40" class="opacity-70" vid="43"></circle>
+                            </svg>
+                        </div>
+                        <div class="text-[#a0c0e0] text-xs" vid="44">今年办结量</div>
+                        <div class="text-white font-bold text-lg font-mono" vid="45">24512<span class="text-[10px] text-gray-400 ml-1 font-sans" vid="46">件</span></div>
+                    </div>
+                    
+                    <div class="flex flex-col items-center gap-2" vid="47">
+                        <div class="w-14 h-14 rounded-full border border-[rgba(0,150,255,0.4)] flex items-center justify-center bg-[rgba(10,30,70,0.5)] shadow-[inset_0_0_15px_rgba(0,100,255,0.3)] relative" vid="48">
+                            <i class="ph ph-clock-counter-clockwise text-2xl text-white" vid="49"></i>
+                            <svg class="absolute inset-0 w-full h-full transform -rotate-90" vid="50">
+                                <circle cx="28" cy="28" r="27" fill="none" stroke="#00f0ff" stroke-width="2" stroke-dasharray="170" stroke-dashoffset="40" class="opacity-70" vid="51"></circle>
+                            </svg>
+                        </div>
+                        <div class="text-[#a0c0e0] text-xs" vid="52">调解成功率</div>
+                        <div class="text-white font-bold text-lg font-mono" vid="53">72.6<span class="text-[10px] text-[#00f0ff] ml-1 font-sans" vid="54">%</span></div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="panel-bg rounded-lg p-4 h-[280px] flex flex-col" vid="55">
+                <div class="flex items-center gap-2 mb-3" vid="56">
+                    <i class="ph-fill ph-caret-double-right text-[#00f0ff]" vid="57"></i>
+                    <h2 class="text-lg font-bold text-white tracking-wider glow-text" vid="58">本月排名</h2>
+                </div>
+                
+                
+                <div class="flex gap-2 mb-4 border-b border-[rgba(30,80,150,0.5)]" vid="59">
+                    <button class="px-4 py-1 text-sm bg-[rgba(0,150,255,0.2)] border-b-2 border-[#00f0ff] text-[#00f0ff]" vid="60">矛盾纠纷事项受理排行</button>
+                    <button class="px-4 py-1 text-sm text-[#a0c0e0] hover:text-white transition-colors" vid="61">矛盾纠纷事项办结率</button>
+                </div>
+
+                
+                <div class="flex-1 flex flex-col gap-3 overflow-hidden" vid="62">
+                    
+                    <div class="flex items-center gap-3" vid="63">
+                        <div class="w-[80px] flex items-center gap-2" vid="64">
+                            <span class="text-[#00f0ff] font-mono italic font-bold text-sm" vid="65">No.1</span>
+                            <span class="text-[#e0e8f0] text-sm whitespace-nowrap" vid="66">朝阳区</span>
+                        </div>
+                        <div class="flex-1 h-[6px] bg-[rgba(20,50,100,0.5)] rounded-full relative" vid="67">
+                            <div class="absolute left-0 top-0 h-full rounded-full bg-gradient-to-r from-[rgba(0,100,255,0.5)] to-[#00f0ff] w-[90%]" vid="68">
+                                <div class="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 bg-white rounded-full shadow-[0_0_8px_#fff]" vid="69"></div>
+                            </div>
+                        </div>
+                        <div class="w-[60px] text-right text-white font-mono text-sm" vid="70">1245 <span class="text-[10px] text-gray-500" vid="71">件</span></div>
+                    </div>
+                    
+                    <div class="flex items-center gap-3" vid="72">
+                        <div class="w-[80px] flex items-center gap-2" vid="73">
+                            <span class="text-[#00f0ff] font-mono italic font-bold text-sm" vid="74">No.2</span>
+                            <span class="text-[#e0e8f0] text-sm whitespace-nowrap" vid="75">东城区</span>
+                        </div>
+                        <div class="flex-1 h-[6px] bg-[rgba(20,50,100,0.5)] rounded-full relative" vid="76">
+                            <div class="absolute left-0 top-0 h-full rounded-full bg-gradient-to-r from-[rgba(0,100,255,0.5)] to-[#00f0ff] w-[75%]" vid="77">
+                                <div class="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 bg-white rounded-full shadow-[0_0_8px_#fff]" vid="78"></div>
+                            </div>
+                        </div>
+                        <div class="w-[60px] text-right text-white font-mono text-sm" vid="79">1034 <span class="text-[10px] text-gray-500" vid="80">件</span></div>
+                    </div>
+                    
+                    <div class="flex items-center gap-3" vid="81">
+                        <div class="w-[80px] flex items-center gap-2" vid="82">
+                            <span class="text-[#00f0ff] font-mono italic font-bold text-sm" vid="83">No.3</span>
+                            <span class="text-[#e0e8f0] text-sm whitespace-nowrap" vid="84">西城区</span>
+                        </div>
+                        <div class="flex-1 h-[6px] bg-[rgba(20,50,100,0.5)] rounded-full relative" vid="85">
+                            <div class="absolute left-0 top-0 h-full rounded-full bg-gradient-to-r from-[rgba(0,100,255,0.5)] to-[#00f0ff] w-[65%]" vid="86">
+                                <div class="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 bg-white rounded-full shadow-[0_0_8px_#fff]" vid="87"></div>
+                            </div>
+                        </div>
+                        <div class="w-[60px] text-right text-white font-mono text-sm" vid="88">956 <span class="text-[10px] text-gray-500" vid="89">件</span></div>
+                    </div>
+                    
+                    <div class="flex items-center gap-3" vid="90">
+                        <div class="w-[80px] flex items-center gap-2" vid="91">
+                            <span class="text-[#a0c0e0] font-mono italic font-bold text-sm" vid="92">No.4</span>
+                            <span class="text-[#e0e8f0] text-sm whitespace-nowrap" vid="93">海淀区</span>
+                        </div>
+                        <div class="flex-1 h-[6px] bg-[rgba(20,50,100,0.5)] rounded-full relative" vid="94">
+                            <div class="absolute left-0 top-0 h-full rounded-full bg-gradient-to-r from-[rgba(0,100,255,0.5)] to-[rgba(0,150,255,0.8)] w-[55%]" vid="95">
+                                <div class="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 bg-white rounded-full shadow-[0_0_8px_#fff] opacity-80" vid="96"></div>
+                            </div>
+                        </div>
+                        <div class="w-[60px] text-right text-white font-mono text-sm" vid="97">806 <span class="text-[10px] text-gray-500" vid="98">件</span></div>
+                    </div>
+                    
+                    <div class="flex items-center gap-3" vid="99">
+                        <div class="w-[80px] flex items-center gap-2" vid="100">
+                            <span class="text-[#a0c0e0] font-mono italic font-bold text-sm" vid="101">No.5</span>
+                            <span class="text-[#e0e8f0] text-sm whitespace-nowrap" vid="102">通州区</span>
+                        </div>
+                        <div class="flex-1 h-[6px] bg-[rgba(20,50,100,0.5)] rounded-full relative" vid="103">
+                            <div class="absolute left-0 top-0 h-full rounded-full bg-gradient-to-r from-[rgba(0,100,255,0.5)] to-[rgba(0,150,255,0.8)] w-[45%]" vid="104">
+                                <div class="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 bg-white rounded-full shadow-[0_0_8px_#fff] opacity-80" vid="105"></div>
+                            </div>
+                        </div>
+                        <div class="w-[60px] text-right text-white font-mono text-sm" vid="106">738 <span class="text-[10px] text-gray-500" vid="107">件</span></div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="panel-bg rounded-lg p-4 flex-1 flex flex-col min-h-[200px]" vid="108">
+                <div class="flex items-center gap-2 mb-2" vid="109">
+                    <i class="ph-fill ph-caret-double-right text-[#00f0ff]" vid="110"></i>
+                    <h2 class="text-lg font-bold text-white tracking-wider glow-text" vid="111">矛盾纠纷办理趋势</h2>
+                </div>
+                
+                
+                <div class="flex justify-center gap-6 text-[10px] text-[#a0c0e0] mb-2" vid="112">
+                    <div class="flex items-center gap-1" vid="113"><span class="w-2 h-2 bg-[rgba(0,150,255,0.6)] inline-block" vid="114"></span>受理量</div>
+                    <div class="flex items-center gap-1" vid="115"><span class="w-2 h-2 bg-[#ff8c00] inline-block" vid="116"></span>办结率</div>
+                    <div class="flex items-center gap-1" vid="117"><span class="w-2 h-2 bg-[#00f0ff] inline-block" vid="118"></span>调解成功率</div>
+                </div>
+                
+                <div class="flex-1 relative w-full h-full" vid="119">
+                    <canvas id="trendChartLeft" vid="120"></canvas>
+                </div>
+            </div>
+            
+        </div>
+
+        
+        <div class="flex-1 h-full flex flex-col relative px-4" vid="121">
+            
+            
+            <div class="h-[100px] flex justify-center items-start gap-16 pt-4 relative z-20" vid="122">
+                
+                <div class="flex flex-col items-center" vid="123">
+                    <div class="text-[#a0c0e0] text-sm mb-2 tracking-widest" vid="124">今日受理量</div>
+                    <div class="flex items-end gap-1" vid="125">
+                        <div class="digit-box w-9 h-12 rounded flex items-center justify-center text-3xl font-mono font-bold text-white" vid="126">0</div>
+                        <div class="text-[#00f0ff] text-2xl font-bold pb-1" vid="127">,</div>
+                        <div class="digit-box w-9 h-12 rounded flex items-center justify-center text-3xl font-mono font-bold text-white" vid="128">0</div>
+                        <div class="digit-box w-9 h-12 rounded flex items-center justify-center text-3xl font-mono font-bold text-white" vid="129">2</div>
+                        <div class="digit-box w-9 h-12 rounded flex items-center justify-center text-3xl font-mono font-bold text-white" vid="130">1</div>
+                        <div class="text-[#80a0c0] text-sm ml-1 pb-1" vid="131">件</div>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col items-center" vid="132">
+                    <div class="text-[#a0c0e0] text-sm mb-2 tracking-widest" vid="133">今日办结量</div>
+                    <div class="flex items-end gap-1" vid="134">
+                        <div class="digit-box w-9 h-12 rounded flex items-center justify-center text-3xl font-mono font-bold text-white" vid="135">0</div>
+                        <div class="text-[#00f0ff] text-2xl font-bold pb-1" vid="136">,</div>
+                        <div class="digit-box w-9 h-12 rounded flex items-center justify-center text-3xl font-mono font-bold text-white" vid="137">2</div>
+                        <div class="digit-box w-9 h-12 rounded flex items-center justify-center text-3xl font-mono font-bold text-white" vid="138">1</div>
+                        <div class="digit-box w-9 h-12 rounded flex items-center justify-center text-3xl font-mono font-bold text-white" vid="139">8</div>
+                        <div class="text-[#80a0c0] text-sm ml-1 pb-1" vid="140">件</div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="flex-1 relative w-full h-full flex items-center justify-center" vid="141">
+                
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full border border-[rgba(0,100,255,0.1)] border-dashed animate-[spin_60s_linear_infinite] pointer-events-none" vid="142"></div>
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full border border-[rgba(0,200,255,0.1)] pointer-events-none" vid="143"></div>
+                
+                
+                <div class="relative w-[80%] h-[80%] max-w-[800px] max-h-[600px] map-glow flex items-center justify-center" vid="144">
+                    
+                    
+                    <div class="absolute inset-10 bg-[radial-gradient(ellipse_at_center,rgba(0,80,200,0.4)_0%,rgba(0,20,60,0)_70%)] rounded-[40%] blur-xl pointer-events-none" vid="145"></div>
+                    
+                    
+                    <svg class="absolute inset-0 w-full h-full opacity-60" viewBox="0 0 100 100" preserveAspectRatio="none" vid="146">
+                        
+                        <path d="M 50,10 L 60,30 L 80,40 L 70,60 L 90,70 L 60,90 L 40,80 L 20,90 L 10,60 L 30,50 L 20,30 Z" fill="rgba(10,40,100,0.5)" stroke="#00aaff" stroke-width="0.2" stroke-linejoin="round" class="filter drop-shadow(0 0 2px #00aaff)" vid="147"></path>
+                        <path d="M 50,10 L 40,25 L 30,50" stroke="rgba(0,200,255,0.5)" stroke-width="0.1" fill="none" stroke-dasharray="1 1" vid="148"></path>
+                        <path d="M 60,30 L 70,50 L 70,60" stroke="rgba(0,200,255,0.5)" stroke-width="0.1" fill="none" stroke-dasharray="1 1" vid="149"></path>
+                        <path d="M 40,80 L 50,60 L 70,60" stroke="rgba(0,200,255,0.5)" stroke-width="0.1" fill="none" stroke-dasharray="1 1" vid="150"></path>
+                    </svg>
+
+                    
+                    
+                    <div class="absolute top-[15%] left-[45%] flex flex-col items-center" vid="151">
+                        <span class="text-[#a0c0e0] text-xs" vid="152">延庆区</span>
+                    </div>
+                    <div class="absolute top-[18%] left-[60%] flex flex-col items-center" vid="153">
+                        <span class="text-white text-xs font-mono" vid="154">260</span>
+                        <div class="w-1 h-8 bg-gradient-to-t from-[rgba(0,255,255,0)] to-[#00f0ff] opacity-50 mb-1" vid="155"></div>
+                        <span class="text-[#a0c0e0] text-xs" vid="156">怀柔区</span>
+                    </div>
+                    <div class="absolute top-[25%] left-[75%] flex flex-col items-center" vid="157">
+                        <span class="text-white text-xs font-mono" vid="158">260</span>
+                        <div class="w-1 h-6 bg-gradient-to-t from-[rgba(0,255,255,0)] to-[#00f0ff] opacity-50 mb-1" vid="159"></div>
+                        <span class="text-[#a0c0e0] text-xs" vid="160">密云区</span>
+                    </div>
+
+                    
+                    <div class="absolute top-[35%] left-[55%] flex flex-col items-center" vid="161">
+                        <span class="text-white text-xs font-mono" vid="162">367</span>
+                        <div class="w-1 h-4 bg-gradient-to-t from-[rgba(0,255,255,0)] to-[#00f0ff] opacity-50 mb-1" vid="163"></div>
+                    </div>
+                    <div class="absolute top-[45%] left-[40%] flex flex-col items-center" vid="164">
+                        <span class="text-[#a0c0e0] text-xs" vid="165">昌平区</span>
+                    </div>
+                    <div class="absolute top-[42%] left-[65%] flex flex-col items-center" vid="166">
+                        <span class="text-white text-xs font-mono" vid="167">260</span>
+                        <div class="w-1 h-5 bg-gradient-to-t from-[rgba(0,255,255,0)] to-[#00f0ff] opacity-50 mb-1" vid="168"></div>
+                        <span class="text-[#a0c0e0] text-xs mt-1" vid="169">顺义区</span>
+                    </div>
+                    <div class="absolute top-[45%] left-[85%] flex flex-col items-center" vid="170">
+                        <span class="text-white text-xs font-mono" vid="171">184</span>
+                        <div class="w-1 h-6 bg-gradient-to-t from-[rgba(0,255,255,0)] to-[#00f0ff] opacity-50 mb-1" vid="172"></div>
+                        <span class="text-[#a0c0e0] text-xs" vid="173">平谷区</span>
+                    </div>
+
+                    
+                    <div class="absolute top-[50%] left-[25%] flex flex-col items-center" vid="174">
+                        <span class="text-white text-xs font-mono" vid="175">184</span>
+                        <div class="w-1 h-6 bg-gradient-to-t from-[rgba(0,255,255,0)] to-[#00f0ff] opacity-50 mb-1" vid="176"></div>
+                    </div>
+                    <div class="absolute top-[60%] left-[30%] flex flex-col items-center" vid="177">
+                        <span class="text-[#a0c0e0] text-xs" vid="178">门头沟区</span>
+                    </div>
+                    
+                    <div class="absolute top-[52%] left-[48%] flex flex-col items-center" vid="179">
+                        <span class="text-white text-sm font-bold font-mono text-[#00f0ff] drop-shadow-[0_0_5px_#00f0ff]" vid="180">132</span>
+                        <div class="w-[2px] h-4 bg-[#00f0ff] mb-1" vid="181"></div>
+                        <span class="text-white text-xs font-bold" vid="182">海淀区</span>
+                    </div>
+                    <div class="absolute top-[58%] left-[55%] flex flex-col items-center" vid="183">
+                        <span class="text-white text-xs" vid="184">朝阳区</span>
+                    </div>
+                    <div class="absolute top-[60%] left-[45%] flex flex-col items-center" vid="185">
+                        <span class="text-[#a0c0e0] text-[10px]" vid="186">石景山区</span>
+                    </div>
+                    <div class="absolute top-[62%] left-[50%] flex flex-col items-center" vid="187">
+                        <span class="text-[#a0c0e0] text-[10px]" vid="188">西城区</span>
+                    </div>
+
+                    
+                    <div class="absolute top-[68%] left-[25%] flex flex-col items-center" vid="189">
+                        <span class="text-white text-xs font-mono" vid="190">184</span>
+                        <div class="w-1 h-6 bg-gradient-to-t from-[rgba(0,255,255,0)] to-[#00f0ff] opacity-50 mb-1" vid="191"></div>
+                        <span class="text-[#a0c0e0] text-xs mt-2" vid="192">房山区</span>
+                    </div>
+                    <div class="absolute top-[65%] left-[48%] flex flex-col items-center" vid="193">
+                        <span class="text-[#a0c0e0] text-[10px] mb-1" vid="194">丰台区</span>
+                        <span class="text-white text-xs font-mono" vid="195">260</span>
+                        <div class="w-1 h-4 bg-gradient-to-t from-[rgba(0,255,255,0)] to-[#00f0ff] opacity-50" vid="196"></div>
+                    </div>
+                    <div class="absolute top-[75%] left-[55%] flex flex-col items-center" vid="197">
+                        <span class="text-[#a0c0e0] text-xs" vid="198">大兴区</span>
+                    </div>
+                    <div class="absolute top-[65%] left-[70%] flex flex-col items-center" vid="199">
+                        <span class="text-[#a0c0e0] text-xs mb-1" vid="200">通州区</span>
+                        <span class="text-white text-xs font-mono" vid="201">132</span>
+                        <div class="w-1 h-5 bg-gradient-to-t from-[rgba(0,255,255,0)] to-[#00f0ff] opacity-50 mt-1" vid="202"></div>
+                    </div>
+
+                </div>
+            </div>
+
+            
+            <div class="h-[60px] w-full flex justify-center items-center gap-6 pb-4 relative z-20" vid="203">
+                <button class="flex items-center gap-2 px-6 py-2 bg-[rgba(10,30,70,0.5)] border border-[rgba(0,150,255,0.3)] rounded hover:bg-[rgba(20,50,100,0.6)] transition-colors text-[#a0c0e0]" vid="204">
+                    <i class="ph ph-squares-four" vid="205"></i>
+                    <span vid="206">数据总览</span>
+                </button>
+                <button class="flex items-center gap-2 px-6 py-2 bg-[rgba(10,30,70,0.5)] border border-[rgba(0,150,255,0.3)] rounded hover:bg-[rgba(20,50,100,0.6)] transition-colors text-[#a0c0e0]" vid="207">
+                    <i class="ph ph-desktop" vid="208"></i>
+                    <span vid="209">事件办理</span>
+                </button>
+                
+                <button class="flex items-center gap-2 px-6 py-2 bg-[rgba(0,100,255,0.3)] border border-[#00f0ff] rounded shadow-[0_0_15px_rgba(0,200,255,0.3)] text-white" vid="210">
+                    <i class="ph ph-handshake text-[#00f0ff]" vid="211"></i>
+                    <span class="glow-text" vid="212">纠纷调解</span>
+                </button>
+            </div>
+
+        </div>
+
+        
+        <div class="w-[380px] h-full flex flex-col gap-4 shrink-0" vid="213">
+            
+            
+            <div class="panel-bg rounded-lg p-4 h-[220px] flex flex-col" vid="214">
+                <div class="flex items-center justify-between mb-4" vid="215">
+                    <div class="flex items-center gap-2" vid="216">
+                        <i class="ph-fill ph-caret-double-right text-[#00f0ff]" vid="217"></i>
+                        <h2 class="text-lg font-bold text-white tracking-wider glow-text" vid="218">预测预警</h2>
+                    </div>
+                </div>
+                
+                <div class="flex-1 relative" vid="219">
+                    
+                    <div class="absolute inset-0 flex items-center justify-center opacity-30 pointer-events-none" vid="220">
+                        <i class="ph ph-shield-warning text-[100px] text-[#00f0ff]" vid="221"></i>
+                    </div>
+
+                    
+                    <div class="grid grid-cols-2 grid-rows-2 gap-4 h-full relative z-10" vid="222">
+                        
+                        <div class="flex flex-col items-center justify-center bg-[rgba(5,15,40,0.6)] border border-[rgba(30,70,120,0.5)] rounded p-2 hover:border-[#00f0ff] transition-colors cursor-pointer" vid="223">
+                            <div class="flex items-center gap-2 mb-1" vid="224">
+                                <i class="ph ph-warning-octagon text-gray-400 text-lg" vid="225"></i>
+                                <span class="text-[#a0c0e0] text-sm" vid="226">重大矛盾纠纷</span>
+                            </div>
+                            <div class="text-white font-mono text-xl font-bold" vid="227">1543 <span class="text-xs text-gray-500 font-sans font-normal" vid="228">件</span></div>
+                        </div>
+                        
+                        <div class="flex flex-col items-center justify-center bg-[rgba(5,15,40,0.6)] border border-[rgba(30,70,120,0.5)] rounded p-2 hover:border-[#00f0ff] transition-colors cursor-pointer" vid="229">
+                            <div class="flex items-center gap-2 mb-1" vid="230">
+                                <span class="text-[#a0c0e0] text-sm" vid="231">疑难矛盾纠纷</span>
+                                <i class="ph ph-users-three text-gray-400 text-lg" vid="232"></i>
+                            </div>
+                            <div class="text-white font-mono text-xl font-bold" vid="233">4415 <span class="text-xs text-gray-500 font-sans font-normal" vid="234">件</span></div>
+                        </div>
+                        
+                        <div class="flex flex-col items-center justify-center bg-[rgba(5,15,40,0.6)] border border-[rgba(30,70,120,0.5)] rounded p-2 hover:border-[#00f0ff] transition-colors cursor-pointer" vid="235">
+                            <div class="flex items-center gap-2 mb-1" vid="236">
+                                <i class="ph ph-user-focus text-gray-400 text-lg" vid="237"></i>
+                                <span class="text-[#a0c0e0] text-sm" vid="238">重点关注人</span>
+                            </div>
+                            <div class="text-white font-mono text-xl font-bold" vid="239">3561 <span class="text-xs text-gray-500 font-sans font-normal" vid="240">件</span></div>
+                        </div>
+                        
+                        <div class="flex flex-col items-center justify-center bg-[rgba(5,15,40,0.6)] border border-[rgba(30,70,120,0.5)] rounded p-2 hover:border-[#00f0ff] transition-colors cursor-pointer" vid="241">
+                            <div class="flex items-center gap-2 mb-1" vid="242">
+                                <span class="text-[#a0c0e0] text-sm" vid="243">重点关注企业</span>
+                                <i class="ph ph-buildings text-gray-400 text-lg" vid="244"></i>
+                            </div>
+                            <div class="text-white font-mono text-xl font-bold" vid="245">26 <span class="text-xs text-gray-500 font-sans font-normal" vid="246">件</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="panel-bg rounded-lg p-4 h-[220px] flex flex-col" vid="247">
+                <div class="flex items-center gap-2 mb-4" vid="248">
+                    <i class="ph-fill ph-caret-double-right text-[#00f0ff]" vid="249"></i>
+                    <h2 class="text-lg font-bold text-white tracking-wider glow-text" vid="250">高频纠纷类型</h2>
+                </div>
+                
+                <div class="grid grid-cols-2 grid-rows-2 gap-3 flex-1" vid="251">
+                    
+                    <div class="bg-[rgba(5,15,40,0.8)] border border-[rgba(30,70,120,0.5)] border-t-[rgba(0,150,255,0.8)] border-t-2 rounded flex items-center p-3 gap-3 group hover:bg-[rgba(10,30,70,0.8)] transition-all" vid="252">
+                        <div class="w-10 h-10 rounded-full bg-[rgba(0,100,255,0.2)] flex items-center justify-center" vid="253">
+                            <i class="ph ph-users text-2xl text-white group-hover:text-[#00f0ff] transition-colors" vid="254"></i>
+                        </div>
+                        <div vid="255">
+                            <div class="text-[#a0c0e0] text-xs mb-1" vid="256">民事纠纷</div>
+                            <div class="text-white font-mono font-bold text-lg" vid="257">7262 <span class="text-[10px] text-gray-500 font-sans font-normal" vid="258">件</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-[rgba(5,15,40,0.8)] border border-[rgba(30,70,120,0.5)] border-t-[rgba(0,150,255,0.8)] border-t-2 rounded flex items-center p-3 gap-3 group hover:bg-[rgba(10,30,70,0.8)] transition-all" vid="259">
+                        <div class="w-10 h-10 rounded-full bg-[rgba(0,100,255,0.2)] flex items-center justify-center" vid="260">
+                            <i class="ph ph-users-three text-2xl text-white group-hover:text-[#00f0ff] transition-colors" vid="261"></i>
+                        </div>
+                        <div vid="262">
+                            <div class="text-[#a0c0e0] text-xs mb-1" vid="263">集体上访</div>
+                            <div class="text-white font-mono font-bold text-lg" vid="264">7262 <span class="text-[10px] text-gray-500 font-sans font-normal" vid="265">件</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-[rgba(5,15,40,0.8)] border border-[rgba(30,70,120,0.5)] border-t-[rgba(0,150,255,0.8)] border-t-2 rounded flex items-center p-3 gap-3 group hover:bg-[rgba(10,30,70,0.8)] transition-all" vid="266">
+                        <div class="w-10 h-10 rounded-full bg-[rgba(0,100,255,0.2)] flex items-center justify-center" vid="267">
+                            <i class="ph ph-scales text-2xl text-white group-hover:text-[#00f0ff] transition-colors" vid="268"></i>
+                        </div>
+                        <div vid="269">
+                            <div class="text-[#a0c0e0] text-xs mb-1" vid="270">涉法涉诉纠纷</div>
+                            <div class="text-white font-mono font-bold text-lg" vid="271">7262 <span class="text-[10px] text-gray-500 font-sans font-normal" vid="272">件</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-[rgba(5,15,40,0.8)] border border-[rgba(30,70,120,0.5)] border-t-[rgba(0,150,255,0.8)] border-t-2 rounded flex items-center p-3 gap-3 group hover:bg-[rgba(10,30,70,0.8)] transition-all" vid="273">
+                        <div class="w-10 h-10 rounded-full bg-[rgba(0,100,255,0.2)] flex items-center justify-center" vid="274">
+                            <i class="ph ph-files text-2xl text-white group-hover:text-[#00f0ff] transition-colors" vid="275"></i>
+                        </div>
+                        <div vid="276">
+                            <div class="text-[#a0c0e0] text-xs mb-1" vid="277">群体性事项</div>
+                            <div class="text-white font-mono font-bold text-lg" vid="278">7262 <span class="text-[10px] text-gray-500 font-sans font-normal" vid="279">件</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="panel-bg rounded-lg p-4 flex-1 flex flex-col min-h-[200px]" vid="280">
+                <div class="flex items-center gap-2 mb-2" vid="281">
+                    <i class="ph-fill ph-caret-double-right text-[#00f0ff]" vid="282"></i>
+                    <h2 class="text-lg font-bold text-white tracking-wider glow-text" vid="283">案件办理趋势</h2>
+                </div>
+                
+                
+                <div class="flex justify-center gap-6 text-[10px] text-[#a0c0e0] mb-2" vid="284">
+                    <div class="flex items-center gap-1" vid="285"><span class="w-2 h-2 bg-[#00aaff] inline-block" vid="286"></span>信访</div>
+                    <div class="flex items-center gap-1" vid="287"><span class="w-2 h-2 bg-[#ff6600] inline-block" vid="288"></span>超级访</div>
+                    <div class="flex items-center gap-1" vid="289"><span class="w-2 h-2 bg-[#a0c0e0] inline-block" vid="290"></span>诉讼案件</div>
+                </div>
+
+                <div class="flex-1 relative w-full h-full" vid="291">
+                    <canvas id="trendChartRight" vid="292"></canvas>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    
+    <script vid="293">
+        
+        Chart.defaults.color = '#80a0c0';
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.font.size = 10;
+        
+        const commonOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: 'rgba(5, 15, 35, 0.9)',
+                    titleColor: '#00f0ff',
+                    bodyColor: '#fff',
+                    borderColor: 'rgba(0, 150, 255, 0.5)',
+                    borderWidth: 1,
+                    padding: 10
+                }
+            },
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
+        };
+
+        const labelsYears = ['2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022'];
+
+        
+        const ctxLeft = document.getElementById('trendChartLeft').getContext('2d');
+        
+        
+        const gradientLeftArea = ctxLeft.createLinearGradient(0, 0, 0, 200);
+        gradientLeftArea.addColorStop(0, 'rgba(0, 150, 255, 0.5)');
+        gradientLeftArea.addColorStop(1, 'rgba(0, 150, 255, 0.0)');
+
+        new Chart(ctxLeft, {
+            type: 'line',
+            data: {
+                labels: labelsYears,
+                datasets: [
+                    {
+                        label: '受理量',
+                        data: [50, 120, 80, 250, 200, 150, 300, 180],
+                        borderColor: '#0088ff',
+                        backgroundColor: gradientLeftArea,
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: '办结率',
+                        data: [40, 60, 55, 80, 75, 90, 85, 95],
+                        borderColor: '#ff8c00',
+                        borderWidth: 2,
+                        fill: false,
+                        tension: 0.4,
+                        yAxisID: 'y1'
+                    },
+                    {
+                        label: '调解成功率',
+                        data: [30, 45, 50, 70, 65, 80, 75, 85],
+                        borderColor: '#00f0ff',
+                        borderWidth: 2,
+                        fill: false,
+                        tension: 0.4,
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                ...commonOptions,
+                scales: {
+                    x: {
+                        grid: { color: 'rgba(30, 70, 120, 0.2)', drawBorder: false },
+                        ticks: { maxRotation: 0, autoSkip: false }
+                    },
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        grid: { color: 'rgba(30, 70, 120, 0.2)', drawBorder: false },
+                        min: 0,
+                        max: 376,
+                        ticks: { stepSize: 94 }
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        grid: { drawOnChartArea: false }, 
+                        min: 0,
+                        max: 100,
+                        ticks: { stepSize: 25, callback: function(value) { return value; } }
+                    }
+                }
+            }
+        });
+
+        
+        const ctxRight = document.getElementById('trendChartRight').getContext('2d');
+        
+        
+        const gradientRightArea = ctxRight.createLinearGradient(0, 0, 0, 200);
+        gradientRightArea.addColorStop(0, 'rgba(0, 170, 255, 0.4)');
+        gradientRightArea.addColorStop(1, 'rgba(0, 170, 255, 0.0)');
+
+        new Chart(ctxRight, {
+            type: 'line',
+            data: {
+                labels: labelsYears,
+                datasets: [
+                    {
+                        label: '信访',
+                        data: [80, 150, 100, 280, 150, 120, 320, 100],
+                        borderColor: '#00aaff',
+                        backgroundColor: gradientRightArea,
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4
+                    },
+                    {
+                        label: '超级访',
+                        data: [40, 90, 60, 180, 100, 80, 200, 60],
+                        borderColor: '#ff6600',
+                        borderWidth: 2,
+                        fill: false,
+                        tension: 0.4
+                    },
+                    {
+                        label: '诉讼案件',
+                        data: [20, 50, 30, 100, 50, 40, 120, 30],
+                        borderColor: '#a0c0e0',
+                        borderWidth: 2,
+                        fill: false,
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: {
+                ...commonOptions,
+                scales: {
+                    x: {
+                        grid: { color: 'rgba(30, 70, 120, 0.2)', drawBorder: false },
+                        ticks: { maxRotation: 0, autoSkip: false }
+                    },
+                    y: {
+                        grid: { color: 'rgba(30, 70, 120, 0.2)', drawBorder: false },
+                        min: 0,
+                        max: 376,
+                        ticks: { stepSize: 94 }
+                    }
+                }
+            }
+        });
+    </script>
+
+</body></html>

@@ -1,0 +1,200 @@
+<html lang="zh-CN" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">情绪收藏罐 - 详情</title>
+    <script src="https://cdn.tailwindcss.com/3.4.17" vid="5"></script>
+    <style vid="6">
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500&display=swap');
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #E5E5E5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .glass-header {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .moment-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+            transition: transform 0.2s ease;
+        }
+
+        .moment-card:active {
+            transform: scale(0.98);
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-20px) scale(1.1); }
+        }
+
+        .bg-glow {
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: floatSlow 10s ease-in-out infinite;
+        }
+
+        .jar-shape {
+            background: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%);
+            border: 1px solid rgba(255,255,255,0.6);
+            box-shadow: inset 0 0 40px rgba(255,255,255,0.4);
+        }
+    </style>
+</head>
+<body vid="7">
+
+    <div id="app-container" class="w-[400px] h-[867px] relative overflow-hidden bg-[#FAFAF7] text-stone-800 rounded-[20px] shadow-2xl" vid="8">
+        
+        
+        <div class="absolute top-[10%] -right-20 w-80 h-80 bg-amber-200 rounded-full bg-glow" vid="9"></div>
+        <div class="absolute bottom-[20%] -left-20 w-64 h-64 bg-orange-100 rounded-full bg-glow" style="animation-delay: -3s;" vid="10"></div>
+
+        
+        <div class="absolute inset-0 overflow-y-auto hide-scrollbar pt-28 pb-32" vid="11">
+            
+            
+            <div class="flex flex-col items-center mb-12 px-8" vid="12">
+                <div class="relative w-24 h-32 flex flex-col items-center" vid="13">
+                    <div class="w-8 h-2 bg-[#E8E3DB] rounded-t-sm shadow-sm z-10" vid="14"></div>
+                    <div class="w-10 h-2 bg-white/40 border-x border-white/60 z-10" vid="15"></div>
+                    <div class="w-20 h-28 jar-shape rounded-[24px] relative overflow-hidden" vid="16">
+                        <div class="absolute inset-0 bg-gradient-to-br from-amber-100/30 to-transparent" vid="17"></div>
+                        
+                        <div class="absolute top-4 left-4 text-xs opacity-40" vid="18">✨</div>
+                        <div class="absolute bottom-8 right-5 text-[10px] opacity-30" vid="19">🌟</div>
+                    </div>
+                </div>
+                <h2 class="text-xl font-medium text-stone-700 mt-4 tracking-[0.2em]" vid="20">发光罐</h2>
+                <p class="text-xs text-stone-400 mt-1.5 font-light tracking-widest" vid="21">收纳了 12 个温暖的瞬间</p>
+            </div>
+
+            
+            <div class="px-6 space-y-4" vid="22">
+                
+                
+                <div class="moment-card p-5 rounded-[28px]" vid="23">
+                    <div class="flex justify-between items-start mb-3" vid="24">
+                        <div class="flex items-center gap-3" vid="25">
+                            <div class="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-lg shadow-inner" vid="26">✨</div>
+                            <div vid="27">
+                                <h4 class="text-sm font-medium text-stone-700" vid="28">晨间暖阳</h4>
+                                <span class="text-[10px] text-stone-400 font-light" vid="29">今天 08:32</span>
+                            </div>
+                        </div>
+                        <button class="text-stone-300" vid="30">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" vid="31"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" vid="32"></path></svg>
+                        </button>
+                    </div>
+                    <p class="text-xs text-stone-500 leading-relaxed font-light pl-[52px]" vid="33">
+                        拉开窗帘的那一刻，阳光正好洒在猫咪背上，金灿灿的，感觉这一天都会很好。
+                    </p>
+                </div>
+
+                
+                <div class="moment-card p-5 rounded-[28px]" vid="34">
+                    <div class="flex justify-between items-start mb-3" vid="35">
+                        <div class="flex items-center gap-3" vid="36">
+                            <div class="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-lg shadow-inner" vid="37">☕</div>
+                            <div vid="38">
+                                <h4 class="text-sm font-medium text-stone-700" vid="39">午后松弛</h4>
+                                <span class="text-[10px] text-stone-400 font-light" vid="40">昨日 14:15</span>
+                            </div>
+                        </div>
+                        <button class="text-stone-300" vid="41">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" vid="42"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" vid="43"></path></svg>
+                        </button>
+                    </div>
+                    <p class="text-xs text-stone-500 leading-relaxed font-light pl-[52px]" vid="44">
+                        尝试了新的燕麦拿铁，第一口就被惊喜到。耳机里的音乐旋律也恰到好处。
+                    </p>
+                </div>
+
+                
+                <div class="moment-card p-5 rounded-[28px]" vid="45">
+                    <div class="flex justify-between items-start mb-3" vid="46">
+                        <div class="flex items-center gap-3" vid="47">
+                            <div class="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-lg shadow-inner" vid="48">🌟</div>
+                            <div vid="49">
+                                <h4 class="text-sm font-medium text-stone-700" vid="50">意外的赞美</h4>
+                                <span class="text-[10px] text-stone-400 font-light" vid="51">周二 18:20</span>
+                            </div>
+                        </div>
+                        <button class="text-stone-300" vid="52">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" vid="53"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" vid="54"></path></svg>
+                        </button>
+                    </div>
+                    <p class="text-xs text-stone-500 leading-relaxed font-light pl-[52px]" vid="55">
+                        下班路上被路人夸奖围巾很好看，这种微小的肯定让空气都变甜了。
+                    </p>
+                </div>
+
+                
+                <div class="moment-card p-5 rounded-[28px]" vid="56">
+                    <div class="flex justify-between items-start mb-3" vid="57">
+                        <div class="flex items-center gap-3" vid="58">
+                            <div class="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-lg shadow-inner" vid="59">🌻</div>
+                            <div vid="60">
+                                <h4 class="text-sm font-medium text-stone-700" vid="61">花开时刻</h4>
+                                <span class="text-[10px] text-stone-400 font-light" vid="62">周一 09:10</span>
+                            </div>
+                        </div>
+                        <button class="text-stone-300" vid="63">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" vid="64"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" vid="65"></path></svg>
+                        </button>
+                    </div>
+                    <p class="text-xs text-stone-500 leading-relaxed font-light pl-[52px]" vid="66">
+                        工位上的小向日葵终于开了。生活总会在不经意间给你一些小礼物。
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        
+        <header class="glass-header absolute top-0 inset-x-0 h-24 px-6 flex items-end pb-4 z-50" vid="67">
+            <div class="flex items-center justify-between w-full" vid="68">
+                <button class="w-10 h-10 flex items-center justify-center text-stone-500 rounded-full active:bg-stone-100/50 transition-colors" vid="69">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" vid="70"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7" vid="71"></path></svg>
+                </button>
+                <h3 class="text-stone-700 font-medium tracking-widest text-sm" vid="72">查看容器</h3>
+                <button class="w-10 h-10 flex items-center justify-center text-stone-500 rounded-full active:bg-stone-100/50 transition-colors" vid="73">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" vid="74"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" vid="75"></path></svg>
+                </button>
+            </div>
+        </header>
+
+        
+        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 w-[280px] h-14 bg-white/80 backdrop-blur-xl border border-stone-100 shadow-[0_8px_30px_rgb(0,0,0,0.06)] rounded-[28px] px-6 flex items-center justify-between z-40" vid="76">
+            <button class="w-12 h-12 flex items-center justify-center text-stone-400" vid="77">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" vid="78"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" vid="79"></path></svg>
+            </button>
+            <button class="w-12 h-12 flex items-center justify-center text-stone-800" vid="80">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" vid="81"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" vid="82"></path></svg>
+            </button>
+            <button class="w-12 h-12 flex items-center justify-center text-stone-400" vid="83">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" vid="84"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" vid="85"></path></svg>
+            </button>
+        </div>
+
+    </div>
+
+</body></html>

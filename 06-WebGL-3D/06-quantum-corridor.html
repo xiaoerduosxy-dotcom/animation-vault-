@@ -1,0 +1,213 @@
+<html lang="en" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">Quantum Corridor - Ground View</title>
+    <style vid="5">
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #030304;
+        }
+        canvas {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        .viewport-container {
+            width: 1440px;
+            height: 1024px;
+            overflow: hidden;
+            border-radius: 24px;
+            position: relative;
+            margin: auto;
+            background: #000;
+        }
+    </style>
+</head>
+<body vid="6">
+    <div class="viewport-container" vid="7">
+        <canvas id="mainCanvas" vid="8"></canvas>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" vid="9"></script>
+    <script vid="10">
+        const canvas = document.getElementById('mainCanvas');
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x020203);
+        
+        
+        scene.fog = new THREE.FogExp2(0x030304, 0.04);
+
+        
+        const camera = new THREE.PerspectiveCamera(75, 1440 / 1024, 0.1, 1000);
+        
+        
+        camera.position.set(0, 0.8, 15); 
+        camera.lookAt(0, 0.8, -100);
+
+        const renderer = new THREE.WebGLRenderer({ 
+            canvas: canvas,
+            antialias: true, 
+            powerPreference: "high-performance" 
+        });
+        renderer.setSize(1440, 1024);
+        renderer.setPixelRatio(1);
+
+        const GRID_SIZE = 60; 
+        const CUBE_SIZE = 0.9;
+        const SPACING = 1.0;
+        const OFFSET_Z = (GRID_SIZE * SPACING) / 2;
+
+        const geometry = new THREE.BoxGeometry(CUBE_SIZE, 1.0, CUBE_SIZE);
+        geometry.translate(0, 0.5, 0);
+
+        const material = new THREE.ShaderMaterial({
+            uniforms: {
+                uTime: { value: 0 },
+                uScanPos: { value: 0 }, 
+                uColorBg: { value: new THREE.Color(0x0a0a0f) },
+                uColorActive: { value: new THREE.Color(0xd0d5db) },
+                uColorScan: { value: new THREE.Color(0x00f3ff) } 
+            },
+            vertexShader: `
+                attribute float aState;
+                attribute float aOffset;
+                uniform float uTime;
+                varying vec3 vWorldPos;
+                varying float vState;
+                varying float vHeight;
+
+                void main() {
+                    float pulse = sin(uTime * 0.5 + aOffset) * 0.1;
+                    float baseState = aState;
+                    
+                    // Blocks move up and down slightly for a living data feel
+                    float hMultiplier = mix(0.15, 6.0, baseState);
+                    vHeight = hMultiplier + pulse;
+                    
+                    vec3 transformed = position;
+                    transformed.y *= vHeight;
+
+                    vec4 worldPosition = instanceMatrix * vec4(transformed, 1.0);
+                    vWorldPos = worldPosition.xyz;
+                    gl_Position = projectionMatrix * viewMatrix * worldPosition;
+                    vState = baseState;
+                }
+            `,
+            fragmentShader: `
+                uniform float uScanPos;
+                uniform vec3 uColorBg;
+                uniform vec3 uColorActive;
+                uniform vec3 uColorScan;
+                varying vec3 vWorldPos;
+                varying float vState;
+                varying float vHeight;
+
+                void main() {
+                    vec3 baseColor = mix(uColorBg, uColorActive, vState);
+                    
+                    // Darken bases for depth
+                    float ao = smoothstep(0.0, 0.8, vWorldPos.y / vHeight);
+                    baseColor *= (ao * 0.8 + 0.2);
+
+                    // Scan beam logic (moving along Z for corridor effect)
+                    float distToScan = abs(vWorldPos.z - uScanPos);
+                    float scanLine = exp(-distToScan * 8.0);
+                    float scanGlow = exp(-distToScan * 1.5) * 0.4;
+                    
+                    // The beam lights up the top edges more
+                    float topLight = smoothstep(2.0, 6.0, vWorldPos.y);
+                    vec3 finalColor = baseColor + (uColorScan * (scanLine + scanGlow) * (1.0 + topLight));
+
+                    gl_FragColor = vec4(finalColor, 1.0);
+                }
+            `
+        });
+
+        const count = GRID_SIZE * 20; 
+        const instancedMesh = new THREE.InstancedMesh(geometry, material, count);
+        scene.add(instancedMesh);
+
+        const states = new Float32Array(count);
+        const offsets = new Float32Array(count);
+        const dummy = new THREE.Object3D();
+
+        let idx = 0;
+        const corridorWidth = 3; 
+
+        for (let x = -10; x < 10; x++) {
+            for (let z = 0; z < GRID_SIZE; z++) {
+                
+                if (Math.abs(x) < corridorWidth / 2) {
+                    states[idx] = 0; 
+                } else {
+                    
+                    states[idx] = Math.random() > 0.6 ? Math.random() : 0.1;
+                }
+
+                dummy.position.set(x * SPACING, 0, (z * SPACING) - OFFSET_Z);
+                dummy.updateMatrix();
+                instancedMesh.setMatrixAt(idx, dummy.matrix);
+                
+                offsets[idx] = Math.random() * 10.0;
+                idx++;
+            }
+        }
+
+        geometry.setAttribute('aState', new THREE.InstancedBufferAttribute(states, 1));
+        geometry.setAttribute('aOffset', new THREE.InstancedBufferAttribute(offsets, 1));
+
+        
+        const postScene = new THREE.Scene();
+        const postCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+        const renderTarget = new THREE.WebGLRenderTarget(1440, 1024);
+        
+        const postMaterial = new THREE.ShaderMaterial({
+            uniforms: {
+                tDiffuse: { value: renderTarget.texture },
+                uTime: { value: 0 }
+            },
+            vertexShader: `
+                varying vec2 vUv;
+                void main() { vUv = uv; gl_Position = vec4(position, 1.0); }
+            `,
+            fragmentShader: `
+                uniform sampler2D tDiffuse;
+                uniform float uTime;
+                varying vec2 vUv;
+                float hash(vec2 p) { return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
+                void main() {
+                    vec4 col = texture2D(tDiffuse, vUv);
+                    float noise = (hash(vUv + fract(uTime)) - 0.5) * 0.05;
+                    float vig = smoothstep(1.2, 0.4, length(vUv - 0.5));
+                    gl_FragColor = vec4((col.rgb + noise) * vig, 1.0);
+                }
+            `
+        });
+        const postQuad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), postMaterial);
+        postScene.add(postQuad);
+
+        const clock = new THREE.Clock();
+        function animate() {
+            requestAnimationFrame(animate);
+            const time = clock.getElapsedTime();
+            
+            
+            camera.position.z = 15 - (time * 1.5 % 30);
+            
+            
+            material.uniforms.uScanPos.value = Math.sin(time * 0.8) * 30;
+            material.uniforms.uTime.value = time;
+            postMaterial.uniforms.uTime.value = time;
+
+            renderer.setRenderTarget(renderTarget);
+            renderer.render(scene, camera);
+            renderer.setRenderTarget(null);
+            renderer.render(postScene, postCamera);
+        }
+
+        animate();
+    </script>
+</body></html>

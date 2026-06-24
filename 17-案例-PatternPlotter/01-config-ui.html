@@ -1,0 +1,379 @@
+<html lang="en" vid="0"><head vid="1">
+<meta charset="UTF-8" vid="2">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+<title vid="4">Pattern Plotter // CONFIG_UI</title>
+<style vid="5">
+    @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
+    :root {
+        --bg-app: #111111;
+        --bg-panel: #1A1A1A;
+        --text-main: #E0E0E0;
+        --text-dim: #888888;
+        --border-color: #333333;
+        --accent: #E84A5F;
+        --font-mono: 'Space Mono', 'Courier New', Courier, monospace;
+    }
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        background-color: var(--bg-app);
+        color: var(--text-main);
+        font-family: var(--font-mono);
+        font-size: 12px;
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        user-select: none;
+    }
+
+    header {
+        height: 32px;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+        justify-content: space-between;
+        background: var(--bg-panel);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .status-group {
+        display: flex;
+        gap: 24px;
+    }
+
+    .status-item span:first-child {
+        color: var(--text-dim);
+        margin-right: 8px;
+    }
+
+    main {
+        display: flex;
+        flex: 1;
+        height: calc(100vh - 32px);
+        justify-content: center;
+        align-items: center;
+        background: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #111111 100%);
+    }
+
+    .config-modal {
+        width: 800px;
+        background: var(--bg-panel);
+        border: 1px solid var(--border-color);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .modal-header {
+        padding: 24px;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .modal-title {
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        color: var(--text-main);
+    }
+
+    .modal-content {
+        padding: 32px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+    }
+
+    .config-group {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .config-section-label {
+        color: var(--text-dim);
+        font-weight: 700;
+        font-size: 10px;
+        letter-spacing: 1px;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 8px;
+        margin-bottom: 4px;
+    }
+
+    .control-item {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .control-header {
+        display: flex;
+        justify-content: space-between;
+        font-size: 11px;
+    }
+
+    .control-label {
+        color: var(--text-main);
+    }
+
+    .control-value {
+        color: var(--accent);
+    }
+
+    
+    input[type=range] {
+        -webkit-appearance: none;
+        width: 100%;
+        background: transparent;
+    }
+
+    input[type=range]:focus {
+        outline: none;
+    }
+
+    input[type=range]::-webkit-slider-runnable-track {
+        width: 100%;
+        height: 4px;
+        cursor: pointer;
+        background: var(--border-color);
+        border-radius: 0px;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+        height: 16px;
+        width: 8px;
+        background: var(--text-main);
+        cursor: pointer;
+        -webkit-appearance: none;
+        margin-top: -6px;
+        border: 1px solid #000;
+    }
+
+    input[type=range]:active::-webkit-slider-thumb {
+        background: var(--accent);
+    }
+
+    
+    .text-input-row {
+        display: flex;
+        gap: 8px;
+    }
+
+    input[type=text], input[type=number] {
+        background: #000;
+        border: 1px solid var(--border-color);
+        color: var(--accent);
+        padding: 8px;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        flex: 1;
+    }
+
+    input:focus {
+        outline: 1px solid var(--accent);
+        border-color: var(--accent);
+    }
+
+    .modal-footer {
+        padding: 24px 32px;
+        border-top: 1px solid var(--border-color);
+        display: flex;
+        justify-content: flex-end;
+        gap: 16px;
+    }
+
+    .btn {
+        background: transparent;
+        border: 1px solid var(--border-color);
+        color: var(--text-main);
+        font-family: inherit;
+        padding: 12px 24px;
+        cursor: pointer;
+        text-transform: uppercase;
+        font-weight: 700;
+        transition: all 0.2s;
+    }
+
+    .btn:hover {
+        background: var(--text-main);
+        color: var(--bg-app);
+    }
+
+    .btn-primary {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
+    }
+
+    .btn-primary:hover {
+        background: #fff;
+        color: var(--accent);
+        border-color: #fff;
+    }
+
+    .grid-preview {
+        border: 1px dashed var(--border-color);
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-dim);
+        font-size: 10px;
+        margin-top: 8px;
+    }
+
+</style>
+</head>
+<body vid="6">
+
+<header vid="7">
+    <div class="status-group" vid="8">
+        <div class="status-item" vid="9">
+            <span vid="10">SYS:</span>
+            <span vid="11">TX_PLOTTER v4.2</span>
+        </div>
+        <div class="status-item" vid="12">
+            <span vid="13">MODE:</span>
+            <span vid="14">INITIALIZATION_PHASE</span>
+        </div>
+    </div>
+    <div class="status-group" vid="15">
+        <div class="status-item" vid="16">
+            <span vid="17">STATUS:</span>
+            <span vid="18">AWAITING_PARAMETERS</span>
+        </div>
+    </div>
+</header>
+
+<main vid="19">
+    <div class="config-modal" vid="20">
+        <div class="modal-header" vid="21">
+            <div class="modal-title" vid="22">NEW_PATTERN_CONFIG</div>
+            <div style="color: var(--text-dim); font-size: 10px;" vid="23">BUILD: 2023.11.04</div>
+        </div>
+        
+        <div class="modal-content" vid="24">
+            <div class="config-group" vid="25">
+                <div class="config-section-label" vid="26">GRID_GEOMETRY</div>
+                
+                <div class="control-item" vid="27">
+                    <div class="control-header" vid="28">
+                        <span class="control-label" vid="29">CANVAS_WIDTH (COLS)</span>
+                        <span class="control-value" id="val-cols" vid="30">100</span>
+                    </div>
+                    <input type="range" min="10" max="200" value="100" class="slider" id="input-cols" vid="31">
+                </div>
+
+                <div class="control-item" vid="32">
+                    <div class="control-header" vid="33">
+                        <span class="control-label" vid="34">CANVAS_HEIGHT (ROWS)</span>
+                        <span class="control-value" id="val-rows" vid="35">70</span>
+                    </div>
+                    <input type="range" min="10" max="150" value="70" class="slider" id="input-rows" vid="36">
+                </div>
+
+                <div class="control-item" vid="37">
+                    <div class="control-header" vid="38">
+                        <span class="control-label" vid="39">CELL_RESOLUTION (PX)</span>
+                        <span class="control-value" id="val-res" vid="40">18</span>
+                    </div>
+                    <input type="range" min="8" max="32" value="18" class="slider" id="input-res" vid="41">
+                </div>
+
+                <div class="grid-preview" id="grid-stats" vid="42">
+                    ESTIMATED TOTAL CELLS: 7,000
+                </div>
+            </div>
+
+            <div class="config-group" vid="43">
+                <div class="config-section-label" vid="44">TERRAIN_ALGORITHM</div>
+
+                <div class="control-item" vid="45">
+                    <div class="control-header" vid="46">
+                        <span class="control-label" vid="47">GENERATION_SEED</span>
+                    </div>
+                    <div class="text-input-row" vid="48">
+                        <input type="text" value="FLORA_GRASSLAND_01" id="input-seed" vid="49">
+                        <button class="btn" style="padding: 0 12px;" vid="50">RAND</button>
+                    </div>
+                </div>
+
+                <div class="control-item" vid="51">
+                    <div class="control-header" vid="52">
+                        <span class="control-label" vid="53">FLORA_SCATTER_DENSITY</span>
+                        <span class="control-value" id="val-density" vid="54">40%</span>
+                    </div>
+                    <input type="range" min="0" max="100" value="40" class="slider" id="input-density" vid="55">
+                </div>
+
+                <div class="control-item" vid="56">
+                    <div class="control-header" vid="57">
+                        <span class="control-label" vid="58">ELEVATION_THRESHOLD</span>
+                        <span class="control-value" id="val-elev" vid="59">0.25</span>
+                    </div>
+                    <input type="range" min="0" max="100" value="25" class="slider" id="input-elev" vid="60">
+                </div>
+
+                <div class="control-item" vid="61">
+                    <div class="control-header" vid="62">
+                        <span class="control-label" vid="63">COLOR_MAPPING_PROFILE</span>
+                    </div>
+                    <select style="background: #000; border: 1px solid var(--border-color); color: var(--text-main); padding: 8px; font-family: var(--font-mono);" vid="64">
+                        <option vid="65">DMC_STANDARD_v2</option>
+                        <option vid="66">ANCHOR_VINTAGE</option>
+                        <option vid="67">CUSTOM_PASTEL_HEX</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer" vid="68">
+            <button class="btn" vid="69">LOAD_PRESET</button>
+            <button class="btn btn-primary" onclick="window.location.reload()" vid="70">GENERATE_CHART.exe</button>
+        </div>
+    </div>
+</main>
+
+<script vid="71">
+    
+    const inputs = [
+        { id: 'input-cols', valId: 'val-cols', suffix: '' },
+        { id: 'input-rows', valId: 'val-rows', suffix: '' },
+        { id: 'input-res', valId: 'val-res', suffix: 'px' },
+        { id: 'input-density', valId: 'val-density', suffix: '%' },
+        { id: 'input-elev', valId: 'val-elev', factor: 0.01, suffix: '' }
+    ];
+
+    inputs.forEach(input => {
+        const el = document.getElementById(input.id);
+        const valEl = document.getElementById(input.valId);
+        
+        el.addEventListener('input', () => {
+            let displayVal = el.value;
+            if (input.factor) displayVal = (el.value * input.factor).toFixed(2);
+            valEl.textContent = displayVal + input.suffix;
+            updateStats();
+        });
+    });
+
+    function updateStats() {
+        const c = document.getElementById('input-cols').value;
+        const r = document.getElementById('input-rows').value;
+        const total = (c * r).toLocaleString();
+        document.getElementById('grid-stats').textContent = `ESTIMATED TOTAL CELLS: ${total}`;
+    }
+</script>
+
+</body></html>

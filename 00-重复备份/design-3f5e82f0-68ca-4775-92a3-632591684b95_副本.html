@@ -1,0 +1,504 @@
+<html lang="en" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">Aura - Active Session</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" vid="5">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" vid="6">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&amp;display=swap" rel="stylesheet" vid="7">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" vid="8"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" vid="9"></script>
+
+    <style vid="10">
+        :root {
+            --bg-color: #FFFFFF;
+            --panel-bg: #F5F5F7;
+            --text-main: #1D1D1F;
+            --text-muted: #86868B;
+            --text-light: #A1A1A6;
+            --pill-bg: #EAEAEB;
+            --pill-active: #FFFFFF;
+            --accent-color: #000000;
+            --recording-red: #FF3B30;
+            
+            --font-serif: 'Newsreader', serif;
+            --font-sans: 'Inter', sans-serif;
+            
+            --radius-card: 28px;
+            --radius-pill: 999px;
+            
+            --shadow-subtle: 0 2px 12px rgba(0, 0, 0, 0.04);
+            --shadow-float: 0 8px 32px rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+        }
+
+        .radial-ui {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .recording-header {
+            position: absolute;
+            top: 60px;
+            text-align: center;
+            pointer-events: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .rec-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 6px 14px;
+            border-radius: var(--radius-pill);
+            box-shadow: var(--shadow-subtle);
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .rec-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--recording-red);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.1); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .rec-timer {
+            font-family: var(--font-sans);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-main);
+            letter-spacing: 0.05em;
+        }
+
+        .title {
+            font-family: var(--font-serif);
+            font-size: 42px;
+            font-weight: 400;
+            letter-spacing: -0.02em;
+            color: var(--text-main);
+        }
+
+        .waveform-container {
+            width: 240px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            margin-top: 8px;
+        }
+
+        .wave-bar {
+            width: 3px;
+            background: var(--text-main);
+            border-radius: 3px;
+            transition: height 0.1s ease;
+        }
+
+        .ring-item {
+            position: absolute;
+            pointer-events: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .param-node {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0,0,0,0.05);
+            border-radius: 24px;
+            padding: 16px 20px;
+            width: 160px;
+            text-align: center;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .node-value {
+            font-family: var(--font-serif);
+            font-size: 18px;
+            color: var(--text-main);
+            display: block;
+        }
+
+        .node-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 4px;
+        }
+
+        .p-1 { transform: translate(340px, 0); }
+        .p-2 { transform: translate(-340px, 0); }
+        .p-3 { transform: translate(240px, 240px); }
+        .p-4 { transform: translate(-240px, 240px); }
+
+        .status-badge {
+            position: absolute;
+            left: 40px;
+            bottom: 40px;
+            background: rgba(245, 245, 247, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 20px 24px;
+            border-radius: var(--radius-card);
+            pointer-events: auto;
+            border: 1px solid rgba(0,0,0,0.03);
+            max-width: 280px;
+        }
+
+        .status-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+        .status-info { font-size: 12px; color: var(--text-muted); }
+
+        .action-container {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            pointer-events: auto;
+        }
+
+        .btn-stop {
+            background-color: #FFFFFF;
+            color: #000000;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 18px 40px;
+            border-radius: var(--radius-pill);
+            border: 1px solid rgba(0,0,0,0.1);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: var(--shadow-float);
+            transition: all 0.3s ease;
+        }
+
+        .btn-stop:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        }
+
+        .stop-icon {
+            width: 14px;
+            height: 14px;
+            background: var(--recording-red);
+            border-radius: 2px;
+        }
+
+        .meta-info {
+            position: absolute;
+            right: 40px;
+            bottom: 40px;
+            font-size: 10px;
+            color: var(--text-light);
+            text-align: right;
+            letter-spacing: 0.1em;
+            line-height: 2;
+        }
+
+        #cursor-indicator {
+            position: fixed;
+            pointer-events: none;
+            font-family: var(--font-sans);
+            font-size: 11px;
+            color: var(--text-muted);
+            background: rgba(255,255,255,0.9);
+            padding: 6px 12px;
+            border-radius: 20px;
+            transform: translate(-50%, -200%);
+            opacity: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-subtle);
+        }
+    </style>
+</head>
+<body vid="11">
+
+    <div id="canvas-container" vid="12"></div>
+
+    <div class="radial-ui" vid="13">
+        <div class="recording-header" vid="14">
+            <div class="rec-indicator" vid="15">
+                <div class="rec-dot" vid="16"></div>
+                <span class="rec-timer" id="timer" vid="17">00:14:22</span>
+            </div>
+            <h1 class="title" vid="18">Capturing Aura</h1>
+            <div class="waveform-container" id="waveform" vid="19">
+                
+            </div>
+        </div>
+
+        <div class="ring-item p-1" vid="20">
+            <div class="param-node" vid="21">
+                <span class="node-value" id="val-1" vid="22">0.82</span>
+                <span class="node-label" vid="23">Density</span>
+            </div>
+        </div>
+
+        <div class="ring-item p-2" vid="24">
+            <div class="param-node" vid="25">
+                <span class="node-value" id="val-2" vid="26">Fluid</span>
+                <span class="node-label" vid="27">Viscosity</span>
+            </div>
+        </div>
+
+        <div class="ring-item p-3" vid="28">
+            <div class="param-node" vid="29">
+                <span class="node-value" id="val-3" vid="30">64%</span>
+                <span class="node-label" vid="31">Bloom</span>
+            </div>
+        </div>
+
+        <div class="ring-item p-4" vid="32">
+            <div class="param-node" vid="33">
+                <span class="node-value" id="val-4" vid="34">Long</span>
+                <span class="node-label" vid="35">Decay</span>
+            </div>
+        </div>
+
+        <div class="status-badge" vid="36">
+            <div class="status-title" vid="37">Session: Morning Mist</div>
+            <div class="status-info" vid="38">Recording high-fidelity spatial data...</div>
+        </div>
+
+        <div class="action-container" vid="39">
+            <button class="btn-stop" onclick="window.location.reload()" vid="40">
+                <div class="stop-icon" vid="41"></div>
+                Stop Recording
+            </button>
+        </div>
+
+        <div class="meta-info" vid="42">
+            ENCODING // LOSSLESS<br vid="43">
+            BUFFER // 1024 SAMPLES
+        </div>
+    </div>
+
+    <div id="cursor-indicator" vid="44">Live modulation active</div>
+
+    <script id="vertexShader" type="x-shader/x-vertex" vid="45">
+        vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
+        vec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}
+        float snoise(vec3 v){ 
+            const vec2  C = vec2(1.0/6.0, 1.0/3.0) ;
+            const vec4  D = vec4(0.0, 0.5, 1.0, 2.0);
+            vec3 i  = floor(v + dot(v, C.yyy) );
+            vec3 x0 = v - i + dot(i, C.xxx) ;
+            vec3 g = step(x0.yzx, x0.xyz);
+            vec3 l = 1.0 - g;
+            vec3 i1 = min( g.xyz, l.zxy );
+            vec3 i2 = max( g.xyz, l.zxy );
+            vec3 x1 = x0 - i1 + 1.0 * C.xxx;
+            vec3 x2 = x0 - i2 + 2.0 * C.xxx;
+            vec3 x3 = x0 - 1.0 + 3.0 * C.xxx;
+            i = mod(i, 289.0 ); 
+            vec4 p = permute( permute( permute( i.z + vec4(0.0, i1.z, i2.z, 1.0 )) + i.y + vec4(0.0, i1.y, i2.y, 1.0 )) + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));
+            float n_ = 1.0/7.0; 
+            vec3  ns = n_ * D.wyz - D.xzx;
+            vec4 j = p - 49.0 * floor(p * ns.z *ns.z);  
+            vec4 x_ = floor(j * ns.z);
+            vec4 y_ = floor(j - 7.0 * x_ );    
+            vec4 x = x_ *ns.x + ns.yyyy;
+            vec4 y = y_ *ns.x + ns.yyyy;
+            vec4 h = 1.0 - abs(x) - abs(y);
+            vec4 b0 = vec4( x.xy, y.xy );
+            vec4 b1 = vec4( x.zw, y.zw );
+            vec4 s0 = floor(b0)*2.0 + 1.0;
+            vec4 s1 = floor(b1)*2.0 + 1.0;
+            vec4 sh = -step(h, vec4(0.0));
+            vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy ;
+            vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww ;
+            vec3 p0 = vec3(a0.xy,h.x);
+            vec3 p1 = vec3(a0.zw,h.y);
+            vec3 p2 = vec3(a1.xy,h.z);
+            vec3 p3 = vec3(a1.zw,h.w);
+            vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3)));
+            p0 *= norm.x; p1 *= norm.y; p2 *= norm.z; p3 *= norm.w;
+            vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
+            m = m * m;
+            return 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3) ) );
+        }
+
+        uniform float uTime;
+        uniform float uInteraction;
+        varying vec3 vNormal;
+        varying vec3 vPosition;
+        varying float vNoise;
+
+        void main() {
+            vNormal = normal;
+            float noiseAmount = snoise(vec3(position.x * 1.5, position.y * 1.5, position.z * 1.5 + uTime * 0.2));
+            float interactiveNoise = noiseAmount * (1.2 + uInteraction * 1.8);
+            vNoise = interactiveNoise;
+            vec3 displacedPosition = position + normal * (interactiveNoise * 0.45);
+            vPosition = displacedPosition;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(displacedPosition, 1.0);
+        }
+    </script>
+
+    <script id="fragmentShader" type="x-shader/x-fragment" vid="46">
+        uniform float uTime;
+        uniform vec3 uColor1; 
+        uniform vec3 uColor2; 
+        varying vec3 vNormal;
+        varying vec3 vPosition;
+        varying float vNoise;
+
+        float random(vec2 st) {
+            return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453123);
+        }
+
+        void main() {
+            vec3 viewDirection = normalize(cameraPosition - vPosition);
+            float dotProduct = dot(vNormal, viewDirection);
+            float edgeSoftness = smoothstep(0.0, 0.7, dotProduct);
+            float mixVal = smoothstep(-1.0, 1.0, vNoise + sin(uTime * 0.4));
+            vec3 baseColor = mix(uColor1, uColor2, mixVal);
+            float grain = random(vPosition.xy * 12.0 + uTime);
+            vec3 texturedColor = baseColor + (grain * 0.12);
+            float finalAlpha = edgeSoftness * 0.85;
+            if (finalAlpha < 0.05) discard;
+            gl_FragColor = vec4(texturedColor, finalAlpha);
+        }
+    </script>
+
+    <script vid="47">
+        const container = document.getElementById('canvas-container');
+        const indicator = document.getElementById('cursor-indicator');
+        const waveContainer = document.getElementById('waveform');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.position.z = 6;
+
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        container.appendChild(renderer.domElement);
+
+        
+        const barCount = 32;
+        const bars = [];
+        for (let i = 0; i < barCount; i++) {
+            const bar = document.createElement('div');
+            bar.className = 'wave-bar';
+            bar.style.height = '4px';
+            waveContainer.appendChild(bar);
+            bars.push(bar);
+        }
+
+        const geometry = new THREE.IcosahedronGeometry(1.8, 64);
+        const uniforms = {
+            uTime: { value: 0.0 },
+            uInteraction: { value: 0.3 },
+            uColor1: { value: new THREE.Color('#FFB6C1') },
+            uColor2: { value: new THREE.Color('#4A90E2') }
+        };
+
+        const material = new THREE.ShaderMaterial({
+            vertexShader: document.getElementById('vertexShader').textContent,
+            fragmentShader: document.getElementById('fragmentShader').textContent,
+            uniforms: uniforms,
+            transparent: true,
+            side: THREE.DoubleSide,
+            depthWrite: false
+        });
+
+        const organism = new THREE.Mesh(geometry, material);
+        scene.add(organism);
+
+        let targetInteraction = 0.3;
+        window.addEventListener('mousedown', () => { targetInteraction = 1.2; });
+        window.addEventListener('mouseup', () => { targetInteraction = 0.3; });
+        
+        document.addEventListener('mousemove', (e) => {
+            indicator.style.left = e.clientX + 'px';
+            indicator.style.top = e.clientY + 'px';
+            indicator.style.opacity = 1;
+        });
+
+        const clock = new THREE.Clock();
+        function animate() {
+            requestAnimationFrame(animate);
+            const delta = clock.getElapsedTime();
+            uniforms.uTime.value = delta;
+            uniforms.uInteraction.value = THREE.MathUtils.lerp(uniforms.uInteraction.value, targetInteraction, 0.05);
+            organism.rotation.y = delta * 0.15;
+            organism.rotation.x = Math.sin(delta * 0.2) * 0.1;
+            
+            
+            bars.forEach((bar, i) => {
+                const wave = Math.sin(delta * 4 + i * 0.3) * 0.5 + 0.5;
+                const noise = Math.random() * 0.3;
+                const h = 4 + (wave + noise) * 32 * (uniforms.uInteraction.value);
+                bar.style.height = `${h}px`;
+                bar.style.opacity = 0.3 + wave * 0.7;
+            });
+
+            
+            if (Math.random() > 0.95) {
+                document.getElementById('val-1').innerText = (0.75 + Math.random() * 0.15).toFixed(2);
+                document.getElementById('val-3').innerText = Math.floor(60 + Math.random() * 10) + '%';
+            }
+
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body></html>

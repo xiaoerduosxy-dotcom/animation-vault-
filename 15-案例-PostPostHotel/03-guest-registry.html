@@ -1,0 +1,262 @@
+<html lang="en" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">Post Post Hotel - Guest Registry</title>
+    <script src="https://cdn.tailwindcss.com/3.4.17" vid="5"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" vid="6">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" vid="7">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&amp;family=Courier+Prime:wght@400;700&amp;family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&amp;family=Birthstone&amp;display=swap" rel="stylesheet" vid="8">
+    <script src="https://unpkg.com/phosphor-icons" vid="9"></script>
+    <style vid="10">
+        :root {
+            --color-mustard: #FFC233;
+            --color-terracotta: #C65D3B;
+            --color-warm-gray: #D1D1C9;
+            --color-ink: #1F1F1F;
+            --color-paper: #F4F1EA;
+            --color-ink-blue: #2B3A67;
+        }
+        
+        body {
+            background-color: var(--color-paper);
+            color: var(--color-ink);
+            font-family: 'Cormorant Garamond', serif;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+        }
+
+        .font-typewriter { font-family: 'Courier Prime', monospace; }
+        .font-sans-modern { font-family: 'DM Sans', sans-serif; }
+        .font-handwritten { font-family: 'Birthstone', cursive; font-size: 1.8rem; line-height: 1; }
+
+        .paper-texture {
+            position: relative;
+            overflow: hidden;
+        }
+        .paper-texture::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' fill='white'/%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.15'/%3E%3C/svg%3E");
+            opacity: 0.4;
+            pointer-events: none;
+            mix-blend-mode: multiply;
+        }
+
+        .registry-spine {
+            background: linear-gradient(90deg, #2a2a2a 0%, #3a3a3a 50%, #2a2a2a 100%);
+            box-shadow: inset -5px 0 10px rgba(0,0,0,0.5);
+        }
+
+        .ink-stamp {
+            border: 2px solid currentColor;
+            padding: 4px 8px;
+            text-transform: uppercase;
+            font-weight: bold;
+            display: inline-block;
+            transform: rotate(-5deg);
+            opacity: 0.8;
+            mix-blend-mode: multiply;
+            border-radius: 4px;
+        }
+
+        .blue-ink {
+            color: var(--color-ink-blue);
+        }
+
+        .perforated-edge {
+            background-image: radial-gradient(circle, transparent 4px, #F4F1EA 5px);
+            background-size: 16px 16px;
+            background-position: -8px -8px;
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #D1D1C9; border-radius: 3px; }
+    </style>
+</head>
+<body class="w-full h-screen flex flex-col lg:flex-row overflow-hidden selection:bg-[#C65D3B] selection:text-white" vid="11">
+
+    
+    <aside class="w-full lg:w-1/4 h-auto lg:h-screen border-r border-[#D1D1C9]/50 flex flex-col justify-between p-8 lg:p-12 z-20 bg-[#F4F1EA]" vid="12">
+        <div class="flex flex-col gap-8" vid="13">
+            <div class="flex items-center gap-3" vid="14">
+                <div class="w-10 h-10 border border-current rounded-full flex items-center justify-center cursor-pointer hover:bg-black hover:text-white transition-all" vid="15">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-6 h-6" vid="16">
+                        <path d="M4 12h16M4 12l6-6m-6 6l6 6" vid="17"></path>
+                    </svg>
+                </div>
+                <span class="font-typewriter uppercase tracking-widest text-xs" vid="18">Digital Key</span>
+            </div>
+
+            <div class="space-y-4 mt-8" vid="19">
+                <h1 class="text-5xl lg:text-7xl font-ital font-light leading-[0.9]" vid="20">Post<br vid="21"><span class="ml-8 italic" vid="22">Post</span></h1>
+                <p class="font-typewriter text-sm max-w-[200px] leading-relaxed opacity-80" vid="23">
+                    Bad Hofgastein<br vid="24">
+                    Guest Archives
+                </p>
+            </div>
+        </div>
+
+        <nav class="hidden lg:flex flex-col gap-4 mt-auto" vid="25">
+            <a href="#" class="font-typewriter uppercase text-xs tracking-widest hover:text-[#C65D3B] transition-colors opacity-50" vid="26">Digital Key</a>
+            <a href="#" class="font-typewriter uppercase text-xs tracking-widest hover:text-[#C65D3B] transition-colors flex items-center gap-2" vid="27">
+                <div class="w-1.5 h-1.5 bg-[#C65D3B] rounded-full" vid="28"></div>
+                Guest Profile
+            </a>
+            <a href="#" class="font-typewriter uppercase text-xs tracking-widest hover:text-[#C65D3B] transition-colors opacity-50" vid="29">Archive</a>
+            <a href="#" class="font-typewriter uppercase text-xs tracking-widest hover:text-[#C65D3B] transition-colors opacity-50" vid="30">Settings</a>
+        </nav>
+    </aside>
+
+    
+    <main class="flex-1 w-full h-full relative overflow-y-auto bg-[#E8E4DB] flex items-center justify-center p-6 lg:p-12" vid="31">
+        
+        <div class="relative w-full max-w-5xl aspect-[1.4/1] flex shadow-[20px_20px_60px_rgba(0,0,0,0.2)] rounded-sm overflow-hidden" vid="32">
+            
+            
+            <div class="paper-texture w-1/2 bg-[#F9F7F2] border-r border-black/5 p-12 flex flex-col relative" vid="33">
+                
+                <div class="absolute top-0 right-0 bottom-0 w-8 bg-gradient-to-l from-black/10 to-transparent pointer-events-none" vid="34"></div>
+                
+                <header class="border-b border-black/20 pb-6 mb-8 flex justify-between items-end" vid="35">
+                    <div vid="36">
+                        <span class="font-typewriter text-[10px] uppercase tracking-widest opacity-60" vid="37">Registry Folio No.</span>
+                        <h2 class="font-serif text-3xl italic" vid="38">Elena Rostova</h2>
+                    </div>
+                    <div class="ink-stamp text-[#C65D3B] font-typewriter text-[10px] border-[#C65D3B]" vid="39">Verified Guest</div>
+                </header>
+
+                <section class="space-y-8 flex-1" vid="40">
+                    <div class="grid grid-cols-2 gap-8" vid="41">
+                        <div vid="42">
+                            <span class="font-typewriter text-[10px] uppercase tracking-widest opacity-50 block mb-1" vid="43">Member Since</span>
+                            <p class="font-serif text-xl border-b border-black/5 pb-1" vid="44">Winter 2021</p>
+                        </div>
+                        <div vid="45">
+                            <span class="font-typewriter text-[10px] uppercase tracking-widest opacity-50 block mb-1" vid="46">Total Sojourns</span>
+                            <p class="font-serif text-xl border-b border-black/5 pb-1" vid="47">14 Nights</p>
+                        </div>
+                    </div>
+
+                    <div vid="48">
+                        <span class="font-typewriter text-[10px] uppercase tracking-widest opacity-50 block mb-3" vid="49">Stay History</span>
+                        <div class="space-y-3" vid="50">
+                            <div class="flex justify-between items-center text-sm font-typewriter border-b border-dashed border-black/10 pb-2" vid="51">
+                                <span vid="52">Oct 2024</span>
+                                <span vid="53">Room 204</span>
+                                <span class="opacity-50" vid="54">Current</span>
+                            </div>
+                            <div class="flex justify-between items-center text-sm font-typewriter border-b border-dashed border-black/10 pb-2" vid="55">
+                                <span vid="56">Jan 2023</span>
+                                <span vid="57">Room 112</span>
+                                <span class="opacity-50" vid="58">Complete</span>
+                            </div>
+                            <div class="flex justify-between items-center text-sm font-typewriter border-b border-dashed border-black/10 pb-2" vid="59">
+                                <span vid="60">Dec 2021</span>
+                                <span vid="61">Room 305</span>
+                                <span class="opacity-50" vid="62">Complete</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="relative mt-8" vid="63">
+                        <div class="absolute -top-4 left-4 font-handwritten blue-ink transform -rotate-3" vid="64">Notes from the concierge...</div>
+                        <div class="bg-black/5 p-6 rounded italic font-serif text-lg leading-relaxed pt-10" vid="65">
+                            "Mme. Rostova prefers the morning sun. Always request extra blankets and a carafe of sparkling water upon arrival."
+                        </div>
+                    </div>
+                </section>
+
+                <footer class="mt-auto pt-6 border-t border-black/10 flex justify-between items-center" vid="66">
+                    <span class="font-typewriter text-[10px] uppercase tracking-widest opacity-40" vid="67">Page 42/B</span>
+                    <div class="w-12 h-12 rounded-full border border-black/20 flex items-center justify-center opacity-30" vid="68">
+                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" vid="69"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z" vid="70"></path></svg>
+                    </div>
+                </footer>
+            </div>
+
+            
+            <div class="paper-texture w-1/2 bg-[#F9F7F2] p-12 flex flex-col relative" vid="71">
+                
+                <div class="absolute top-0 left-0 bottom-0 w-8 bg-gradient-to-r from-black/10 to-transparent pointer-events-none" vid="72"></div>
+                
+                <div class="absolute top-10 right-10 rotate-12 opacity-80" vid="73">
+                    <div class="w-24 h-24 border-2 border-double border-[#C65D3B] rounded-full flex items-center justify-center text-center p-2" vid="74">
+                        <span class="font-typewriter text-[8px] text-[#C65D3B] font-bold" vid="75">APPROVED FOR<br vid="76">PREMIUM LOUNGE<br vid="77">2024</span>
+                    </div>
+                </div>
+
+                <header class="border-b border-black/20 pb-6 mb-8" vid="78">
+                    <h3 class="font-typewriter text-[10px] uppercase tracking-[0.3em] opacity-60 mb-2" vid="79">Preference Profile</h3>
+                    <div class="flex gap-4" vid="80">
+                        <div class="px-3 py-1 bg-[#FFC233]/20 border border-[#FFC233] text-[#1F1F1F] text-[10px] font-typewriter rounded-full" vid="81">Mountain View</div>
+                        <div class="px-3 py-1 bg-[#C65D3B]/10 border border-[#C65D3B] text-[#C65D3B] text-[10px] font-typewriter rounded-full" vid="82">Late Checkout</div>
+                    </div>
+                </header>
+
+                <div class="space-y-10" vid="83">
+                    <div vid="84">
+                        <h4 class="font-serif text-2xl mb-4 italic" vid="85">Domestic Luxuries</h4>
+                        <ul class="space-y-4" vid="86">
+                            <li class="flex items-center gap-4 group cursor-pointer" vid="87">
+                                <div class="w-5 h-5 border border-black/30 rounded flex items-center justify-center group-hover:border-[#C65D3B]" vid="88">
+                                    <div class="w-3 h-3 bg-[#C65D3B]" vid="89"></div>
+                                </div>
+                                <span class="font-serif text-lg" vid="90">Down Pillows (Firm)</span>
+                                <span class="font-handwritten blue-ink text-sm ml-auto opacity-0 group-hover:opacity-100" vid="91">Standard in 204</span>
+                            </li>
+                            <li class="flex items-center gap-4 group cursor-pointer" vid="92">
+                                <div class="w-5 h-5 border border-black/30 rounded flex items-center justify-center" vid="93">
+                                    <div class="w-3 h-3 bg-[#C65D3B]" vid="94"></div>
+                                </div>
+                                <span class="font-serif text-lg" vid="95">Herbal Tea Selection</span>
+                            </li>
+                            <li class="flex items-center gap-4 group cursor-pointer" vid="96">
+                                <div class="w-5 h-5 border border-black/30 rounded" vid="97"></div>
+                                <span class="font-serif text-lg opacity-50" vid="98">Morning Newspaper</span>
+                                <span class="font-handwritten blue-ink text-sm ml-auto" vid="99">Digital only?</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div vid="100">
+                        <h4 class="font-serif text-2xl mb-4 italic" vid="101">The Table</h4>
+                        <div class="p-6 border border-black/10 relative bg-[#F4F1EA]" vid="102">
+                            <div class="font-typewriter text-xs uppercase opacity-40 mb-2" vid="103">Dietary Requirements</div>
+                            <p class="font-serif text-lg" vid="104">Pescatarian. Allergic to walnuts. Prefers window seating for breakfast.</p>
+                            <div class="absolute -right-4 -bottom-4 font-handwritten blue-ink transform rotate-6" vid="105">Check table 4!</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-auto flex justify-end gap-4" vid="106">
+                    <button class="font-typewriter text-[10px] uppercase tracking-widest border border-black/20 px-6 py-3 hover:bg-black hover:text-white transition-all" vid="107">
+                        Amend Record
+                    </button>
+                    <button class="font-typewriter text-[10px] uppercase tracking-widest bg-[#C65D3B] text-white px-6 py-3 hover:bg-[#a64d31] transition-all" vid="108">
+                        Sign &amp; Save
+                    </button>
+                </div>
+            </div>
+            
+            
+            <div class="absolute left-1/2 top-0 bottom-0 w-[2px] bg-black/10 z-30" vid="109"></div>
+        </div>
+
+        
+        <div class="absolute top-0 right-0 p-12 opacity-5 pointer-events-none hidden lg:block" vid="110">
+            <svg class="w-96 h-96 spin-slow" viewBox="0 0 200 200" vid="111">
+                <path id="curve" d="M 100, 100 m -75, 0 a 75,75 0 1,1 150,0 a 75,75 0 1,1 -150,0" fill="transparent" vid="112"></path>
+                <text width="500" vid="113">
+                    <textPath xlink:href="#curve" class="font-typewriter text-[10px] uppercase tracking-[0.2em]" vid="114">
+                        archive department • post post hotel • established 1924 • 
+                    </textPath>
+                </text>
+            </svg>
+        </div>
+    </main>
+
+    
+    <div class="fixed inset-0 pointer-events-none opacity-[0.03] z-50" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E');" vid="115"></div>
+
+</body></html>

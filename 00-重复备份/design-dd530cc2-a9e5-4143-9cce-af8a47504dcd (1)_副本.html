@@ -1,0 +1,856 @@
+<html lang="zh-CN" class="w-full h-full" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">海南省智慧环卫管理驾驶舱</title>
+    <script src="https://cdn.tailwindcss.com/3.4.17" vid="5"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web" vid="6"></script>
+    <style vid="7">
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&display=swap');
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #020919;
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(12, 36, 88, 0.5) 0%, transparent 60%),
+                linear-gradient(0deg, rgba(0,20,50,0.8) 0%, rgba(2,9,25,1) 100%);
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .num-font {
+            font-family: 'Oswald', sans-serif;
+        }
+
+        
+        .glass-panel {
+            background: linear-gradient(180deg, rgba(10, 25, 59, 0.8) 0%, rgba(4, 11, 28, 0.9) 100%);
+            border: 1px solid rgba(20, 70, 140, 0.8);
+            box-shadow: inset 0 0 20px rgba(0, 163, 255, 0.1), 0 0 10px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        .glass-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 10px;
+            height: 10px;
+            border-top: 2px solid #00f0ff;
+            border-left: 2px solid #00f0ff;
+        }
+
+        .glass-panel::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 10px;
+            height: 10px;
+            border-bottom: 2px solid #00f0ff;
+            border-right: 2px solid #00f0ff;
+        }
+
+        .panel-title {
+            display: flex;
+            align-items: center;
+            height: 36px;
+            background: linear-gradient(90deg, rgba(14, 45, 99, 0.8) 0%, transparent 100%);
+            padding-left: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #ffffff;
+            letter-spacing: 1px;
+            border-left: 3px solid #00f0ff;
+        }
+
+        .panel-title-dot {
+            width: 4px;
+            height: 4px;
+            background-color: #00f0ff;
+            margin-right: 8px;
+            box-shadow: 0 0 8px #00f0ff;
+        }
+
+        
+        .header-bg {
+            background: url('data:image/svg+xml;utf8,<svg width="100%" height="100%" viewBox="0 0 1920 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,0 L1920,0 L1920,30 L1300,30 L1260,70 L660,70 L620,30 L0,30 Z" fill="rgba(10, 30, 70, 0.5)" stroke="%2300f0ff" stroke-width="1"/></svg>') no-repeat;
+            background-size: 100% 100%;
+        }
+
+        .header-title-glow {
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.8), 0 0 20px rgba(0, 240, 255, 0.4);
+        }
+
+        
+        .nav-tab {
+            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%);
+            background: rgba(20, 60, 120, 0.3);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            color: #a0c0e0;
+            transition: all 0.3s;
+        }
+        .nav-tab.active {
+            background: linear-gradient(90deg, rgba(0, 163, 255, 0.2), rgba(0, 163, 255, 0.6));
+            border-color: #00f0ff;
+            color: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+        }
+
+        
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 240, 255, 0.3);
+            border-radius: 2px;
+        }
+
+        
+        @keyframes scanline {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+        .scanner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.8), transparent);
+            opacity: 0.5;
+            animation: scanline 4s linear infinite;
+            pointer-events: none;
+        }
+
+        
+        .map-point {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ff6b35 20%, transparent 60%);
+            box-shadow: 0 0 15px rgba(255, 107, 53, 0.8);
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .map-point::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 1px solid #ff6b35;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+
+        
+        .card-clip {
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+        }
+    </style>
+</head>
+<body class="w-full h-full flex flex-col p-4 box-border" vid="8">
+    
+    
+    <header class="w-full h-[80px] flex justify-between items-start relative z-10 shrink-0" vid="9">
+        
+        <div class="flex gap-2 mt-4 ml-4 w-[350px]" vid="10">
+            <div class="nav-tab active px-6 py-1.5 text-sm cursor-pointer whitespace-nowrap" vid="11">综合全景</div>
+            <div class="nav-tab px-6 py-1.5 text-sm cursor-pointer whitespace-nowrap" vid="12">分类全景</div>
+            <div class="nav-tab px-6 py-1.5 text-sm cursor-pointer whitespace-nowrap" vid="13">清扫全景</div>
+            <div class="nav-tab px-6 py-1.5 text-sm cursor-pointer whitespace-nowrap" vid="14">海上全景</div>
+            <div class="nav-tab px-6 py-1.5 text-sm cursor-pointer whitespace-nowrap" vid="15">统计全景</div>
+        </div>
+
+        
+        <div class="absolute left-1/2 -translate-x-1/2 top-0 w-[600px] h-[70px] header-bg flex justify-center items-center" vid="16">
+            <h1 class="text-[32px] font-bold text-transparent bg-clip-text bg-gradient-to-b from-[#ffffff] to-[#7eb5ff] tracking-[4px] header-title-glow -mt-2" vid="17">
+                海南省智慧环卫管理驾驶舱
+            </h1>
+        </div>
+
+        
+        <div class="flex gap-4 mt-4 mr-4 text-[#a0c0e0] text-sm items-center w-[350px] justify-end" vid="18">
+            <div class="flex items-center gap-1" vid="19">
+                <i class="ph ph-cloud-sun text-lg" vid="20"></i>
+                <span vid="21">26°C 多云</span>
+            </div>
+            <div class="font-mono text-[15px] tracking-wider" vid="22">
+                2024-05-21 10:32:18
+            </div>
+        </div>
+    </header>
+
+    
+    <main class="w-full h-[calc(100%-80px)] grid grid-cols-[25%_1fr_25%] gap-4 overflow-hidden relative z-0" vid="23">
+        
+        
+        <div class="flex flex-col gap-4 h-full overflow-hidden" vid="24">
+            
+            
+            <div class="glass-panel flex-1 rounded-sm flex flex-col relative overflow-hidden min-h-0" vid="25">
+                <div class="scanner" vid="26"></div>
+                <div class="panel-title" vid="27">
+                    <div class="panel-title-dot" vid="28"></div>
+                    垃圾处理率
+                </div>
+                <div class="flex-1 flex flex-col items-center justify-center p-4 relative" vid="29">
+                    
+                    <div class="relative w-[180px] h-[180px]" vid="30">
+                        <svg viewBox="0 0 100 100" class="w-full h-full transform -rotate-90" vid="31">
+                            
+                            <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(20,60,120,0.3)" stroke-width="8" vid="32"></circle>
+                            <circle cx="50" cy="50" r="48" fill="none" stroke="rgba(0,240,255,0.1)" stroke-width="1" vid="33"></circle>
+                            <circle cx="50" cy="50" r="32" fill="none" stroke="rgba(0,240,255,0.1)" stroke-width="1" vid="34"></circle>
+                            
+                            
+                            <circle cx="50" cy="50" r="40" fill="none" stroke="url(#blue-gradient)" stroke-width="8" stroke-dasharray="251.2" stroke-dashoffset="1.98" stroke-linecap="round" style="filter: drop-shadow(0 0 4px #00f0ff);" vid="35"></circle>
+                            
+                            
+                            <circle cx="50" cy="50" r="36" fill="rgba(0,240,255,0.05)" stroke="#00f0ff" stroke-width="0.5" stroke-dasharray="2 4" vid="36"></circle>
+
+                            <defs vid="37">
+                                <linearGradient id="blue-gradient" x1="0%" y1="0%" x2="100%" y2="0%" vid="38">
+                                    <stop offset="0%" stop-color="#0066ff" vid="39"></stop>
+                                    <stop offset="100%" stop-color="#00f0ff" vid="40"></stop>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center" vid="41">
+                            <span class="text-3xl font-bold num-font text-[#00f0ff] drop-shadow-[0_0_8px_rgba(0,240,255,0.8)]" vid="42">99.21<span class="text-sm" vid="43">%</span></span>
+                            <span class="text-xs text-[#a0c0e0] mt-1" vid="44">处理率</span>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-sm flex items-center gap-2" vid="45">
+                        <span class="text-[#a0c0e0]" vid="46">较昨日</span>
+                        <span class="text-[#ff4d4f] flex items-center" vid="47"><i class="ph ph-arrow-up font-bold" vid="48"></i> 0.36%</span>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="glass-panel flex-1 rounded-sm flex flex-col relative overflow-hidden min-h-0" vid="49">
+                <div class="panel-title flex justify-between pr-4" vid="50">
+                    <div class="flex items-center" vid="51">
+                        <div class="panel-title-dot" vid="52"></div>
+                        各市县清运量排名 TOP5
+                    </div>
+                    <span class="text-xs text-[#a0c0e0] font-normal" vid="53">单位: 吨</span>
+                </div>
+                <div class="flex-1 flex flex-col justify-between p-4 py-6" vid="54">
+                    
+                    <div class="flex items-center gap-3" vid="55">
+                        <div class="w-5 h-5 rounded-full border border-[#00f0ff] text-[#00f0ff] flex items-center justify-center text-xs shadow-[0_0_5px_#00f0ff]" vid="56">1</div>
+                        <div class="w-16 text-sm text-[#e0e0e0]" vid="57">海口市</div>
+                        <div class="flex-1 h-2 bg-[rgba(20,60,120,0.3)] rounded-full relative" vid="58">
+                            <div class="absolute top-0 left-0 h-full rounded-full bg-gradient-to-r from-[#0066ff] to-[#00f0ff] w-[90%] shadow-[0_0_8px_#00f0ff]" vid="59">
+                                <div class="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-3 bg-white rounded-[1px] shadow-[0_0_5px_white]" vid="60"></div>
+                            </div>
+                        </div>
+                        <div class="w-12 text-right num-font text-[#00f0ff]" vid="61">2,689</div>
+                    </div>
+                    
+                    <div class="flex items-center gap-3" vid="62">
+                        <div class="w-5 h-5 rounded-full border border-[#a0c0e0] text-[#a0c0e0] flex items-center justify-center text-xs" vid="63">2</div>
+                        <div class="w-16 text-sm text-[#e0e0e0]" vid="64">三亚市</div>
+                        <div class="flex-1 h-2 bg-[rgba(20,60,120,0.3)] rounded-full relative" vid="65">
+                            <div class="absolute top-0 left-0 h-full rounded-full bg-gradient-to-r from-[#0066ff] to-[#00f0ff] w-[75%]" vid="66">
+                                <div class="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-3 bg-white rounded-[1px]" vid="67"></div>
+                            </div>
+                        </div>
+                        <div class="w-12 text-right num-font text-[#00f0ff]" vid="68">2,198</div>
+                    </div>
+                    
+                    <div class="flex items-center gap-3" vid="69">
+                        <div class="w-5 h-5 rounded-full border border-[#a0c0e0] text-[#a0c0e0] flex items-center justify-center text-xs" vid="70">3</div>
+                        <div class="w-16 text-sm text-[#e0e0e0]" vid="71">儋州市</div>
+                        <div class="flex-1 h-2 bg-[rgba(20,60,120,0.3)] rounded-full relative" vid="72">
+                            <div class="absolute top-0 left-0 h-full rounded-full bg-gradient-to-r from-[#0066ff] to-[#00f0ff] w-[60%]" vid="73">
+                                <div class="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-3 bg-white rounded-[1px]" vid="74"></div>
+                            </div>
+                        </div>
+                        <div class="w-12 text-right num-font text-[#00f0ff]" vid="75">1,756</div>
+                    </div>
+                    
+                    <div class="flex items-center gap-3" vid="76">
+                        <div class="w-5 h-5 rounded-full border border-[#a0c0e0] text-[#a0c0e0] flex items-center justify-center text-xs" vid="77">4</div>
+                        <div class="w-16 text-sm text-[#e0e0e0]" vid="78">澄迈县</div>
+                        <div class="flex-1 h-2 bg-[rgba(20,60,120,0.3)] rounded-full relative" vid="79">
+                            <div class="absolute top-0 left-0 h-full rounded-full bg-gradient-to-r from-[#0066ff] to-[#00f0ff] w-[45%]" vid="80">
+                                <div class="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-3 bg-white rounded-[1px]" vid="81"></div>
+                            </div>
+                        </div>
+                        <div class="w-12 text-right num-font text-[#00f0ff]" vid="82">1,298</div>
+                    </div>
+                    
+                    <div class="flex items-center gap-3" vid="83">
+                        <div class="w-5 h-5 rounded-full border border-[#a0c0e0] text-[#a0c0e0] flex items-center justify-center text-xs" vid="84">5</div>
+                        <div class="w-16 text-sm text-[#e0e0e0]" vid="85">琼海市</div>
+                        <div class="flex-1 h-2 bg-[rgba(20,60,120,0.3)] rounded-full relative" vid="86">
+                            <div class="absolute top-0 left-0 h-full rounded-full bg-gradient-to-r from-[#0066ff] to-[#00f0ff] w-[35%]" vid="87">
+                                <div class="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-3 bg-white rounded-[1px]" vid="88"></div>
+                            </div>
+                        </div>
+                        <div class="w-12 text-right num-font text-[#00f0ff]" vid="89">1,087</div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="glass-panel flex-[1.2] rounded-sm flex flex-col relative overflow-hidden min-h-0" vid="90">
+                <div class="panel-title flex justify-between pr-4" vid="91">
+                    <div class="flex items-center" vid="92">
+                        <div class="panel-title-dot" vid="93"></div>
+                        近7日垃圾类型统计
+                    </div>
+                    <span class="text-xs text-[#a0c0e0] font-normal" vid="94">单位: 吨</span>
+                </div>
+                <div class="flex-1 p-4 flex flex-col" vid="95">
+                    
+                    <div class="flex justify-center gap-4 text-xs text-[#a0c0e0] mb-2" vid="96">
+                        <div class="flex items-center gap-1" vid="97"><div class="w-2 h-2 bg-[#00f0ff]" vid="98"></div>生活垃圾</div>
+                        <div class="flex items-center gap-1" vid="99"><div class="w-2 h-2 bg-[#0066ff]" vid="100"></div>厨余垃圾</div>
+                        <div class="flex items-center gap-1" vid="101"><div class="w-2 h-2 bg-[#ffb703]" vid="102"></div>可回收物</div>
+                        <div class="flex items-center gap-1" vid="103"><div class="w-2 h-2 bg-[#ef233c]" vid="104"></div>有害垃圾</div>
+                    </div>
+                    
+                    <div class="flex-1 relative flex" vid="105">
+                        
+                        <div class="flex flex-col justify-between text-xs text-[#a0c0e0] pr-2 w-[45px] text-right pb-6" vid="106">
+                            <span vid="107">10,000</span>
+                            <span vid="108">8,000</span>
+                            <span vid="109">6,000</span>
+                            <span vid="110">4,000</span>
+                            <span vid="111">2,000</span>
+                            <span vid="112">0</span>
+                        </div>
+                        
+                        <div class="flex-1 relative border-l border-b border-[rgba(20,60,120,0.5)] flex justify-around items-end pb-1" vid="113">
+                            
+                            <div class="absolute top-0 left-0 w-full h-full flex flex-col justify-between pointer-events-none" vid="114">
+                                <div class="w-full h-px bg-[rgba(20,60,120,0.2)]" vid="115"></div>
+                                <div class="w-full h-px bg-[rgba(20,60,120,0.2)]" vid="116"></div>
+                                <div class="w-full h-px bg-[rgba(20,60,120,0.2)]" vid="117"></div>
+                                <div class="w-full h-px bg-[rgba(20,60,120,0.2)]" vid="118"></div>
+                                <div class="w-full h-px bg-[rgba(20,60,120,0.2)]" vid="119"></div>
+                                <div vid="120"></div> 
+                            </div>
+                            
+                            
+                            <div class="relative w-4 h-full flex flex-col justify-end items-center z-10" vid="121">
+                                <div class="w-full bg-[#ef233c] h-[5%]" vid="122"></div>
+                                <div class="w-full bg-[#ffb703] h-[25%]" vid="123"></div>
+                                <div class="w-full bg-[#0066ff] h-[30%]" vid="124"></div>
+                                <div class="w-full bg-[#00f0ff] h-[25%]" vid="125"></div>
+                                <span class="absolute -bottom-5 text-[10px] text-[#a0c0e0]" vid="126">05-15</span>
+                            </div>
+                            <div class="relative w-4 h-full flex flex-col justify-end items-center z-10" vid="127">
+                                <div class="w-full bg-[#ef233c] h-[4%]" vid="128"></div>
+                                <div class="w-full bg-[#ffb703] h-[22%]" vid="129"></div>
+                                <div class="w-full bg-[#0066ff] h-[28%]" vid="130"></div>
+                                <div class="w-full bg-[#00f0ff] h-[24%]" vid="131"></div>
+                                <span class="absolute -bottom-5 text-[10px] text-[#a0c0e0]" vid="132">05-16</span>
+                            </div>
+                            <div class="relative w-4 h-full flex flex-col justify-end items-center z-10" vid="133">
+                                <div class="w-full bg-[#ef233c] h-[6%]" vid="134"></div>
+                                <div class="w-full bg-[#ffb703] h-[28%]" vid="135"></div>
+                                <div class="w-full bg-[#0066ff] h-[32%]" vid="136"></div>
+                                <div class="w-full bg-[#00f0ff] h-[28%]" vid="137"></div>
+                                <span class="absolute -bottom-5 text-[10px] text-[#a0c0e0]" vid="138">05-17</span>
+                            </div>
+                            <div class="relative w-4 h-full flex flex-col justify-end items-center z-10" vid="139">
+                                <div class="w-full bg-[#ef233c] h-[5%]" vid="140"></div>
+                                <div class="w-full bg-[#ffb703] h-[24%]" vid="141"></div>
+                                <div class="w-full bg-[#0066ff] h-[35%]" vid="142"></div>
+                                <div class="w-full bg-[#00f0ff] h-[30%]" vid="143"></div>
+                                <span class="absolute -bottom-5 text-[10px] text-[#a0c0e0]" vid="144">05-18</span>
+                            </div>
+                            <div class="relative w-4 h-full flex flex-col justify-end items-center z-10" vid="145">
+                                <div class="w-full bg-[#ef233c] h-[8%]" vid="146"></div>
+                                <div class="w-full bg-[#ffb703] h-[30%]" vid="147"></div>
+                                <div class="w-full bg-[#0066ff] h-[38%]" vid="148"></div>
+                                <div class="w-full bg-[#00f0ff] h-[22%]" vid="149"></div>
+                                <span class="absolute -bottom-5 text-[10px] text-[#a0c0e0]" vid="150">05-19</span>
+                            </div>
+                            <div class="relative w-4 h-full flex flex-col justify-end items-center z-10" vid="151">
+                                <div class="w-full bg-[#ef233c] h-[4%]" vid="152"></div>
+                                <div class="w-full bg-[#ffb703] h-[26%]" vid="153"></div>
+                                <div class="w-full bg-[#0066ff] h-[34%]" vid="154"></div>
+                                <div class="w-full bg-[#00f0ff] h-[32%]" vid="155"></div>
+                                <span class="absolute -bottom-5 text-[10px] text-[#a0c0e0]" vid="156">05-20</span>
+                            </div>
+                            <div class="relative w-4 h-full flex flex-col justify-end items-center z-10" vid="157">
+                                <div class="w-full bg-[#ef233c] h-[5%]" vid="158"></div>
+                                <div class="w-full bg-[#ffb703] h-[25%]" vid="159"></div>
+                                <div class="w-full bg-[#0066ff] h-[30%]" vid="160"></div>
+                                <div class="w-full bg-[#00f0ff] h-[28%]" vid="161"></div>
+                                <span class="absolute -bottom-5 text-[10px] text-[#a0c0e0]" vid="162">05-21</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="flex flex-col gap-4 h-full relative" vid="163">
+            
+            
+            <div class="grid grid-cols-4 gap-4 h-[90px] shrink-0" vid="164">
+                <div class="bg-[rgba(10,25,60,0.6)] border border-[rgba(0,150,255,0.3)] card-clip flex items-center p-4 gap-4 relative overflow-hidden group" vid="165">
+                    <div class="absolute inset-0 bg-gradient-to-r from-[rgba(0,150,255,0.1)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" vid="166"></div>
+                    <div class="w-12 h-12 rounded-full bg-[rgba(0,100,255,0.2)] border border-[rgba(0,150,255,0.5)] flex items-center justify-center shrink-0 shadow-[0_0_10px_rgba(0,150,255,0.2)]" vid="167">
+                        <i class="ph ph-truck text-2xl text-[#00aaff]" vid="168"></i>
+                    </div>
+                    <div class="flex flex-col" vid="169">
+                        <span class="text-sm text-[#a0c0e0]" vid="170">全省环卫车辆</span>
+                        <div class="flex items-baseline gap-1" vid="171">
+                            <span class="text-2xl font-bold num-font tracking-wide" vid="172">1,256</span>
+                            <span class="text-xs text-[#a0c0e0]" vid="173">辆</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-[rgba(10,25,60,0.6)] border border-[rgba(0,150,255,0.3)] card-clip flex items-center p-4 gap-4 relative overflow-hidden group" vid="174">
+                    <div class="absolute inset-0 bg-gradient-to-r from-[rgba(0,150,255,0.1)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" vid="175"></div>
+                    <div class="w-12 h-12 rounded-full bg-[rgba(0,100,255,0.2)] border border-[rgba(0,150,255,0.5)] flex items-center justify-center shrink-0 shadow-[0_0_10px_rgba(0,150,255,0.2)]" vid="176">
+                        <i class="ph ph-arrows-clockwise text-2xl text-[#00aaff]" vid="177"></i>
+                    </div>
+                    <div class="flex flex-col" vid="178">
+                        <span class="text-sm text-[#a0c0e0]" vid="179">在线率</span>
+                        <div class="flex items-baseline gap-1" vid="180">
+                            <span class="text-2xl font-bold num-font tracking-wide" vid="181">89.2</span>
+                            <span class="text-xs text-[#a0c0e0]" vid="182">%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-[rgba(10,25,60,0.6)] border border-[rgba(0,150,255,0.3)] card-clip flex items-center p-4 gap-4 relative overflow-hidden group" vid="183">
+                    <div class="absolute inset-0 bg-gradient-to-r from-[rgba(0,150,255,0.1)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" vid="184"></div>
+                    <div class="w-12 h-12 rounded-full bg-[rgba(0,100,255,0.2)] border border-[rgba(0,150,255,0.5)] flex items-center justify-center shrink-0 shadow-[0_0_10px_rgba(0,150,255,0.2)]" vid="185">
+                        <i class="ph ph-trash text-2xl text-[#00aaff]" vid="186"></i>
+                    </div>
+                    <div class="flex flex-col" vid="187">
+                        <span class="text-sm text-[#a0c0e0]" vid="188">今日清运</span>
+                        <div class="flex items-baseline gap-1" vid="189">
+                            <span class="text-2xl font-bold num-font tracking-wide" vid="190">12,689</span>
+                            <span class="text-xs text-[#a0c0e0]" vid="191">吨</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-[rgba(10,25,60,0.6)] border border-[rgba(0,150,255,0.3)] card-clip flex items-center p-4 gap-4 relative overflow-hidden group" vid="192">
+                    <div class="absolute inset-0 bg-gradient-to-r from-[rgba(0,150,255,0.1)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" vid="193"></div>
+                    <div class="w-12 h-12 rounded-full bg-[rgba(0,100,255,0.2)] border border-[rgba(0,150,255,0.5)] flex items-center justify-center shrink-0 shadow-[0_0_10px_rgba(0,150,255,0.2)]" vid="194">
+                        <i class="ph ph-shield-check text-2xl text-[#00aaff]" vid="195"></i>
+                    </div>
+                    <div class="flex flex-col" vid="196">
+                        <span class="text-sm text-[#a0c0e0]" vid="197">处理率</span>
+                        <div class="flex items-baseline gap-1" vid="198">
+                            <span class="text-2xl font-bold num-font tracking-wide" vid="199">99.21</span>
+                            <span class="text-xs text-[#a0c0e0]" vid="200">%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="flex-1 relative overflow-hidden flex items-center justify-center" vid="201">
+                
+                <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9InJnYmEoMCwyNDAsMjU1LDAuMDUpIi8+PC9zdmc+')]" vid="202"></div>
+                <div class="absolute w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(0,100,255,0.1)_0%,transparent_70%)] rounded-full pointer-events-none" vid="203"></div>
+
+                
+                <div class="relative w-[80%] h-[80%] max-w-[800px] max-h-[600px]" vid="204">
+                    
+                    <svg viewBox="0 0 1000 800" class="w-full h-full absolute inset-0 drop-shadow-[0_0_20px_rgba(0,150,255,0.3)]" style="filter: drop-shadow(0 20px 20px rgba(0,0,0,0.8));" vid="205">
+                        <path d="M680,100 Q750,150 780,250 T750,450 Q700,550 650,600 Q550,650 450,650 Q300,600 250,500 Q200,400 250,300 Q300,200 450,150 Q550,100 680,100 Z" fill="rgba(10, 40, 100, 0.7)" stroke="#00aaff" stroke-width="3" class="shadow-inner" vid="206"></path>
+                        
+                        <path d="M450,150 Q500,250 480,350 Q400,400 350,350 Z" fill="rgba(20, 60, 140, 0.4)" stroke="rgba(0,150,255,0.3)" stroke-width="1" vid="207"></path>
+                        <path d="M680,100 Q600,200 650,350 Q750,300 780,250 Z" fill="rgba(20, 60, 140, 0.4)" stroke="rgba(0,150,255,0.3)" stroke-width="1" vid="208"></path>
+                        <path d="M480,350 Q550,450 650,400 Q700,550 650,600 Q500,550 450,650 Q350,550 400,400 Z" fill="rgba(15, 50, 120, 0.4)" stroke="rgba(0,150,255,0.3)" stroke-width="1" vid="209"></path>
+                    </svg>
+
+                    
+                    
+                    <div class="absolute top-[18%] right-[25%] flex flex-col items-center" vid="210">
+                        <div class="map-point" vid="211"><i class="ph-fill ph-buildings text-white text-xs" vid="212"></i></div>
+                        <span class="text-sm font-bold mt-4 text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]" vid="213">海口市</span>
+                    </div>
+                    
+                    <div class="absolute bottom-[20%] left-[38%] flex flex-col items-center" vid="214">
+                        <div class="map-point" vid="215"><i class="ph-fill ph-truck text-white text-xs" vid="216"></i></div>
+                        <span class="text-sm font-bold mt-4 text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]" vid="217">三亚市</span>
+                    </div>
+                    
+                    <div class="absolute top-[35%] left-[40%] flex flex-col items-center" vid="218">
+                        <div class="map-point" vid="219"><i class="ph-fill ph-truck text-white text-xs" vid="220"></i></div>
+                        <span class="text-sm font-bold mt-4 text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]" vid="221">儋州市</span>
+                    </div>
+                    
+                    <div class="absolute top-[22%] right-[10%] flex flex-col items-center" vid="222">
+                        <div class="map-point" vid="223"><i class="ph-fill ph-truck text-white text-xs" vid="224"></i></div>
+                        <span class="text-sm font-bold mt-4 text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]" vid="225">文昌市</span>
+                    </div>
+                    
+                    <div class="absolute top-[40%] right-[12%] flex flex-col items-center" vid="226">
+                        <div class="map-point bg-[radial-gradient(circle,#00f0ff_20%,transparent_60%)] before:border-[#00f0ff] shadow-[0_0_15px_rgba(0,240,255,0.8)]" vid="227"><i class="ph-fill ph-truck text-[#020919] text-xs" vid="228"></i></div>
+                        <span class="text-sm font-bold mt-4 text-[#00f0ff] drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]" vid="229">琼海市</span>
+                    </div>
+                    
+                    <div class="absolute top-[45%] left-[25%] flex flex-col items-center" vid="230">
+                        <div class="map-point" vid="231"><i class="ph-fill ph-truck text-white text-xs" vid="232"></i></div>
+                        <span class="text-sm font-bold mt-4 text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]" vid="233">东方市</span>
+                    </div>
+                    
+                    <div class="absolute top-[55%] right-[15%] flex flex-col items-center" vid="234">
+                        <div class="map-point" vid="235"><i class="ph-fill ph-truck text-white text-xs" vid="236"></i></div>
+                        <span class="text-sm font-bold mt-4 text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]" vid="237">万宁市</span>
+                    </div>
+                    
+                    <div class="absolute top-[65%] left-[48%] flex flex-col items-center" vid="238">
+                        <div class="map-point bg-[radial-gradient(circle,#ff4d4f_20%,transparent_60%)] before:border-[#ff4d4f] shadow-[0_0_15px_rgba(255,77,79,0.8)]" vid="239"><i class="ph-fill ph-warning-circle text-white text-xs" vid="240"></i></div>
+                        <span class="text-sm font-bold mt-4 text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]" vid="241">五指山市</span>
+                    </div>
+
+                    
+                    <span class="absolute top-[28%] left-[48%] text-xs text-[#a0c0e0]" vid="242">澄迈县</span>
+                    <span class="absolute top-[25%] left-[48%] text-xs text-[#a0c0e0]" vid="243">临高县</span>
+                    <span class="absolute top-[35%] right-[32%] text-xs text-[#a0c0e0]" vid="244">定安县</span>
+                    <span class="absolute top-[40%] right-[40%] text-xs text-[#a0c0e0]" vid="245">屯昌县</span>
+                    <span class="absolute top-[42%] left-[32%] text-xs text-[#a0c0e0]" vid="246">昌江县</span>
+                    <span class="absolute top-[52%] left-[40%] text-xs text-[#a0c0e0]" vid="247">白沙县</span>
+                    <span class="absolute top-[48%] right-[35%] text-xs text-[#a0c0e0]" vid="248">琼中县</span>
+                    <span class="absolute bottom-[35%] left-[32%] text-xs text-[#a0c0e0]" vid="249">乐东县</span>
+                    <span class="absolute bottom-[38%] right-[35%] text-xs text-[#a0c0e0]" vid="250">陵水县</span>
+
+                </div>
+
+                
+                <div class="absolute bottom-4 left-4 bg-[rgba(10,25,60,0.8)] border border-[rgba(0,150,255,0.3)] p-3 rounded text-sm flex flex-col gap-2" vid="251">
+                    <div class="flex items-center gap-2" vid="252">
+                        <i class="ph-fill ph-truck text-[#ff6b35] text-lg drop-shadow-[0_0_5px_#ff6b35]" vid="253"></i>
+                        <span class="text-[#e0e0e0]" vid="254">环卫转运站</span>
+                    </div>
+                    <div class="flex items-center gap-2" vid="255">
+                        <i class="ph-fill ph-buildings text-[#00f0ff] text-lg drop-shadow-[0_0_5px_#00f0ff]" vid="256"></i>
+                        <span class="text-[#e0e0e0]" vid="257">垃圾处理厂</span>
+                    </div>
+                    <div class="flex items-center gap-2" vid="258">
+                        <i class="ph-fill ph-warning text-[#ff4d4f] text-lg drop-shadow-[0_0_5px_#ff4d4f]" vid="259"></i>
+                        <span class="text-[#e0e0e0]" vid="260">海上作业点</span>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="glass-panel h-[100px] shrink-0 rounded-sm flex items-center justify-around px-2 py-4" vid="261">
+                
+                
+                <div class="flex items-center gap-3" vid="262">
+                    <div class="w-10 h-10 rounded-full bg-[rgba(0,150,255,0.1)] border border-[#00f0ff] flex items-center justify-center" vid="263">
+                        <i class="ph ph-truck text-xl text-[#00f0ff]" vid="264"></i>
+                    </div>
+                    <div class="flex flex-col" vid="265">
+                        <span class="text-xs text-[#a0c0e0] mb-1" vid="266">环卫车辆总数</span>
+                        <div class="flex items-baseline gap-1" vid="267">
+                            <span class="text-xl font-bold num-font text-white" vid="268">1,256</span>
+                            <span class="text-[10px] text-[#a0c0e0]" vid="269">辆</span>
+                        </div>
+                        <div class="text-[10px] text-[#ff4d4f] mt-0.5" vid="270">较昨日 <i class="ph ph-arrow-up" vid="271"></i> 28</div>
+                    </div>
+                </div>
+                
+                <div class="h-12 w-px bg-[rgba(0,150,255,0.2)]" vid="272"></div>
+
+                
+                <div class="flex items-center gap-3" vid="273">
+                    <div class="w-10 h-10 rounded-full bg-[rgba(0,150,255,0.1)] border border-[#00f0ff] flex items-center justify-center" vid="274">
+                        <i class="ph ph-users text-xl text-[#00f0ff]" vid="275"></i>
+                    </div>
+                    <div class="flex flex-col" vid="276">
+                        <span class="text-xs text-[#a0c0e0] mb-1" vid="277">作业人员总数</span>
+                        <div class="flex items-baseline gap-1" vid="278">
+                            <span class="text-xl font-bold num-font text-white" vid="279">12,368</span>
+                            <span class="text-[10px] text-[#a0c0e0]" vid="280">人</span>
+                        </div>
+                        <div class="text-[10px] text-[#ff4d4f] mt-0.5" vid="281">较昨日 <i class="ph ph-arrow-up" vid="282"></i> 156</div>
+                    </div>
+                </div>
+                
+                <div class="h-12 w-px bg-[rgba(0,150,255,0.2)]" vid="283"></div>
+
+                
+                <div class="flex items-center gap-3" vid="284">
+                    <div class="w-10 h-10 rounded-full bg-[rgba(0,150,255,0.1)] border border-[#00f0ff] flex items-center justify-center" vid="285">
+                        <i class="ph ph-trash text-xl text-[#00f0ff]" vid="286"></i>
+                    </div>
+                    <div class="flex flex-col" vid="287">
+                        <span class="text-xs text-[#a0c0e0] mb-1" vid="288">中转站总数</span>
+                        <div class="flex items-baseline gap-1" vid="289">
+                            <span class="text-xl font-bold num-font text-white" vid="290">248</span>
+                            <span class="text-[10px] text-[#a0c0e0]" vid="291">座</span>
+                        </div>
+                        <div class="text-[10px] text-[#ff4d4f] mt-0.5" vid="292">较昨日 <i class="ph ph-arrow-up" vid="293"></i> 3</div>
+                    </div>
+                </div>
+                
+                <div class="h-12 w-px bg-[rgba(0,150,255,0.2)]" vid="294"></div>
+
+                
+                <div class="flex items-center gap-3" vid="295">
+                    <div class="w-10 h-10 rounded-full bg-[rgba(0,150,255,0.1)] border border-[#00f0ff] flex items-center justify-center" vid="296">
+                        <i class="ph ph-factory text-xl text-[#00f0ff]" vid="297"></i>
+                    </div>
+                    <div class="flex flex-col" vid="298">
+                        <span class="text-xs text-[#a0c0e0] mb-1" vid="299">处理设施总数</span>
+                        <div class="flex items-baseline gap-1" vid="300">
+                            <span class="text-xl font-bold num-font text-white" vid="301">18</span>
+                            <span class="text-[10px] text-[#a0c0e0]" vid="302">座</span>
+                        </div>
+                        <div class="text-[10px] text-[#a0c0e0] mt-0.5" vid="303">较昨日 - 0</div>
+                    </div>
+                </div>
+                
+                <div class="h-12 w-px bg-[rgba(0,150,255,0.2)]" vid="304"></div>
+
+                
+                <div class="flex items-center gap-3" vid="305">
+                    <div class="w-10 h-10 rounded-full bg-[rgba(0,150,255,0.1)] border border-[#00f0ff] flex items-center justify-center" vid="306">
+                        <i class="ph ph-boat text-xl text-[#00f0ff]" vid="307"></i>
+                    </div>
+                    <div class="flex flex-col" vid="308">
+                        <span class="text-xs text-[#a0c0e0] mb-1" vid="309">海上作业船舶</span>
+                        <div class="flex items-baseline gap-1" vid="310">
+                            <span class="text-xl font-bold num-font text-white" vid="311">86</span>
+                            <span class="text-[10px] text-[#a0c0e0]" vid="312">艘</span>
+                        </div>
+                        <div class="text-[10px] text-[#ff4d4f] mt-0.5" vid="313">较昨日 <i class="ph ph-arrow-up" vid="314"></i> 5</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        
+        <div class="flex flex-col gap-4 h-full overflow-hidden" vid="315">
+            
+            
+            <div class="glass-panel flex-[0.8] rounded-sm flex flex-col relative overflow-hidden min-h-0" vid="316">
+                <div class="panel-title flex justify-between pr-4 items-center" vid="317">
+                    <div class="flex items-center" vid="318">
+                        <div class="panel-title-dot" vid="319"></div>
+                        实时告警
+                    </div>
+                    <span class="text-xs text-[#a0c0e0] cursor-pointer hover:text-white transition-colors" vid="320">更多 &gt;</span>
+                </div>
+                <div class="flex-1 p-3 flex flex-col gap-2 overflow-y-auto" vid="321">
+                    
+                    <div class="bg-[rgba(255,77,79,0.1)] border border-[rgba(255,77,79,0.3)] rounded p-2.5 flex items-center gap-3" vid="322">
+                        <div class="w-8 h-8 rounded-full bg-[rgba(255,77,79,0.2)] flex items-center justify-center shrink-0" vid="323">
+                            <i class="ph-fill ph-warning-circle text-[#ff4d4f] text-xl drop-shadow-[0_0_5px_#ff4d4f]" vid="324"></i>
+                        </div>
+                        <div class="w-8 text-[10px] text-[#ff4d4f] border border-[#ff4d4f] rounded px-1 text-center shrink-0" vid="325">告警</div>
+                        <div class="flex-1 flex flex-col overflow-hidden" vid="326">
+                            <span class="text-sm text-[#e0e0e0] truncate" vid="327">海口市龙华区金贸中转站</span>
+                            <span class="text-xs text-[#a0c0e0]" vid="328">设备离线</span>
+                        </div>
+                        <div class="text-xs text-[#a0c0e0] font-mono shrink-0" vid="329">10:30</div>
+                    </div>
+                    
+                    <div class="bg-[rgba(255,183,3,0.1)] border border-[rgba(255,183,3,0.3)] rounded p-2.5 flex items-center gap-3" vid="330">
+                        <div class="w-8 h-8 rounded-full bg-[rgba(255,183,3,0.2)] flex items-center justify-center shrink-0" vid="331">
+                            <i class="ph-fill ph-warning text-[#ffb703] text-xl drop-shadow-[0_0_5px_#ffb703]" vid="332"></i>
+                        </div>
+                        <div class="w-8 text-[10px] text-[#ffb703] border border-[#ffb703] rounded px-1 text-center shrink-0" vid="333">预警</div>
+                        <div class="flex-1 flex flex-col overflow-hidden" vid="334">
+                            <span class="text-sm text-[#e0e0e0] truncate" vid="335">三亚市吉阳区凤凰路路段</span>
+                            <span class="text-xs text-[#a0c0e0]" vid="336">车辆异常停留</span>
+                        </div>
+                        <div class="text-xs text-[#a0c0e0] font-mono shrink-0" vid="337">10:25</div>
+                    </div>
+                    
+                    <div class="bg-[rgba(255,77,79,0.1)] border border-[rgba(255,77,79,0.3)] rounded p-2.5 flex items-center gap-3" vid="338">
+                        <div class="w-8 h-8 rounded-full bg-[rgba(255,77,79,0.2)] flex items-center justify-center shrink-0" vid="339">
+                            <i class="ph-fill ph-warning-circle text-[#ff4d4f] text-xl drop-shadow-[0_0_5px_#ff4d4f]" vid="340"></i>
+                        </div>
+                        <div class="w-8 text-[10px] text-[#ff4d4f] border border-[#ff4d4f] rounded px-1 text-center shrink-0" vid="341">告警</div>
+                        <div class="flex-1 flex flex-col overflow-hidden" vid="342">
+                            <span class="text-sm text-[#e0e0e0] truncate" vid="343">儋州市那大镇垃圾中转站</span>
+                            <span class="text-xs text-[#a0c0e0]" vid="344">设备温度异常</span>
+                        </div>
+                        <div class="text-xs text-[#a0c0e0] font-mono shrink-0" vid="345">10:18</div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="glass-panel flex-1 rounded-sm flex flex-col relative overflow-hidden min-h-0" vid="346">
+                <div class="panel-title flex justify-between pr-4 items-center" vid="347">
+                    <div class="flex items-center" vid="348">
+                        <div class="panel-title-dot" vid="349"></div>
+                        24小时清运量趋势
+                    </div>
+                    <div class="flex items-center gap-3" vid="350">
+                        <div class="flex items-center gap-1 text-[10px] text-[#a0c0e0]" vid="351"><div class="w-2 h-0.5 bg-[#00f0ff]" vid="352"></div><div class="w-1.5 h-1.5 rounded-full bg-[#00f0ff]" vid="353"></div>今日</div>
+                        <div class="flex items-center gap-1 text-[10px] text-[#a0c0e0]" vid="354"><div class="w-2 h-0.5 bg-[#ff6b35]" vid="355"></div><div class="w-1.5 h-1.5 rounded-full bg-[#ff6b35]" vid="356"></div>昨日</div>
+                        <span class="text-[10px] text-[#a0c0e0] ml-2" vid="357">单位: 吨</span>
+                    </div>
+                </div>
+                <div class="flex-1 p-4 pb-6 relative flex" vid="358">
+                    
+                    <div class="flex flex-col justify-between text-[10px] text-[#a0c0e0] pr-2 w-[35px] text-right shrink-0" vid="359">
+                        <span vid="360">3,000</span>
+                        <span vid="361">2,500</span>
+                        <span vid="362">2,000</span>
+                        <span vid="363">1,500</span>
+                        <span vid="364">1,000</span>
+                        <span vid="365">500</span>
+                        <span vid="366">0</span>
+                    </div>
+                    
+                    <div class="flex-1 relative border-l border-b border-[rgba(20,60,120,0.5)]" vid="367">
+                        
+                        <div class="absolute inset-0 flex flex-col justify-between pointer-events-none" vid="368">
+                            <div class="w-full h-px bg-[rgba(20,60,120,0.2)]" vid="369"></div>
+                            <div class="w-full h-px bg-[rgba(20,60,120,0.2)]" vid="370"></div>
+                            <div class="w-full h-px bg-[rgba(20,60,120,0.2)]" vid="371"></div>
+                            <div class="w-full h-px bg-[rgba(20,60,120,0.2)]" vid="372"></div>
+                            <div class="w-full h-px bg-[rgba(20,60,120,0.2)]" vid="373"></div>
+                            <div class="w-full h-px bg-[rgba(20,60,120,0.2)]" vid="374"></div>
+                            <div vid="375"></div>
+                        </div>
+                        
+                        
+                        <svg viewBox="0 0 100 100" preserveAspectRatio="none" class="absolute inset-0 w-full h-full overflow-visible" vid="376">
+                            <defs vid="377">
+                                <linearGradient id="area-gradient" x1="0" y1="0" x2="0" y2="1" vid="378">
+                                    <stop offset="0%" stop-color="rgba(0,240,255,0.3)" vid="379"></stop>
+                                    <stop offset="100%" stop-color="rgba(0,240,255,0)" vid="380"></stop>
+                                </linearGradient>
+                            </defs>
+                            
+                            
+                            <polyline points="0,80 5,85 10,75 15,60 20,50 25,40 30,55 35,65 40,50 45,30 50,20 55,25 60,40 65,55 70,60 75,65 80,68 85,70 90,65 95,68 100,75" fill="none" stroke="#ff6b35" stroke-width="1" stroke-dasharray="2 2" vid="381"></polyline>
+                            
+                            
+                            <polygon points="0,100 0,70 5,75 10,65 15,40 20,25 25,15 30,35 35,50 40,30 45,10 50,5 55,15 60,30 65,45 70,55 75,60 80,62 85,65 90,55 95,60 100,65 100,100" fill="url(#area-gradient)" vid="382"></polygon>
+                            <polyline points="0,70 5,75 10,65 15,40 20,25 25,15 30,35 35,50 40,30 45,10 50,5 55,15 60,30 65,45 70,55 75,60 80,62 85,65 90,55 95,60 100,65" fill="none" stroke="#00f0ff" stroke-width="1.5" style="filter: drop-shadow(0 0 2px #00f0ff);" vid="383"></polyline>
+                            
+                            
+                            <g fill="#020919" stroke="#00f0ff" stroke-width="1" vid="384">
+                                <circle cx="0" cy="70" r="1.5" vid="385"></circle>
+                                <circle cx="10" cy="65" r="1.5" vid="386"></circle>
+                                <circle cx="20" cy="25" r="1.5" vid="387"></circle>
+                                <circle cx="30" cy="35" r="1.5" vid="388"></circle>
+                                <circle cx="40" cy="30" r="1.5" vid="389"></circle>
+                                <circle cx="50" cy="5" r="1.5" vid="390"></circle>
+                                <circle cx="60" cy="30" r="1.5" vid="391"></circle>
+                                <circle cx="70" cy="55" r="1.5" vid="392"></circle>
+                                <circle cx="80" cy="62" r="1.5" vid="393"></circle>
+                                <circle cx="90" cy="55" r="1.5" vid="394"></circle>
+                                <circle cx="100" cy="65" r="1.5" vid="395"></circle>
+                            </g>
+                        </svg>
+
+                        
+                        <div class="absolute -bottom-5 left-0 w-full flex justify-between text-[10px] text-[#a0c0e0]" vid="396">
+                            <span vid="397">00:00</span>
+                            <span vid="398">04:00</span>
+                            <span vid="399">08:00</span>
+                            <span vid="400">12:00</span>
+                            <span vid="401">16:00</span>
+                            <span vid="402">20:00</span>
+                            <span vid="403">24:00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="glass-panel flex-1 rounded-sm flex flex-col relative overflow-hidden min-h-0" vid="404">
+                <div class="panel-title flex items-center" vid="405">
+                    <div class="panel-title-dot" vid="406"></div>
+                    环卫作业五维评价
+                </div>
+                <div class="flex-1 flex items-center justify-center p-4 relative" vid="407">
+                    
+                    <div class="relative w-full max-w-[200px] aspect-square" vid="408">
+                        <svg viewBox="0 0 100 100" class="w-full h-full overflow-visible" vid="409">
+                            
+                            <g stroke="rgba(20,60,120,0.5)" stroke-width="0.5" fill="none" vid="410">
+                                <polygon points="50,10 88,38 74,82 26,82 12,38" vid="411"></polygon>
+                                <polygon points="50,20 78.5,41 68,74 32,74 21.5,41" vid="412"></polygon>
+                                <polygon points="50,30 69,44 62,66 38,66 31,44" vid="413"></polygon>
+                                <polygon points="50,40 59.5,47 56,58 44,58 40.5,47" vid="414"></polygon>
+                                
+                                <line x1="50" y1="50" x2="50" y2="10" vid="415"></line>
+                                <line x1="50" y1="50" x2="88" y2="38" vid="416"></line>
+                                <line x1="50" y1="50" x2="74" y2="82" vid="417"></line>
+                                <line x1="50" y1="50" x2="26" y2="82" vid="418"></line>
+                                <line x1="50" y1="50" x2="12" y2="38" vid="419"></line>
+                            </g>
+
+                            
+                            <polygon points="50,15 85,40 70,80 30,78 15,45" fill="rgba(0,102,255,0.4)" stroke="#00f0ff" stroke-width="1.5" style="filter: drop-shadow(0 0 4px rgba(0,240,255,0.5));" vid="420"></polygon>
+                            
+                            
+                            <g fill="#00f0ff" vid="421">
+                                <circle cx="50" cy="15" r="2" vid="422"></circle>
+                                <circle cx="85" cy="40" r="2" vid="423"></circle>
+                                <circle cx="70" cy="80" r="2" vid="424"></circle>
+                                <circle cx="30" cy="78" r="2" vid="425"></circle>
+                                <circle cx="15" cy="45" r="2" vid="426"></circle>
+                            </g>
+                        </svg>
+
+                        
+                        <div class="absolute -top-4 left-1/2 -translate-x-1/2 flex flex-col items-center whitespace-nowrap" vid="427">
+                            <span class="text-[10px] text-[#a0c0e0]" vid="428">清扫作业</span>
+                            <span class="text-xs text-white num-font" vid="429">92.6</span>
+                        </div>
+                        <div class="absolute top-[30%] -right-8 flex flex-col items-start whitespace-nowrap" vid="430">
+                            <span class="text-[10px] text-[#a0c0e0]" vid="431">收运作业</span>
+                            <span class="text-xs text-white num-font" vid="432">90.3</span>
+                        </div>
+                        <div class="absolute -bottom-6 right-0 flex flex-col items-center whitespace-nowrap" vid="433">
+                            <span class="text-[10px] text-[#a0c0e0]" vid="434">处置能力</span>
+                            <span class="text-xs text-white num-font" vid="435">91.8</span>
+                        </div>
+                        <div class="absolute -bottom-6 left-0 flex flex-col items-center whitespace-nowrap" vid="436">
+                            <span class="text-[10px] text-[#a0c0e0]" vid="437">海上作业</span>
+                            <span class="text-xs text-white num-font" vid="438">88.7</span>
+                        </div>
+                        <div class="absolute top-[30%] -left-10 flex flex-col items-end whitespace-nowrap" vid="439">
+                            <span class="text-[10px] text-[#a0c0e0]" vid="440">应急响应</span>
+                            <span class="text-xs text-white num-font" vid="441">89.1</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script vid="442">
+        
+        
+        const tabs = document.querySelectorAll('.nav-tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+            });
+        });
+    </script>
+
+</body></html>

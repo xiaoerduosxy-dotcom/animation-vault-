@@ -1,0 +1,586 @@
+<html lang="zh" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">动效展览馆 | Motion Archives</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" vid="5">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" vid="6">
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&amp;family=Noto+Serif+SC:wght@400;500;700&amp;display=swap" rel="stylesheet" vid="7">
+    <style vid="8">
+        :root {
+            --bg-color: #F2F1ED;
+            --ink: #1A1A1A;
+            
+            
+            --c1: #A8A0CA;
+            --c2: #E1C589;
+            --c3: #A95B47;
+            --c4: #8FA2B2;
+            --c5: #BFC0C2; 
+            --c6: #87B27C;
+            --c7: #B496C4;
+            --c8: #E4A78A;
+            --c9: #8CBAB2;
+            --c10: #D2C8B5;
+
+            --font-serif: 'EB Garamond', serif;
+            --font-cn: 'Noto Serif SC', serif;
+            
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            --transition-slow: 0.8s var(--ease-out-expo);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--ink);
+            font-family: var(--font-serif);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4vh 2vw;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        
+        .archive-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            margin-bottom: 2vh;
+            opacity: 0.6;
+            font-weight: 500;
+        }
+
+        .archive-header span {
+            display: inline-block;
+        }
+
+        
+        .gallery {
+            display: flex;
+            height: 85vh;
+            width: 100%;
+            max-width: 1600px;
+            gap: 2px; 
+            background-color: var(--bg-color);
+        }
+
+        
+        .spine {
+            flex: 1;
+            min-width: 0; 
+            position: relative;
+            cursor: pointer;
+            transition: flex var(--transition-slow), transform 0.6s var(--ease-out-expo), opacity 0.4s ease;
+            overflow: hidden;
+            display: flex;
+            flex-direction: row; 
+        }
+
+        
+        .spine-cover {
+            width: 100%;
+            min-width: 60px; 
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 4vh 0;
+            flex-shrink: 0;
+            transition: width var(--transition-slow);
+        }
+
+        
+        .spine-title {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            font-family: var(--font-cn);
+            font-size: 1.1rem;
+            font-weight: 500;
+            letter-spacing: 0.2em;
+            line-height: 1.2;
+            color: var(--ink);
+            opacity: 0.85;
+            max-height: 40%;
+            white-space: nowrap;
+        }
+
+        
+        .spine-number {
+            font-size: 1.2rem;
+            font-weight: 400;
+            opacity: 0.7;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        
+        .spine-artifact {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0.85;
+            mix-blend-mode: multiply; 
+        }
+        
+        .spine-artifact svg {
+            width: 100%;
+            height: 100%;
+            fill: none;
+            stroke: var(--ink);
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        
+        .spine:nth-child(5) {
+            transform-origin: bottom center;
+            transform: rotate(-8deg) translateX(-10px) translateY(-10px);
+            z-index: 10;
+            box-shadow: 10px 0px 20px rgba(0,0,0,0.05); 
+        }
+        .spine:nth-child(5) .spine-number {
+             transform: translateY(-50%) rotate(8deg); 
+        }
+
+        
+        
+        
+        .spine:hover, .spine:focus-within {
+            flex: 12;
+            z-index: 20;
+        }
+
+        
+        .gallery:hover .spine:nth-child(5) {
+            transform: rotate(0deg) translateX(0) translateY(0);
+            box-shadow: none;
+        }
+        .gallery:hover .spine:nth-child(5) .spine-number {
+             transform: translateY(-50%) rotate(0deg);
+        }
+
+        
+        .gallery:hover .spine:not(:hover) {
+            opacity: 0.6;
+            filter: saturate(0.8);
+        }
+
+        
+        .spine:hover .spine-cover {
+            width: 80px;
+            border-right: 1px solid rgba(0,0,0,0.1);
+        }
+
+        
+        .exhibit-stage {
+            flex: 1;
+            padding: 6vh 4vw;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transform: translateX(20px);
+            transition: opacity 0.5s ease 0.2s, transform 0.6s var(--ease-out-expo) 0.1s;
+            pointer-events: none; 
+        }
+
+        .spine:hover .exhibit-stage {
+            opacity: 1;
+            transform: translateX(0);
+            pointer-events: auto;
+        }
+
+        .stage-meta {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            opacity: 0.5;
+            margin-bottom: 2vh;
+        }
+
+        .stage-title {
+            font-family: var(--font-cn);
+            font-size: 3rem;
+            font-weight: 500;
+            margin-bottom: 1vh;
+            color: var(--ink);
+        }
+
+        .stage-title-en {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-size: 1.5rem;
+            opacity: 0.7;
+            margin-bottom: 4vh;
+        }
+
+        .stage-desc {
+            font-family: var(--font-cn);
+            font-size: 1rem;
+            line-height: 1.8;
+            max-width: 400px;
+            opacity: 0.8;
+            margin-bottom: 6vh;
+        }
+
+        
+        .motion-canvas {
+            flex: 1;
+            width: 100%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.05); 
+        }
+
+        
+        .exhibit-wave {
+            width: 80%;
+            height: 200px;
+            position: relative;
+        }
+        .exhibit-wave span {
+            position: absolute;
+            top: 50%;
+            width: 2px;
+            height: 10px;
+            background: var(--ink);
+            animation: wave 2s ease-in-out infinite;
+        }
+        @keyframes wave {
+            0%, 100% { transform: translateY(-50%) scaleY(1); opacity: 0.3;}
+            50% { transform: translateY(-50%) scaleY(15); opacity: 1;}
+        }
+
+        
+        .exhibit-pendulum {
+            width: 200px;
+            height: 200px;
+            border-top: 2px solid var(--ink);
+            position: relative;
+        }
+        .exhibit-pendulum::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 50%;
+            width: 2px; height: 180px;
+            background: var(--ink);
+            transform-origin: top center;
+            animation: swing 2s cubic-bezier(0.4, 0, 0.6, 1) infinite alternate;
+        }
+        .exhibit-pendulum::before {
+            content: '';
+            position: absolute;
+            top: 180px; left: calc(50% - 15px);
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            background: var(--ink);
+            z-index: 2;
+            transform-origin: 15px -180px;
+            animation: swing 2s cubic-bezier(0.4, 0, 0.6, 1) infinite alternate;
+        }
+        @keyframes swing {
+            0% { transform: rotate(30deg); }
+            100% { transform: rotate(-30deg); }
+        }
+
+        
+        .exhibit-orbit {
+            width: 200px; height: 200px;
+            position: relative;
+            animation: spin 10s linear infinite;
+        }
+        .orbit-ring {
+            position: absolute;
+            border: 1px solid rgba(26,26,26,0.3);
+            border-radius: 50%;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .orbit-ring::after {
+            content:''; position: absolute;
+            width: 6px; height: 6px; background: var(--ink); border-radius: 50%;
+            top: -3px; left: 50%; transform: translateX(-50%);
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        
+        .exhibit-topo {
+            width: 100%; height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 10px,
+                rgba(26,26,26,0.1) 10px,
+                rgba(26,26,26,0.1) 11px
+            );
+            mask-image: radial-gradient(circle at center, black, transparent 70%);
+            -webkit-mask-image: radial-gradient(circle at center, black, transparent 70%);
+            animation: pulse-mask 4s ease-in-out infinite alternate;
+        }
+        @keyframes pulse-mask {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.5) rotate(5deg); }
+        }
+
+        
+        .exhibit-tension {
+            width: 60%; height: 2px;
+            background: var(--ink);
+            position: relative;
+        }
+        .exhibit-tension::after {
+            content:''; position: absolute;
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--ink); background: var(--c5);
+            animation: pluck 3s cubic-bezier(.5,-0.5,.5,1.5) infinite;
+        }
+        @keyframes pluck {
+            0%, 100% { transform: translate(-50%, -50%); }
+            50% { transform: translate(-50%, -150px); }
+        }
+
+        
+        .bg-1 { background-color: var(--c1); }
+        .bg-2 { background-color: var(--c2); }
+        .bg-3 { background-color: var(--c3); }
+        .bg-4 { background-color: var(--c4); }
+        .bg-5 { background-color: var(--c5); }
+        .bg-6 { background-color: var(--c6); }
+        .bg-7 { background-color: var(--c7); }
+        .bg-8 { background-color: var(--c8); }
+        .bg-9 { background-color: var(--c9); }
+        .bg-10 { background-color: var(--c10); }
+
+        
+    </style>
+</head>
+<body vid="9">
+
+    <header class="archive-header" vid="10">
+        <span vid="11">Curatorial Dept. / Kinetic Archives</span>
+        <span vid="12">Exhibit 001 - 010</span>
+    </header>
+
+    <main class="gallery" vid="13">
+
+        
+        <article class="spine bg-1" vid="14">
+            <div class="spine-cover" vid="15">
+                <h2 class="spine-title" vid="16">谐波共振原理</h2>
+                <div class="spine-number" vid="17">1</div>
+                <div class="spine-artifact" vid="18">
+                    
+                    <svg viewBox="0 0 24 24" vid="19"><path d="M2 12 Q 7 2, 12 12 T 22 12" stroke-width="2" vid="20"></path></svg>
+                </div>
+            </div>
+            <div class="exhibit-stage" vid="21">
+                <div class="stage-meta" vid="22">Archive Ref. 101</div>
+                <h3 class="stage-title" vid="23">谐波共振</h3>
+                <div class="stage-title-en" vid="24">Harmonic Resonance</div>
+                <p class="stage-desc" vid="25">在物理学中，谐波是系统基础频率的整数倍。此展品模拟了多个粒子在受迫振动下的共振传播状态，展示频率与振幅的数学关系。</p>
+                <div class="motion-canvas" vid="26">
+                    <div class="exhibit-wave" id="wave-container" vid="27">
+                        
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        
+        <article class="spine bg-2" vid="28">
+            <div class="spine-cover" vid="29">
+                <h2 class="spine-title" vid="30">经典动力学</h2>
+                <div class="spine-number" vid="31">2</div>
+                <div class="spine-artifact" vid="32">
+                    
+                    <svg viewBox="0 0 24 24" vid="33"><line x1="12" y1="2" x2="12" y2="18" vid="34"></line><circle cx="12" cy="18" r="4" vid="35"></circle></svg>
+                </div>
+            </div>
+            <div class="exhibit-stage" vid="36">
+                <div class="stage-meta" vid="37">Archive Ref. 102</div>
+                <h3 class="stage-title" vid="38">动力摆系统</h3>
+                <div class="stage-title-en" vid="39">Kinetic Pendulum</div>
+                <p class="stage-desc" vid="40">重力与惯性的完美交织。摆钟运动是人类最早用于量化时间的机械结构，其周期性运动展现了势能与动能的持续转化。</p>
+                <div class="motion-canvas" vid="41">
+                    <div class="exhibit-pendulum" vid="42"></div>
+                </div>
+            </div>
+        </article>
+
+        
+        <article class="spine bg-3" vid="43">
+            <div class="spine-cover" vid="44">
+                <h2 class="spine-title" vid="45">轨道吸引子</h2>
+                <div class="spine-number" vid="46">3</div>
+                <div class="spine-artifact" vid="47">
+                    
+                    <svg viewBox="0 0 24 24" vid="48"><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(45 12 12)" vid="49"></ellipse><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(-45 12 12)" vid="50"></ellipse></svg>
+                </div>
+            </div>
+            <div class="exhibit-stage" vid="51">
+                <div class="stage-meta" vid="52">Archive Ref. 103</div>
+                <h3 class="stage-title" vid="53">轨道系统</h3>
+                <div class="stage-title-en" vid="54">Orbital Attractors</div>
+                <p class="stage-desc" vid="55">受限于向心力的天体运动轨迹。通过嵌套的旋转坐标系，呈现出宏观宇宙中星系运转的几何秩序与混乱边缘的平衡。</p>
+                <div class="motion-canvas" vid="56">
+                    <div class="exhibit-orbit" vid="57">
+                        <div class="orbit-ring" style="width: 150px; height: 150px; animation: spin 8s linear infinite reverse;" vid="58"></div>
+                        <div class="orbit-ring" style="width: 100px; height: 100px; animation: spin 4s linear infinite;" vid="59"></div>
+                        <div class="orbit-ring" style="width: 50px; height: 50px; animation: spin 2s linear infinite reverse;" vid="60"></div>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        
+        <article class="spine bg-4" vid="61">
+            <div class="spine-cover" vid="62">
+                <h2 class="spine-title" vid="63">干涉场拓扑</h2>
+                <div class="spine-number" vid="64">4</div>
+                <div class="spine-artifact" vid="65">
+                    
+                    <svg viewBox="0 0 24 24" vid="66"><circle cx="12" cy="12" r="10" vid="67"></circle><circle cx="12" cy="12" r="6" vid="68"></circle><circle cx="12" cy="12" r="2" vid="69"></circle></svg>
+                </div>
+            </div>
+             <div class="exhibit-stage" vid="70">
+                <div class="stage-meta" vid="71">Archive Ref. 104</div>
+                <h3 class="stage-title" vid="72">干涉拓扑</h3>
+                <div class="stage-title-en" vid="73">Interference Topography</div>
+                <p class="stage-desc" vid="74">两束频率相同的波相遇时产生相长或相消干涉。通过光学莫尔条纹原理，展示静态网格由于微小形变而产生的动态流场幻觉。</p>
+                <div class="motion-canvas" vid="75">
+                    <div class="exhibit-topo" vid="76"></div>
+                </div>
+            </div>
+        </article>
+
+        
+        <article class="spine bg-5" vid="77">
+            <div class="spine-cover" vid="78">
+                <h2 class="spine-title" vid="79">张力与形变</h2>
+                <div class="spine-number" vid="80">5</div>
+                <div class="spine-artifact" vid="81">
+                    
+                    <svg viewBox="0 0 24 24" vid="82"><path d="M2 12 Q 12 22, 22 12 M2 12 L 22 12" stroke-dasharray="2 2" vid="83"></path></svg>
+                </div>
+            </div>
+            <div class="exhibit-stage" vid="84">
+                <div class="stage-meta" vid="85">Archive Ref. 105</div>
+                <h3 class="stage-title" vid="86">弹性张力</h3>
+                <div class="stage-title-en" vid="87">Elastic Tension</div>
+                <p class="stage-desc" vid="88">胡克定律的视觉化再现。打破系统的静态平衡状态，观察介质在恢复力作用下产生的阻尼振荡过程，探究材质的物理记忆。</p>
+                <div class="motion-canvas" vid="89">
+                    <div class="exhibit-tension" vid="90"></div>
+                </div>
+            </div>
+        </article>
+
+        
+        <article class="spine bg-6" vid="91">
+            <div class="spine-cover" vid="92">
+                <h2 class="spine-title" vid="93">流体动力学</h2>
+                <div class="spine-number" vid="94">6</div>
+                <div class="spine-artifact" vid="95"><svg viewBox="0 0 24 24" vid="96"><path d="M12 2 C 12 2, 6 10, 6 15 C 6 18.3, 8.7 21, 12 21 C 15.3 21, 18 18.3, 18 15 C 18 10, 12 2, 12 2 Z" vid="97"></path></svg></div>
+            </div>
+             <div class="exhibit-stage" vid="98">
+                <div class="stage-meta" vid="99">Archive Ref. 106</div>
+                <h3 class="stage-title" vid="100">流体现象</h3>
+                <div class="stage-title-en" vid="101">Fluid Dynamics</div>
+                <p class="stage-desc" vid="102">连续介质力学的分支。该馆区目前处于闭架维护状态，仅展示流体力学中纳维-斯托克斯方程的基础理论文献。</p>
+            </div>
+        </article>
+
+        <article class="spine bg-7" vid="103">
+            <div class="spine-cover" vid="104">
+                <h2 class="spine-title" vid="105">粒子游走</h2>
+                <div class="spine-number" vid="106">7</div>
+                <div class="spine-artifact" vid="107"><svg viewBox="0 0 24 24" vid="108"><circle cx="12" cy="12" r="2" fill="var(--ink)" vid="109"></circle><circle cx="6" cy="8" r="1.5" fill="var(--ink)" vid="110"></circle><circle cx="18" cy="16" r="1" fill="var(--ink)" vid="111"></circle><path d="M6 8 L 12 12 L 18 16" stroke-dasharray="2 2" vid="112"></path></svg></div>
+            </div>
+             <div class="exhibit-stage" vid="113">
+                <div class="stage-meta" vid="114">Archive Ref. 107</div>
+                <h3 class="stage-title" vid="115">布朗运动</h3>
+                <div class="stage-title-en" vid="116">Brownian Walk</div>
+                <p class="stage-desc" vid="117">微小颗粒在流体中做无规则运动的宏观表现。展现了热力学中分子运动的随机性与统计规律。</p>
+            </div>
+        </article>
+
+        <article class="spine bg-8" vid="118">
+            <div class="spine-cover" vid="119">
+                <h2 class="spine-title" vid="120">折射与色散</h2>
+                <div class="spine-number" vid="121">8</div>
+                <div class="spine-artifact" vid="122"><svg viewBox="0 0 24 24" vid="123"><polygon points="12,4 2,20 22,20" vid="124"></polygon><line x1="2" y1="12" x2="10" y2="15" vid="125"></line></svg></div>
+            </div>
+             <div class="exhibit-stage" vid="126">
+                <div class="stage-meta" vid="127">Archive Ref. 108</div>
+                <h3 class="stage-title" vid="128">光谱色散</h3>
+                <div class="stage-title-en" vid="129">Spectral Dispersion</div>
+                <p class="stage-desc" vid="130">光波在不同介质中传播速度不同导致的波长分离现象。经典的光学棱镜实验理论归档。</p>
+            </div>
+        </article>
+
+        <article class="spine bg-9" vid="131">
+            <div class="spine-cover" vid="132">
+                <h2 class="spine-title" vid="133">磁场效应</h2>
+                <div class="spine-number" vid="134">9</div>
+                <div class="spine-artifact" vid="135"><svg viewBox="0 0 24 24" vid="136"><path d="M6 12 C 6 6, 18 6, 18 12 M8 12 C 8 8, 16 8, 16 12 M10 12 C 10 10, 14 10, 14 12" stroke-dasharray="2 2" vid="137"></path><rect x="11" y="12" width="2" height="8" fill="var(--ink)" vid="138"></rect></svg></div>
+            </div>
+             <div class="exhibit-stage" vid="139">
+                <div class="stage-meta" vid="140">Archive Ref. 109</div>
+                <h3 class="stage-title" vid="141">洛伦兹力场</h3>
+                <div class="stage-title-en" vid="142">Magnetic Fields</div>
+                <p class="stage-desc" vid="143">运动电荷在磁场中所受的力。记录了磁感线分布的不可见几何结构。</p>
+            </div>
+        </article>
+
+        <article class="spine bg-10" vid="144">
+            <div class="spine-cover" vid="145">
+                <h2 class="spine-title" vid="146">量子纠缠</h2>
+                <div class="spine-number" vid="147">10</div>
+                <div class="spine-artifact" vid="148"><svg viewBox="0 0 24 24" vid="149"><path d="M4 12 C 4 6, 10 12, 12 12 C 14 12, 20 6, 20 12 C 20 18, 14 12, 12 12 C 10 12, 4 18, 4 12" vid="150"></path></svg></div>
+            </div>
+             <div class="exhibit-stage" vid="151">
+                <div class="stage-meta" vid="152">Archive Ref. 110</div>
+                <h3 class="stage-title" vid="153">量子态</h3>
+                <div class="stage-title-en" vid="154">Quantum Entanglement</div>
+                <p class="stage-desc" vid="155">微观粒子系统相互作用后产生的不可分割状态。本馆区为绝密理论档案，未授权交互展示。</p>
+            </div>
+        </article>
+
+    </main>
+
+    <script vid="156">
+        
+        const waveContainer = document.getElementById('wave-container');
+        const numBars = 40;
+        
+        for(let i=0; i<numBars; i++) {
+            let span = document.createElement('span');
+            
+            span.style.left = `${(i / numBars) * 100}%`;
+            
+            let delay = Math.sin((i / numBars) * Math.PI * 2) * -1;
+            span.style.animationDelay = `${delay}s`;
+            waveContainer.appendChild(span);
+        }
+    </script>
+
+</body></html>

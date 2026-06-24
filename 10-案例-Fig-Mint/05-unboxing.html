@@ -1,0 +1,368 @@
+<html lang="en" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">Unboxing Fig Mint</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" vid="5">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" vid="6">
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&amp;family=VT323&amp;display=swap" rel="stylesheet" vid="7">
+    <style vid="8">
+        :root {
+            --beige-light: #F0EDE0;
+            --beige-main: #E0DCCF;
+            --beige-dark: #C4C0B3;
+            --beige-shadow: #A09C8F;
+            --cardboard: #d2b48c;
+            --cardboard-dark: #b89b72;
+            --cardboard-light: #e6ccaa;
+            --foam: #f9f9f9;
+            --ink-black: #0f0f0f;
+            --font-serif: 'EB Garamond', serif;
+            --font-mono: 'VT323', monospace;
+        }
+
+        @font-face {
+            font-family: 'RetroSerif';
+            src: local('Apple Garamond'), local('Garamond'), local('Times New Roman');
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #f4f1e6;
+            font-family: 'RetroSerif', serif;
+            color: var(--ink-black);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 1400px;
+            height: 900px;
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            align-items: center;
+            padding: 4rem;
+            position: relative;
+        }
+
+        .content-col {
+            padding-left: 4rem;
+            z-index: 10;
+        }
+
+        h1 {
+            font-size: 5rem;
+            line-height: 0.85;
+            margin: 0 0 2rem 0;
+            letter-spacing: -2px;
+            font-weight: 500;
+        }
+
+        h1 .italic {
+            font-style: italic;
+            display: block;
+            margin-top: 0.2rem;
+        }
+
+        p.lead {
+            font-size: 1.5rem;
+            line-height: 1.2;
+            margin-bottom: 2.5rem;
+            max-width: 440px;
+            color: #444;
+        }
+
+        .checklist {
+            list-style: none;
+            margin-bottom: 3rem;
+            font-family: 'RetroSerif', serif;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            color: #555;
+        }
+
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--ink-black);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .checkbox::after {
+            content: '✓';
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--ink-black);
+            color: #f4f1e6;
+            padding: 1.2rem 2.5rem;
+            font-size: 1.4rem;
+            text-decoration: none;
+            border-radius: 8px;
+            border: 2px solid var(--ink-black);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            background: transparent;
+            color: var(--ink-black);
+        }
+
+        
+        .box-container {
+            position: relative;
+            width: 500px;
+            height: 500px;
+            perspective: 2000px;
+        }
+
+        .cardboard-box {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transform: rotateX(25deg) rotateY(-20deg);
+        }
+
+        
+        .box-face {
+            position: absolute;
+            background: var(--cardboard);
+            border: 2px solid var(--cardboard-dark);
+        }
+
+        .box-bottom {
+            width: 400px;
+            height: 400px;
+            transform: rotateX(90deg) translateZ(-200px);
+            background: var(--cardboard-dark);
+        }
+
+        .box-front {
+            width: 400px;
+            height: 300px;
+            transform: translateZ(200px);
+            display: flex;
+            align-items: flex-end;
+            padding: 20px;
+        }
+        
+        .box-front::after {
+            content: 'FIG MINT';
+            font-family: var(--font-mono);
+            font-weight: bold;
+            opacity: 0.3;
+            font-size: 40px;
+            letter-spacing: 5px;
+        }
+
+        .box-left {
+            width: 400px;
+            height: 300px;
+            transform: rotateY(-90deg) translateZ(200px);
+            background: var(--cardboard-dark);
+        }
+
+        .box-right {
+            width: 400px;
+            height: 300px;
+            transform: rotateY(90deg) translateZ(200px);
+        }
+
+        .box-back {
+            width: 400px;
+            height: 300px;
+            transform: rotateY(180deg) translateZ(200px);
+        }
+
+        
+        .flap {
+            position: absolute;
+            background: var(--cardboard-light);
+            border: 1px solid var(--cardboard-dark);
+            height: 180px;
+            width: 400px;
+        }
+
+        .flap-front {
+            bottom: 300px;
+            transform-origin: bottom;
+            transform: translateZ(200px) rotateX(110deg);
+        }
+
+        .flap-back {
+            bottom: 300px;
+            transform-origin: bottom;
+            transform: translateZ(-200px) rotateX(-110deg);
+        }
+
+        
+        .foam-insert {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 360px;
+            height: 360px;
+            background: var(--foam);
+            transform: rotateX(90deg) translateZ(-150px);
+            border-radius: 4px;
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .foam-cutout {
+            width: 260px;
+            height: 260px;
+            background: rgba(0,0,0,0.05);
+            border-radius: 8px;
+            box-shadow: inset 5px 5px 15px rgba(0,0,0,0.2);
+        }
+
+        
+        .mini-computer {
+            position: absolute;
+            width: 240px;
+            height: 280px;
+            background: var(--beige-light);
+            left: 80px;
+            top: -60px;
+            transform: translateZ(50px);
+            box-shadow: 10px 20px 40px rgba(0,0,0,0.2);
+            border: 1px solid var(--beige-dark);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .mini-screen {
+            width: 180px;
+            height: 140px;
+            background: #333;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 8px solid var(--beige-main);
+            box-shadow: inset 0 0 10px #000;
+        }
+
+        .mini-floppy {
+            width: 100px;
+            height: 8px;
+            background: #222;
+            margin-left: 40px;
+            border-radius: 4px;
+        }
+
+        .tape-seal {
+            position: absolute;
+            width: 40px;
+            height: 120px;
+            background: rgba(255,255,255,0.3);
+            top: -40px;
+            left: 180px;
+            transform: rotate(5deg);
+            z-index: 20;
+        }
+
+        @media (max-width: 1000px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                height: auto;
+                padding: 2rem;
+            }
+            .content-col { padding: 0; margin-top: 2rem; text-align: center; order: 2; }
+            .box-container { order: 1; margin: 0 auto; transform: scale(0.7); }
+            .checklist { display: inline-block; text-align: left; }
+        }
+    </style>
+</head>
+<body vid="9">
+
+    <div class="main-container" vid="10">
+        
+        <div class="content-col" vid="11">
+            <h1 vid="12">
+                <span vid="13">Open your</span>
+                <span class="italic" vid="14">Fig Mint.</span>
+            </h1>
+            <p class="lead" vid="15">
+                The future has arrived at your doorstep. Carefully unpack your unit and ensure all components are present before first boot.
+            </p>
+            
+            <ul class="checklist" vid="16">
+                <li class="checklist-item" vid="17">
+                    <div class="checkbox" vid="18"></div> Fig Mint Computing Unit
+                </li>
+                <li class="checklist-item" vid="19">
+                    <div class="checkbox" vid="20"></div> Integrated Keyboard
+                </li>
+                <li class="checklist-item" vid="21">
+                    <div class="checkbox" vid="22"></div> FigOS System Disk (Floppy)
+                </li>
+                <li class="checklist-item" vid="23">
+                    <div class="checkbox" vid="24"></div> Owner's Manual &amp; Stickers
+                </li>
+            </ul>
+
+            <div class="cta-group" vid="25">
+                <a href="#" class="btn" vid="26">Get Started</a>
+            </div>
+        </div>
+
+        <div class="product-col" vid="27">
+            <div class="box-container" vid="28">
+                <div class="cardboard-box" vid="29">
+                    
+                    <div class="flap flap-front" vid="30"></div>
+                    <div class="flap flap-back" vid="31"></div>
+                    
+                    
+                    <div class="box-face box-bottom" vid="32"></div>
+                    <div class="box-face box-front" vid="33"></div>
+                    <div class="box-face box-left" vid="34"></div>
+                    <div class="box-face box-right" vid="35"></div>
+                    <div class="box-face box-back" vid="36"></div>
+
+                    
+                    <div class="foam-insert" vid="37">
+                        <div class="foam-cutout" vid="38"></div>
+                    </div>
+
+                    
+                    <div class="mini-computer" vid="39">
+                        <div class="mini-screen" vid="40"></div>
+                        <div class="mini-floppy" vid="41"></div>
+                        <div style="position: absolute; bottom: 15px; left: 15px; width: 15px; height: 18px; background: linear-gradient(to bottom, #63B548, #F6C829, #D83335, #468CCF); border-radius: 2px;" vid="42"></div>
+                    </div>
+                    
+                    <div class="tape-seal" vid="43"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body></html>

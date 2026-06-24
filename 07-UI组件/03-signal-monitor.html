@@ -1,0 +1,264 @@
+<html lang="en" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">Signal Monitor Unit</title>
+    <style vid="5">
+        :root {
+            --bg-color: #E6E6E6; 
+            --card-bg: #151619; 
+            --text-primary: #FFFFFF;
+            --text-secondary: #8E9299;
+            --accent-red: #FF4444;
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --mono-font: 'JetBrains Mono', 'Roboto Mono', monospace;
+            --border-radius: 8px;
+            --padding-inner: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: var(--font-family);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .widget-container {
+            width: 320px;
+            height: 240px;
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .widget-header {
+            padding: 12px var(--padding-inner);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .ref-label {
+            font-family: var(--mono-font);
+            font-size: 9px;
+            color: var(--text-secondary);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .live-tag {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-family: var(--mono-font);
+            font-size: 9px;
+            color: var(--accent-red);
+        }
+
+        .live-dot {
+            width: 4px;
+            height: 4px;
+            background-color: var(--accent-red);
+            border-radius: 50%;
+            animation: pulse-dot 1.5s infinite;
+        }
+
+        .monitor-stage {
+            flex-grow: 1;
+            padding: 12px var(--padding-inner);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.02) 0%, transparent 100%);
+        }
+
+        .oscilloscope-view {
+            height: 70px;
+            width: 100%;
+            position: relative;
+            background: rgba(0,0,0,0.2);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .spectrum-view {
+            height: 50px;
+            width: 100%;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            gap: 2px;
+        }
+
+        .spectrum-bar {
+            flex: 1;
+            background: rgba(255,255,255,0.15);
+            min-height: 2px;
+            transition: height 0.1s ease;
+        }
+
+        .grid-overlay {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+            pointer-events: none;
+        }
+
+        .footer-readout {
+            padding: 8px var(--padding-inner) 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .metric {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .metric-label {
+            font-family: var(--mono-font);
+            font-size: 8px;
+            color: var(--text-secondary);
+            letter-spacing: 0.5px;
+        }
+
+        .metric-value {
+            font-family: var(--mono-font);
+            font-size: 10px;
+            color: var(--text-primary);
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        canvas {
+            display: block;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet" vid="6">
+</head>
+<body vid="7">
+
+    <div class="widget-container" vid="8">
+        <div class="widget-header" vid="9">
+            <span class="ref-label" vid="10">Signal_MTR-04</span>
+            <div class="live-tag" vid="11">
+                <div class="live-dot" vid="12"></div>
+                LIVE_FEED
+            </div>
+        </div>
+
+        <div class="monitor-stage" vid="13">
+            <div class="oscilloscope-view" vid="14">
+                <div class="grid-overlay" vid="15"></div>
+                <canvas id="osc-canvas" width="288" height="70" style="position: relative; z-index: 2;" vid="16"></canvas>
+            </div>
+            
+            <div class="spectrum-view" id="spectrum-container" vid="17">
+                
+            </div>
+        </div>
+
+        <div class="footer-readout" vid="18">
+            <div class="metric" vid="19">
+                <span class="metric-label" vid="20">GAIN</span>
+                <span class="metric-value" vid="21">-12.4 dB</span>
+            </div>
+            <div class="metric" vid="22">
+                <span class="metric-label" vid="23">PEAK</span>
+                <span class="metric-value" id="peak-val" vid="24">0.824</span>
+            </div>
+            <div class="metric" style="text-align: right;" vid="25">
+                <span class="metric-label" vid="26">LATENCY</span>
+                <span class="metric-value" vid="27">1.4ms</span>
+            </div>
+        </div>
+    </div>
+
+    <script vid="28">
+        const oscCanvas = document.getElementById('osc-canvas');
+        const oscCtx = oscCanvas.getContext('2d');
+        const specContainer = document.getElementById('spectrum-container');
+        const peakDisplay = document.getElementById('peak-val');
+        
+        const barCount = 32;
+        const bars = [];
+        
+        
+        for (let i = 0; i < barCount; i++) {
+            const bar = document.createElement('div');
+            bar.className = 'spectrum-bar';
+            specContainer.appendChild(bar);
+            bars.push(bar);
+        }
+
+        let offset = 0;
+        function animate() {
+            
+            oscCtx.clearRect(0, 0, oscCanvas.width, oscCanvas.height);
+            oscCtx.beginPath();
+            oscCtx.lineWidth = 1.5;
+            oscCtx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
+            
+            const step = 2;
+            const amp = 20;
+            const freq = 0.05;
+            
+            for (let x = 0; x < oscCanvas.width; x += step) {
+                const noise = Math.sin(x * freq + offset) * amp;
+                const jitter = (Math.random() - 0.5) * 4;
+                const y = (oscCanvas.height / 2) + noise + jitter;
+                
+                if (x === 0) oscCtx.moveTo(x, y);
+                else oscCtx.lineTo(x, y);
+            }
+            oscCtx.stroke();
+            
+            
+            let maxVal = 0;
+            bars.forEach((bar, i) => {
+                const noiseBase = Math.sin(i * 0.5 + offset * 0.5) * 0.5 + 0.5;
+                const dynamic = Math.random() * 0.4;
+                const h = (noiseBase * 60 + dynamic * 40) * (1 - (i / barCount) * 0.5);
+                bar.style.height = `${Math.max(4, h)}%`;
+                bar.style.opacity = 0.15 + (h / 100);
+                if (h > maxVal) maxVal = h;
+            });
+
+            
+            if (Math.random() > 0.95) {
+                peakDisplay.innerText = (0.7 + Math.random() * 0.2).toFixed(3);
+            }
+
+            offset += 0.15;
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+
+</body></html>

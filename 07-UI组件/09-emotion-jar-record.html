@@ -1,0 +1,132 @@
+<html lang="zh-CN" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">情绪收藏罐 - 记录</title>
+    <script src="https://cdn.tailwindcss.com/3.4.17" vid="5"></script>
+    <style vid="6">
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500&display=swap');
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #E5E5E5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .glass-jar {
+            background: linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.2) 100%);
+            box-shadow: 
+                inset 0 0 20px rgba(255,255,255,0.6),
+                inset 0 0 10px rgba(255,255,255,0.4),
+                0 8px 32px rgba(0,0,0,0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.8);
+            position: relative;
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        @keyframes chipFadeIn {
+            from { opacity: 0; transform: translateY(10px) scale(0.9); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .chip-animate {
+            animation: chipFadeIn 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        .dreamy-bg {
+            background: radial-gradient(circle at 10% 20%, rgba(245, 247, 235, 0.8) 0%, transparent 50%),
+                        radial-gradient(circle at 90% 80%, rgba(255, 245, 241, 0.8) 0%, transparent 50%),
+                        radial-gradient(circle at 50% 50%, rgba(250, 250, 247, 1) 0%, rgba(250, 250, 247, 1) 100%);
+        }
+
+        textarea::placeholder {
+            color: #A8A29E;
+            font-weight: 300;
+        }
+
+        .cursor-blink {
+            display: inline-block;
+            width: 2px;
+            height: 24px;
+            background-color: #78716C;
+            animation: blink 1s infinite step-end;
+            vertical-align: middle;
+            margin-left: 2px;
+        }
+
+        @keyframes blink {
+            from, to { opacity: 1; }
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body vid="7">
+
+    <div id="app-container" class="w-[400px] h-[867px] relative overflow-hidden dreamy-bg text-stone-800 rounded-[20px] shadow-2xl" vid="8">
+        
+        <div class="absolute top-0 left-0 w-full px-8 pt-16 flex justify-between items-center z-20" vid="9">
+            <button onclick="history.back()" class="w-10 h-10 flex items-center justify-center text-stone-400 hover:text-stone-600 transition-colors" vid="10">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" vid="11"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12" vid="12"></path></svg>
+            </button>
+            <div class="text-xs font-medium text-stone-400 tracking-[0.2em] uppercase" vid="13">正在倾听...</div>
+            <button onclick="window.location.reload()" class="text-stone-500 font-medium text-sm tracking-widest px-4 py-2 bg-white/40 rounded-full border border-white/60 active:scale-95 transition-all" vid="14">
+                提炼
+            </button>
+        </div>
+
+        <div class="px-8 pt-36 h-full flex flex-col" vid="15">
+            <div class="relative flex-1" vid="16">
+                <textarea class="w-full h-full bg-transparent border-none outline-none text-[22px] font-light leading-relaxed text-stone-700 resize-none hide-scrollbar placeholder-stone-300" placeholder="在这里说出你的任何感受，或者只是几个破碎的词组..." vid="17"></textarea>
+                
+                <div class="absolute bottom-40 left-0 w-full" vid="18">
+                    <p class="text-[10px] text-stone-400 tracking-widest mb-4 opacity-60" vid="19">AI 正在捕捉...</p>
+                    <div class="flex flex-wrap gap-2.5" vid="20">
+                        <div class="chip-animate flex items-center gap-1.5 px-3 py-1.5 bg-white/60 rounded-2xl border border-white/80 shadow-sm" style="animation-delay: 0.2s;" vid="21">
+                            <span class="text-xs" vid="22">🌫️</span>
+                            <span class="text-xs text-stone-600" vid="23">琐碎的忙碌</span>
+                        </div>
+                        <div class="chip-animate flex items-center gap-1.5 px-3 py-1.5 bg-white/60 rounded-2xl border border-white/80 shadow-sm" style="animation-delay: 0.5s;" vid="24">
+                            <span class="text-xs" vid="25">🥣</span>
+                            <span class="text-xs text-stone-600" vid="26">清淡的午后</span>
+                        </div>
+                        <div class="chip-animate flex items-center gap-1.5 px-3 py-1.5 bg-white/60 rounded-2xl border border-white/80 shadow-sm" style="animation-delay: 0.8s;" vid="27">
+                            <span class="text-xs" vid="28">💭</span>
+                            <span class="text-xs text-stone-600" vid="29">期待落空</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pb-16 flex flex-col items-center gap-8" vid="30">
+                <div class="relative" vid="31">
+                    <div class="absolute inset-0 bg-white/40 blur-2xl rounded-full scale-150 animate-pulse" vid="32"></div>
+                    <button class="relative w-20 h-20 bg-white rounded-full shadow-lg flex items-center justify-center border border-white active:scale-90 transition-transform group" vid="33">
+                        <div class="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center group-hover:bg-stone-200 transition-colors" vid="34">
+                            <svg class="w-5 h-5 text-stone-400" fill="currentColor" viewBox="0 0 24 24" vid="35"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z" vid="36"></path><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" vid="37"></path></svg>
+                        </div>
+                    </button>
+                    <div class="absolute -bottom-8 left-1/2 -translate-x-1/2 text-[10px] text-stone-400 tracking-widest whitespace-nowrap" vid="38">长按说话</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-stone-200/50 rounded-full z-20" vid="39"></div>
+
+        <div class="absolute top-1/4 -right-20 w-80 h-80 bg-blue-100/30 rounded-full blur-[80px] -z-10 animate-pulse" style="animation-duration: 8s;" vid="40"></div>
+        <div class="absolute bottom-1/4 -left-20 w-64 h-64 bg-amber-100/20 rounded-full blur-[60px] -z-10 animate-pulse" style="animation-duration: 10s;" vid="41"></div>
+    </div>
+
+    <script vid="42">
+        document.querySelector('textarea').focus();
+    </script>
+</body></html>

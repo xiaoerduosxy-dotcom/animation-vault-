@@ -1,0 +1,351 @@
+<html lang="en" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">The Daily Mint - Machine Intelligence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" vid="5">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" vid="6">
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;0,800;1,400&amp;family=VT323&amp;display=swap" rel="stylesheet" vid="7">
+    <style vid="8">
+        :root {
+            --paper-bg: #f4f1e6;
+            --ink-black: #1a1a1a;
+            --ink-fade: #444;
+            --border-heavy: 4px solid var(--ink-black);
+            --border-light: 1px solid var(--ink-black);
+            --font-serif: 'EB Garamond', serif;
+            --font-mono: 'VT323', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #dcd9ce;
+            font-family: var(--font-serif);
+            color: var(--ink-black);
+            display: flex;
+            justify-content: center;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .newspaper-container {
+            background-color: var(--paper-bg);
+            width: 100%;
+            max-width: 1200px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15), 0 0 100px rgba(0,0,0,0.05);
+            position: relative;
+            background-image: 
+                radial-gradient(#00000005 1px, transparent 0);
+            background-size: 4px 4px;
+        }
+
+        
+        .masthead {
+            text-align: center;
+            border-bottom: var(--border-heavy);
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        .masthead-info {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: var(--border-light);
+            padding: 5px 0;
+            text-transform: uppercase;
+            font-weight: bold;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .masthead-title {
+            font-size: 6.5rem;
+            font-weight: 800;
+            letter-spacing: -4px;
+            line-height: 0.9;
+            margin: 20px 0;
+            font-style: italic;
+        }
+
+        
+        .headline-section {
+            text-align: center;
+            border-bottom: var(--border-light);
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+        }
+
+        h1.main-headline {
+            font-size: 5.5rem;
+            line-height: 1;
+            text-transform: uppercase;
+            font-weight: 800;
+            margin: 10px 0;
+            letter-spacing: -2px;
+        }
+
+        .sub-headline {
+            font-size: 1.8rem;
+            font-style: italic;
+            color: var(--ink-fade);
+        }
+
+        
+        .article-layout {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 30px;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .column:not(:last-child) {
+            border-right: 1px solid rgba(0,0,0,0.1);
+            padding-right: 15px;
+        }
+
+        
+        .halftone-img {
+            width: 100%;
+            height: 250px;
+            background-color: #333;
+            position: relative;
+            overflow: hidden;
+            filter: contrast(150%) grayscale(100%);
+            margin-bottom: 10px;
+            border: 1px solid #000;
+        }
+
+        .halftone-img::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: radial-gradient(circle, #fff 1px, transparent 1px);
+            background-size: 3px 3px;
+            opacity: 0.4;
+        }
+
+        .img-caption {
+            font-size: 0.85rem;
+            font-style: italic;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .article-text {
+            column-count: 1;
+            line-height: 1.4;
+            font-size: 1.1rem;
+            text-align: justify;
+        }
+
+        .article-text::first-letter {
+            float: left;
+            font-size: 4rem;
+            line-height: 0.8;
+            padding-right: 8px;
+            padding-top: 4px;
+            font-weight: 800;
+        }
+
+        .pull-quote {
+            font-size: 1.6rem;
+            font-weight: 600;
+            line-height: 1.2;
+            padding: 20px 0;
+            border-top: var(--border-light);
+            border-bottom: var(--border-light);
+            margin: 15px 0;
+            font-style: italic;
+            position: relative;
+        }
+
+        .pull-quote::before {
+            content: '"';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            font-size: 4rem;
+            opacity: 0.1;
+        }
+
+        .reviewer-meta {
+            display: block;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-top: 10px;
+            font-style: normal;
+        }
+
+        .sidebar-box {
+            background: rgba(0,0,0,0.03);
+            padding: 15px;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .sidebar-title {
+            font-weight: 800;
+            text-transform: uppercase;
+            border-bottom: 2px solid #000;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .nav-back {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: var(--ink-black);
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-family: var(--font-mono);
+            border-radius: 4px;
+            z-index: 100;
+            transition: transform 0.2s;
+        }
+
+        .nav-back:hover {
+            transform: scale(1.05);
+        }
+
+        
+        .widget-item {
+            display: flex;
+            justify-content: space-between;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 900px) {
+            .article-layout {
+                grid-template-columns: 1fr;
+            }
+            .column:not(:last-child) {
+                border-right: none;
+                border-bottom: 1px solid rgba(0,0,0,0.1);
+                padding-right: 0;
+                padding-bottom: 30px;
+            }
+            .masthead-title {
+                font-size: 4rem;
+            }
+            h1.main-headline {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body vid="9">
+
+    <a href="#" class="btn nav-back" vid="10">&lt; BACK TO SHOP</a>
+
+    <div class="newspaper-container" vid="11">
+        
+        <header class="masthead" vid="12">
+            <div class="masthead-info" vid="13">
+                <span vid="14">Vol. LXXXIV... No. 2,495</span>
+                <span vid="15">THE DAILY MINT</span>
+                <span vid="16">Tuesday, October 15, 1984</span>
+            </div>
+            <div class="masthead-title" vid="17">The Daily Mint</div>
+            <div class="masthead-info" style="border-top: 1px solid black; border-bottom: 4px solid black;" vid="18">
+                <span vid="19">PRICE: $2,495.00</span>
+                <span vid="20">LATE CITY EDITION</span>
+                <span vid="21">FORECAST: BRIGHT PHOSPHOR</span>
+            </div>
+        </header>
+
+        <section class="headline-section" vid="22">
+            <h1 class="main-headline" vid="23">Machine Thinks For Itself</h1>
+            <p class="sub-headline" vid="24">Fig Mint Architecture Bridges the Gap Between Silicon and Synapse</p>
+        </section>
+
+        <div class="article-layout" vid="25">
+            
+            <div class="column" vid="26">
+                <div class="sidebar-box" vid="27">
+                    <div class="sidebar-title" vid="28">MARKET WATCH</div>
+                    <div class="widget-item" vid="29"><span vid="30">SILICON</span> <span vid="31">+12.4%</span></div>
+                    <div class="widget-item" vid="32"><span vid="33">FLOPPY</span> <span vid="34">-2.1%</span></div>
+                    <div class="widget-item" vid="35"><span vid="36">NEURAL</span> <span vid="37">STEADY</span></div>
+                </div>
+
+                <div class="pull-quote" vid="38">
+                    "The Fig Mint isn't just a tool; it's a colleague. It drafted my morning reports before I even sat down."
+                    <span class="reviewer-meta" vid="39">— Julian Sterling, The Tech Tribune</span>
+                </div>
+
+                <div class="halftone-img" style="height: 180px; background: url('https://images.unsplash.com/photo-1547394765-185e1e68f34e?auto=format&amp;fit=crop&amp;q=80&amp;w=400') center/cover;" vid="40"></div>
+                <p class="img-caption" vid="41">A close-up of the Fig Mint's revolutionary neural grid assembly.</p>
+                
+                <div class="sidebar-box" vid="42">
+                    <div class="sidebar-title" vid="43">SPECIFICATIONS</div>
+                    <p style="font-size: 0.9rem; line-height: 1.4;" vid="44">
+                        Powered by the <strong vid="45">Synapse 512K</strong>, the Fig Mint utilizes a proprietary "Think-First" logic gate system that anticipates user input based on previous file hierarchies.
+                    </p>
+                </div>
+            </div>
+
+            
+            <div class="column" vid="46">
+                <div class="halftone-img" style="height: 400px; background: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&amp;fit=crop&amp;q=80&amp;w=800') center/cover;" vid="47"></div>
+                <p class="img-caption" vid="48">The Fig Mint workstation, shown here in its native beige-main finish, currently dominating the modern desk space.</p>
+                
+                <div class="article-text" vid="49">
+                    In a move that has left the computing world stunned, the designers at Fig Mint have unveiled a machine that claims to possess more than just processing power—it claims to have "intuition." The new 9-inch phosphor display glows with a clarity unseen in previous iterations of desktop hardware, but the real secret lies beneath the hood.
+                    <br vid="50"><br vid="51">
+                    The "Neural Engine" is not a marketing gimmick. During our three-day testing period, the Fig Mint learned our filing habits, predicted which memos would need drafting, and organized our disk space with a logic that felt eerie, yet indispensable.
+                    <br vid="52"><br vid="53">
+                    "We didn't want to build a better calculator," says the chief architect. "We wanted to build a figment of your imagination brought to life." And indeed, the seamless integration of hardware and the new FigOS 1.0 suggests a future where the machine serves the man, rather than the other way around.
+                </div>
+
+                <div class="pull-quote" style="font-size: 2rem;" vid="54">
+                    "The future has arrived, and it fits neatly on your desk."
+                    <span class="reviewer-meta" vid="55">— Editorial, Computing Today</span>
+                </div>
+            </div>
+
+            
+            <div class="column" vid="56">
+                <div class="sidebar-title" vid="57">THE VERDICT</div>
+                <div class="article-text" style="font-size: 1rem; border-bottom: 1px solid #ddd; padding-bottom: 20px;" vid="58">
+                    While the $2,495 price tag may deter the casual hobbyist, the professional value is undeniable. In an era of beige boxes, the Fig Mint stands alone as a beacon of machine intelligence. 
+                </div>
+
+                <div class="pull-quote" vid="59">
+                    "I asked it to think about my storage problems. Ten minutes later, my floppy disks were indexed and searchable."
+                    <span class="reviewer-meta" vid="60">— Sarah Chen, Byte Magazine</span>
+                </div>
+
+                <div class="halftone-img" style="height: 150px; background: url('https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&amp;fit=crop&amp;q=80&amp;w=400') center/cover;" vid="61"></div>
+                <p class="img-caption" vid="62">Early adopters wait in line for the 5.25" expansion drive.</p>
+
+                <div class="sidebar-box" style="background: var(--ink-black); color: #fff; text-align: center;" vid="63">
+                    <div class="sidebar-title" style="color: #fff; border-color: #fff;" vid="64">CLASSIFIED</div>
+                    <p style="font-family: var(--font-mono); font-size: 0.8rem;" vid="65">
+                        WANTED: NEURAL OPERATORS. Must be proficient in FigOS. Apply at terminal 01.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <footer style="margin-top: 40px; padding-top: 20px; border-top: var(--border-heavy); text-align: center; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px;" vid="66">
+            © 1984 Fig Mint Computing Corp. — All Rights Reserved — Printed on Recycled Phosphor
+        </footer>
+    </div>
+
+</body></html>

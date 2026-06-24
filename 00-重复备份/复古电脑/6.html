@@ -1,0 +1,327 @@
+<html lang="en" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">FigOS - Booting...</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" vid="5">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" vid="6">
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&amp;family=VT323&amp;display=swap" rel="stylesheet" vid="7">
+    <style vid="8">
+        :root {
+            --beige-light: #F0EDE0;
+            --beige-main: #E0DCCF;
+            --beige-dark: #C4C0B3;
+            --beige-shadow: #A09C8F;
+            --screen-black: #1a1c1e;
+            --crt-glow: rgba(255, 255, 255, 0.05);
+            --ink-black: #0f0f0f;
+            --font-serif: 'EB Garamond', serif;
+            --font-mono: 'VT323', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #121212;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        
+        .crt-monitor-frame {
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #2a2a2a 0%, #111 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        
+        .bezel {
+            width: 90%;
+            height: 85%;
+            background: var(--beige-main);
+            border-radius: 40px;
+            padding: 40px;
+            box-shadow: 
+                inset 10px 10px 30px rgba(255,255,255,0.2),
+                inset -10px -10px 30px rgba(0,0,0,0.3),
+                0 0 100px rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .screen-inset {
+            width: 100%;
+            height: 100%;
+            background: #222;
+            border-radius: 30px;
+            padding: 10px;
+            box-shadow: 
+                inset 5px 5px 20px rgba(0,0,0,0.8),
+                inset -5px -5px 20px rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        
+        .crt-screen {
+            width: 100%;
+            height: 100%;
+            background: var(--screen-black);
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            font-family: var(--font-mono);
+            color: #efefef;
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        
+        .crt-screen::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 10;
+            background-size: 100% 3px, 3px 100%;
+            pointer-events: none;
+        }
+
+        .crt-screen::after {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: rgba(18, 16, 16, 0.1);
+            opacity: 0;
+            z-index: 11;
+            pointer-events: none;
+            animation: flicker 0.15s infinite;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0.27861; }
+            5% { opacity: 0.34769; }
+            10% { opacity: 0.23604; }
+            15% { opacity: 0.90626; }
+            20% { opacity: 0.18128; }
+            25% { opacity: 0.83891; }
+            30% { opacity: 0.65583; }
+            35% { opacity: 0.57807; }
+            40% { opacity: 0.26559; }
+            45% { opacity: 0.84693; }
+            50% { opacity: 0.96019; }
+            55% { opacity: 0.08594; }
+            60% { opacity: 0.20313; }
+            65% { opacity: 0.71988; }
+            70% { opacity: 0.53455; }
+            75% { opacity: 0.37288; }
+            80% { opacity: 0.71428; }
+            85% { opacity: 0.70419; }
+            90% { opacity: 0.7003; }
+            95% { opacity: 0.36108; }
+            100% { opacity: 0.24387; }
+        }
+
+        
+        .boot-log {
+            font-size: 24px;
+            line-height: 1.4;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+
+        .boot-item {
+            margin-bottom: 8px;
+            opacity: 0;
+            animation: fadeIn 0.1s forwards;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 14px;
+            height: 24px;
+            background: #fff;
+            animation: blink 0.8s step-end infinite;
+            vertical-align: middle;
+            margin-left: 5px;
+        }
+
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        
+        .loading-container {
+            margin-top: auto;
+            margin-bottom: 100px;
+            width: 400px;
+            align-self: center;
+            text-align: center;
+        }
+
+        .progress-label {
+            font-size: 18px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 24px;
+            border: 2px solid #fff;
+            padding: 3px;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #fff;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        
+        .chime-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-size: 80px;
+            color: #fff;
+            opacity: 0;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        
+        .bezel-logo {
+            position: absolute;
+            bottom: 30px;
+            left: 50px;
+            width: 30px;
+            height: 38px;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            background: linear-gradient(180deg, #63B548 0%, #63B548 16.6%, #F6C829 16.6%, #F6C829 33.3%, #E57D25 33.3%, #E57D25 50%, #D83335 50%, #D83335 66.6%, #9C4595 66.6%, #9C4595 83.3%, #468CCF 83.3%, #468CCF 100%);
+            box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .vent-strip {
+            position: absolute;
+            bottom: 30px;
+            right: 50px;
+            width: 60px;
+            height: 20px;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 4px;
+        }
+        .vent-hole {
+            background: rgba(0,0,0,0.2);
+            border-radius: 2px;
+            box-shadow: inset 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+    </style>
+</head>
+<body vid="9">
+
+    <div class="crt-monitor-frame" vid="10">
+        <div class="bezel" vid="11">
+            <div class="screen-inset" vid="12">
+                <div class="crt-screen" vid="13">
+                    
+                    <div class="boot-log" id="bootLog" vid="14">
+                        <div class="boot-item" style="animation-delay: 0.5s" vid="15">FIG MINT ROM v1.0.42</div>
+                        <div class="boot-item" style="animation-delay: 1.0s" vid="16">CPU: NEURAL ENGINE 8-CORE... OK</div>
+                        <div class="boot-item" style="animation-delay: 1.5s" vid="17">MEM: 512K SYNAPSE ADDR... OK</div>
+                        <div class="boot-item" style="animation-delay: 2.0s" vid="18">DSK: 5.25" FLOPPY DRIVE... MOUNTED</div>
+                        <div class="boot-item" style="animation-delay: 2.5s" vid="19">OS: LOADING FIGOS 1.0...<span class="cursor" vid="20"></span></div>
+                    </div>
+
+                    <div class="loading-container" vid="21">
+                        <div class="progress-label" id="statusText" vid="22">Initializing Synapse</div>
+                        <div class="progress-bar" vid="23">
+                            <div class="progress-fill" id="progressFill" vid="24"></div>
+                        </div>
+                    </div>
+
+                    <div class="chime-text" id="chime" vid="25">Fig Mint.</div>
+                </div>
+            </div>
+
+            <div class="bezel-logo" vid="26"></div>
+            <div class="vent-strip" vid="27">
+                <div class="vent-hole" vid="28"></div><div class="vent-hole" vid="29"></div><div class="vent-hole" vid="30"></div>
+                <div class="vent-hole" vid="31"></div><div class="vent-hole" vid="32"></div><div class="vent-hole" vid="33"></div>
+            </div>
+        </div>
+    </div>
+
+    <script vid="34">
+        const fill = document.getElementById('progressFill');
+        const status = document.getElementById('statusText');
+        const chime = document.getElementById('chime');
+        const statuses = [
+            "Initializing Synapse...",
+            "Hydrating Neural Paths...",
+            "Indexing Memories...",
+            "Optimizing Thought...",
+            "Waking Fig Mint..."
+        ];
+
+        let progress = 0;
+        
+        function updateProgress() {
+            if (progress < 100) {
+                
+                progress += Math.random() * 2;
+                if (progress > 100) progress = 100;
+                
+                fill.style.width = progress + '%';
+                
+                
+                const statusIndex = Math.floor((progress / 100) * statuses.length);
+                if (statuses[statusIndex]) {
+                    status.innerText = statuses[statusIndex];
+                }
+
+                requestAnimationFrame(updateProgress);
+            } else {
+                
+                setTimeout(() => {
+                    
+                    chime.style.transition = "opacity 1.5s ease-in-out";
+                    chime.style.opacity = "1";
+                    
+                    
+                    setTimeout(() => {
+                        location.reload();
+                    }, 4000);
+                }, 500);
+            }
+        }
+
+        
+        setTimeout(updateProgress, 2600);
+    </script>
+
+
+</body></html>

@@ -1,0 +1,584 @@
+<html lang="zh-CN" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">Vibe &amp; Logic | 个人作品集 Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" vid="5">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" vid="6">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&amp;family=Outfit:wght@400;600;900&amp;display=swap" rel="stylesheet" vid="7">
+    <style vid="8">
+        :root {
+            --bg-warm: #F4F2F0;
+            --surface-base: #EBE7E4;
+            --surface-milled: #E0DAD5;
+            --orange-vibe: #FF5A1F;
+            --orange-glow: rgba(255, 90, 31, 0.4);
+            --ink-main: #322F2D;
+            --ink-muted: #827C77;
+            --white-edge: rgba(255, 255, 255, 0.85);
+            --shadow-soft: rgba(180, 170, 160, 0.5);
+            --mono-font: 'JetBrains Mono', monospace;
+            --sans-font: 'Outfit', sans-serif;
+            
+            --neu-out: 8px 8px 16px var(--shadow-soft), -8px -8px 16px var(--white-edge);
+            --neu-in: inset 4px 4px 8px var(--shadow-soft), inset -4px -4px 8px var(--white-edge);
+            --neu-btn: 4px 4px 8px var(--shadow-soft), inset 0 2px 4px var(--white-edge);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg-warm);
+            color: var(--ink-main);
+            font-family: var(--sans-font);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .layout-container {
+            width: 1400px;
+            height: 900px;
+            display: grid;
+            grid-template-columns: 420px 1fr;
+            gap: 24px;
+            padding: 24px;
+            position: relative;
+        }
+
+        
+        .sidebar {
+            background: var(--surface-base);
+            border-radius: 40px;
+            box-shadow: var(--neu-out);
+            display: flex;
+            flex-direction: column;
+            padding: 40px;
+            position: relative;
+            border: 1px solid var(--white-edge);
+        }
+
+        .avatar-container {
+            width: 100%;
+            aspect-ratio: 1;
+            background: radial-gradient(circle, #E6E1FF 0%, #D8D2F5 100%);
+            border-radius: 50%;
+            box-shadow: var(--neu-in);
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        .avatar-img {
+            width: 90%;
+            height: auto;
+            transform-origin: bottom center;
+            transition: transform 0.1s ease-out;
+            filter: drop-shadow(0 20px 30px rgba(0,0,0,0.15));
+            z-index: 2;
+        }
+
+        .sidebar-nav {
+            margin-top: auto;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+            margin-bottom: 12px;
+            background: var(--surface-base);
+            border-radius: 20px;
+            text-decoration: none;
+            color: var(--ink-main);
+            font-weight: 600;
+            box-shadow: var(--neu-btn);
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .nav-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 12px 12px 20px var(--shadow-soft), -8px -8px 16px var(--white-edge);
+        }
+
+        .nav-link.active {
+            box-shadow: var(--neu-in);
+            color: var(--orange-vibe);
+        }
+
+        .lang-switch {
+            font-family: var(--mono-font);
+            font-size: 11px;
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            color: var(--ink-muted);
+        }
+
+        .lang-active { color: var(--orange-vibe); font-weight: bold; }
+
+        
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            overflow-y: auto;
+            padding-right: 12px;
+            scrollbar-width: none;
+        }
+
+        .main-content::-webkit-scrollbar { display: none; }
+
+        .lab-card {
+            height: 420px;
+            overflow: hidden;
+        }
+
+        .insights-card {
+            height: 360px;
+            overflow: hidden;
+        }
+
+        .lab-card {
+            height: 420px;
+            overflow: hidden;
+        }
+
+        .insights-card {
+            height: 360px;
+            overflow: hidden;
+        }
+
+        .section-card {
+            background: var(--surface-base);
+            border-radius: 40px;
+            padding: 48px;
+            box-shadow: var(--neu-out);
+            border: 1px solid var(--white-edge);
+        }
+
+        .label-technical {
+            font-family: var(--mono-font);
+            font-size: 12px;
+            color: var(--orange-vibe);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .label-technical::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            background: var(--orange-vibe);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--orange-vibe);
+        }
+
+        h1 { font-size: 56px; font-weight: 900; line-height: 1.1; margin-bottom: 24px; letter-spacing: -2px; }
+        h2 { font-size: 32px; font-weight: 800; margin-bottom: 24px; }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        .about-text {
+            color: var(--ink-muted);
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        
+        .vibe-terminal {
+            background: #252321;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: inset 0 10px 30px rgba(0,0,0,0.5);
+            font-family: var(--mono-font);
+            color: #D1C5B8;
+            margin-top: 32px;
+            position: relative;
+        }
+
+        .terminal-header {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .dot { width: 10px; height: 10px; border-radius: 50%; background: #454240; }
+
+        .code-line { margin-bottom: 4px; font-size: 14px; }
+        .keyword { color: var(--orange-vibe); }
+        .string { color: #CBAC8E; }
+
+        .visualizer {
+            display: flex;
+            align-items: flex-end;
+            gap: 4px;
+            height: 40px;
+            margin-top: 16px;
+        }
+
+        .vis-bar {
+            flex: 1;
+            background: var(--orange-vibe);
+            border-radius: 2px 2px 0 0;
+            animation: bounce 1.2s infinite ease-in-out;
+        }
+
+        @keyframes bounce {
+            0%, 100% { height: 10%; }
+            50% { height: 80%; }
+        }
+
+        
+        .article-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .article-row:hover {
+            padding-left: 12px;
+            color: var(--orange-vibe);
+        }
+
+        .article-meta {
+            font-family: var(--mono-font);
+            font-size: 12px;
+            color: var(--ink-muted);
+        }
+
+        .article-title { font-weight: 600; font-size: 20px; }
+
+        
+        .puffy-btn {
+            background: var(--orange-vibe);
+            color: white;
+            padding: 16px 32px;
+            border-radius: 99px;
+            border: none;
+            font-weight: 700;
+            box-shadow: 0 10px 20px var(--orange-glow), inset 0 4px 6px rgba(255,255,255,0.3);
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 24px;
+        }
+
+        .puffy-btn:hover { transform: scale(1.05); }
+
+    </style>
+</head>
+<body vid="9">
+
+    <div class="layout-container" vid="10">
+        
+        
+        <aside class="sidebar" vid="11">
+            <div class="lang-switch" vid="12">
+                <span class="lang-active" vid="13">CN</span>
+                <span vid="14">/</span>
+                <span vid="15">EN</span>
+            </div>
+
+            <div class="avatar-container" vid="16">
+                
+                <img src="https://cdna.artstation.com/p/assets/images/images/043/515/340/large/danielle-m-character-sculpt.jpg?1637508496" alt="Character" class="avatar-img" id="avatar" vid="17">
+            </div>
+
+            <div style="margin-bottom: 40px;" vid="18">
+                <h1 style="font-size: 32px; margin-bottom: 8px;" vid="19">林静</h1>
+                <p class="text-mono" style="font-family: var(--mono-font); font-size: 12px; color: var(--ink-muted);" vid="20">独立创造者 &amp; AI BUILDER</p>
+            </div>
+
+            <nav class="sidebar-nav" vid="21">
+                <a href="#about" class="nav-link active" vid="22">
+                    <span vid="23">关于我 ABOUT</span>
+                    <span style="font-size: 18px;" vid="24">→</span>
+                </a>
+                <a href="#lab" class="nav-link" vid="25">
+                    <span vid="26">实验实验室 AI LAB</span>
+                    <span style="font-size: 18px;" vid="27">→</span>
+                </a>
+                <a href="#insights" class="nav-link" vid="28">
+                    <span vid="29">行业见解 INSIGHTS</span>
+                    <span style="font-size: 18px;" vid="30">→</span>
+                </a>
+            </nav>
+        </aside>
+
+        
+        <main class="main-content" vid="31">
+            
+            
+            <section id="about" class="section-card" vid="32">
+
+
+            
+            <section id="lab" class="section-card" vid="33">
+                <h2 vid="34" style="font-family: var(--sans-font); font-size: 36px; font-weight: 800; margin-bottom: 16px;">实战实验室</h2>
+                
+                <!-- Lab Content Area -->
+                <div style="display: flex; height: 320px; position: relative;" vid="35">
+                    
+                    <!-- Left Text Content -->
+                    <div style="width: 45%; padding-right: 40px; display: flex; flex-direction: column; justify-content: center;" vid="36">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;" vid="37">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--orange-vibe)" stroke-width="2" vid="38">
+                                <rect x="4" y="4" width="16" height="16" rx="2" vid="39"></rect>
+                                <rect x="9" y="9" width="6" height="6" vid="40"></rect>
+                                <line x1="9" y1="1" x2="9" y2="4" vid="41"></line>
+                                <line x1="15" y1="1" x2="15" y2="4" vid="42"></line>
+                                <line x1="9" y1="20" x2="9" y2="23" vid="43"></line>
+                                <line x1="15" y1="20" x2="15" y2="23" vid="44"></line>
+                                <line x1="20" y1="9" x2="23" y2="9" vid="45"></line>
+                                <line x1="20" y1="14" x2="23" y2="14" vid="46"></line>
+                                <line x1="1" y1="9" x2="4" y2="9" vid="47"></line>
+                                <line x1="1" y1="14" x2="4" y2="14" vid="48"></line>
+                            </svg>
+                            <span style="font-family: var(--mono-font); font-size: 12px; font-weight: 700; color: #8B5E34; letter-spacing: 1px; text-transform: uppercase;" vid="49">Builder's Lab</span>
+                        </div>
+                        
+                        <div style="background: var(--surface-base); border-radius: 20px; padding: 20px; box-shadow: var(--neu-in); margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.4);" vid="50">
+                            <div style="font-family: var(--mono-font); font-size: 11px; color: var(--orange-vibe); margin-bottom: 8px; display: flex; align-items: center; gap: 6px;" vid="51">
+                                <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--orange-vibe); display: block;" vid="52"></span>
+                                当前项目
+                            </div>
+                            <div style="font-weight: 700; font-size: 18px; color: var(--ink-main); line-height: 1.4;" vid="53">个人建站复盘：<br vid="54">拟物化与3D的融合</div>
+                        </div>
+                        
+                        <p style="font-size: 14px; color: var(--ink-muted); line-height: 1.7; margin-bottom: 24px;" vid="55">
+                            记录并开源日常的极客探索。本次项目尝试突破传统扁平化，利用纯 CSS 构建具有物理光影质感的新拟物态视觉系统，并加入深度的交互动效。
+                        </p>
+                        
+                        <button style="padding: 14px 24px; border-radius: 16px; background: var(--surface-base); box-shadow: var(--neu-btn); border: none; cursor: pointer; font-weight: 600; color: var(--ink-main); display: inline-flex; align-items: center; gap: 10px; font-size: 14px; transition: all 0.2s; width: fit-content;" onmouseover="this.style.transform='translateY(1px)'; this.style.boxShadow='inset 3px 3px 6px rgba(180,170,160,0.4), inset -3px -3px 6px rgba(255,255,255,0.8)'" onmouseout="this.style.transform=''; this.style.boxShadow='4px 4px 8px rgba(180,170,160,0.4), -4px -4px 8px rgba(255,255,255,0.8), inset 0 2px 4px rgba(255,255,255,0.3)'" vid="56">
+                            <span vid="57">探索源码与手记</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" vid="58">
+                                <path d="M5 12h14M12 5l7 7-7 7" vid="59"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <!-- Right 3D Computer Scene -->
+                    <div style="width: 55%; display: flex; align-items: center; justify-content: center; position: relative;" vid="60">
+                        
+                        <!-- Floating Code Lines (Blurred, become clear on hover) -->
+                        <div style="position: absolute; inset: 0; z-index: 5; font-family: var(--mono-font); font-size: 11px; pointer-events: none;" vid="61">
+                            <div style="position: absolute; top: 8%; left: 5%; background: rgba(235, 231, 224, 0.9); padding: 8px 12px; border-radius: 8px; box-shadow: 2px 2px 8px rgba(180,170,160,0.2); opacity: 0.4; filter: blur(1px); transition: all 0.6s ease;" class="code-float" vid="62">
+                                <span style="color: #8B5E34;" vid="63">import</span> { <span style="color: var(--orange-vibe);" vid="64">Neumorphism</span> } <span style="color: #8B5E34;" vid="65">from</span> 'ui-core';
+                            </div>
+                            <div style="position: absolute; bottom: 15%; right: 0; background: rgba(235, 231, 224, 0.9); padding: 8px 12px; border-radius: 8px; box-shadow: 2px 2px 8px rgba(180,170,160,0.2); opacity: 0.4; filter: blur(1px); transition: all 0.6s ease;" class="code-float" vid="66">
+                                box-shadow: <span style="color: #3B82F6;" vid="67">inset 8px 8px 16px</span>;
+                            </div>
+                            <div style="position: absolute; top: 40%; left: -5%; background: rgba(235, 231, 224, 0.9); padding: 8px 12px; border-radius: 8px; box-shadow: 2px 2px 8px rgba(180,170,160,0.2); opacity: 0.4; filter: blur(1px); transition: all 0.6s ease;" class="code-float" vid="68">
+                                <span style="color: #9333EA;" vid="69">render</span>(&lt;NeoCard /&gt;);
+                            </div>
+                        </div>
+                        
+                        <!-- 3D Computer Model -->
+                        <div style="position: relative; width: 280px; transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); transform: perspective(1200px) rotateY(-12deg) rotateX(8deg);" class="computer-3d" vid="70">
+                            
+                            <!-- Monitor Body -->
+                            <div style="background: var(--surface-base); border-radius: 28px; padding: 18px; box-shadow: 18px 18px 36px rgba(180,170,160,0.5), -18px -18px 36px rgba(255,255,255,0.9), inset 1px 1px 2px rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.6); display: flex; flex-direction: column; position: relative;" vid="71">
+                                
+                                <!-- Screen Container -->
+                                <div style="background: #EBE7DF; border-radius: 18px; padding: 14px; box-shadow: inset 4px 4px 8px rgba(180,170,160,0.4), inset -4px -4px 8px rgba(255,255,255,0.8); border: 1px solid rgba(61,49,42,0.05); position: relative; overflow: hidden;" vid="72">
+                                    
+                                    <!-- Glossy Reflection -->
+                                    <div style="position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; background: linear-gradient(135deg, rgba(255,255,255,0.7) 0%, transparent 100%); border-radius: 50%; filter: blur(25px); pointer-events: none; z-index: 10;" vid="73"></div>
+                                    
+                                    <!-- Screen Content -->
+                                    <div style="background: #F2EFE9; border-radius: 12px; box-shadow: inset 2px 2px 4px rgba(180,170,160,0.3); padding: 20px; font-family: var(--mono-font); font-size: 11px; color: #82756A; line-height: 1.7; position: relative; min-height: 140px;" vid="74">
+                                        <!-- Window Dots -->
+                                        <div style="display: flex; gap: 6px; margin-bottom: 14px;" vid="75">
+                                            <div style="width: 10px; height: 10px; border-radius: 50%; background: #DEDBD1; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.1);" vid="76"></div>
+                                            <div style="width: 10px; height: 10px; border-radius: 50%; background: #DEDBD1; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.1);" vid="77"></div>
+                                            <div style="width: 10px; height: 10px; border-radius: 50%; background: #DEDBD1; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.1);" vid="78"></div>
+                                        </div>
+                                        
+                                        <!-- Terminal Lines -->
+                                        <div vid="79">&gt; system.init()</div>
+                                        <div vid="80">&gt; loading modules... <span style="color: var(--orange-vibe); font-weight: 700;" vid="81">100%</span></div>
+                                        <div vid="82">&gt; building ui grid...</div>
+                                        <div style="color: var(--ink-main); font-weight: 700; margin-top: 10px;" vid="83">&gt; status: <span style="color: var(--orange-vibe); animation: blink 1s infinite;" vid="84">online_</span></div>
+                                        
+                                        <style vid="85">@keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }</style>
+                                    </div>
+                                </div>
+                                
+                                <!-- Monitor Controls -->
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 14px 24px 0;" vid="86">
+                                    <div style="display: flex; gap: 10px;" vid="87">
+                                        <div style="width: 24px; height: 5px; border-radius: 3px; background: var(--surface-milled); box-shadow: inset 2px 2px 4px rgba(180,170,160,0.4), inset -2px -2px 4px rgba(255,255,255,0.8);" vid="88"></div>
+                                        <div style="width: 24px; height: 5px; border-radius: 3px; background: var(--surface-milled); box-shadow: inset 2px 2px 4px rgba(180,170,160,0.4), inset -2px -2px 4px rgba(255,255,255,0.8);" vid="89"></div>
+                                    </div>
+                                    
+                                    <!-- Status Light -->
+                                    <div style="width: 10px; height: 10px; border-radius: 50%; background: #DEDBD1; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.1); transition: all 0.3s;" class="status-light" vid="90"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Stand Neck -->
+                            <div style="width: 55px; height: 35px; background: linear-gradient(145deg, var(--surface-base), #EBE8DE); margin: 0 auto; border-radius: 0 0 14px 14px; box-shadow: 8px 8px 16px rgba(180,170,160,0.4), -8px -8px 16px rgba(255,255,255,0.6); position: relative; z-index: -1; border: 1px solid rgba(255,255,255,0.4); border-top: none;" vid="91"></div>
+                            
+                            <!-- Stand Base -->
+                            <div style="width: 120px; height: 16px; background: linear-gradient(145deg, var(--surface-base), #EBE8DE); margin: 0 auto; border-radius: 10px; box-shadow: 6px 6px 12px rgba(180,170,160,0.4), -6px -6px 12px rgba(255,255,255,0.6); position: relative; z-index: -2; border: 1px solid rgba(255,255,255,0.4);" vid="92"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            
+            <section id="insights" class="section-card" vid="93">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;" vid="94">
+                    <div vid="95">
+                        <h2 style="margin-bottom: 0; font-size: 36px; font-weight: 800;" vid="96">行业洞察</h2>
+                        <p style="font-family: var(--mono-font); font-size: 12px; color: var(--ink-muted); margin-top: 8px; letter-spacing: 1px;" vid="97">// INSIGHTS</p>
+                    </div>
+                    <div style="display: flex; gap: 12px;" vid="98">
+                        <div style="width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(145deg, #E8E4E0, #F5F2F0); box-shadow: 6px 6px 12px rgba(180,170,160,0.4), -4px -4px 8px rgba(255,255,255,0.8); display: flex; align-items: center; justify-content: center;" vid="99">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#827C77" stroke-width="2" vid="100">
+                                <circle cx="12" cy="12" r="3" vid="101"></circle>
+                                <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1" vid="102"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                
+                <p style="font-size: 16px; color: var(--ink-muted); margin-bottom: 32px; max-width: 600px; line-height: 1.6;" vid="103">
+                    技术之外的思考。关于独立开发、产品商业化与AI时代个体生存指南的深度探讨与播客记录。
+                </p>
+
+                <!-- Podcast Player Card -->
+                <div style="background: linear-gradient(145deg, #F5F2F0, #E8E4E0); border-radius: 32px; padding: 32px; box-shadow: 16px 16px 32px rgba(180,170,160,0.4), -8px -8px 16px rgba(255,255,255,0.9), inset 2px 2px 4px rgba(255,255,255,0.5); position: relative; border: 1px solid rgba(255,255,255,0.6);" vid="104">
+                    <div style="display: flex; align-items: center; gap: 24px;" vid="105">
+                        <!-- Play Button -->
+                        <button style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(145deg, #FF5A1F, #E84E15); box-shadow: 8px 8px 16px rgba(255,90,31,0.3), -4px -4px 8px rgba(255,255,255,0.4), inset 2px 2px 4px rgba(255,255,255,0.3); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" vid="106">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="white" vid="107">
+                                <polygon points="5,3 19,12 5,21" vid="108"></polygon>
+                            </svg>
+                        </button>
+                        
+                        <!-- Episode Info -->
+                        <div style="flex: 1;" vid="109">
+                            <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px;" vid="110">
+                                <span style="font-family: var(--mono-font); font-size: 13px; color: var(--orange-vibe); font-weight: 700;" vid="111">第42卷</span>
+                                <span style="color: var(--ink-muted);" vid="112">•</span>
+                                <span style="font-family: var(--mono-font); font-size: 13px; color: var(--ink-muted);" vid="113">45分钟</span>
+                            </div>
+                            <h3 style="font-size: 24px; font-weight: 700; margin-bottom: 8px; line-height: 1.4;" vid="114">AI时代的独立开发生存指南<br vid="115">与商业化实践</h3>
+                        </div>
+                        
+                        <!-- Volume Icon -->
+                        <div style="display: flex; align-items: center; gap: 12px;" vid="116">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#827C77" stroke-width="2" vid="117">
+                                <polygon points="11,5 6,9 2,9 2,15 6,15 11,19" vid="118"></polygon>
+                                <path d="M15,8a5,5 0 0 1 0,8" vid="119"></path>
+                            </svg>
+                            <div style="width: 60px; height: 4px; background: rgba(130,124,119,0.2); border-radius: 2px; position: relative;" vid="120">
+                                <div style="position: absolute; left: 0; top: 0; height: 100%; width: 70%; background: #827C77; border-radius: 2px;" vid="121">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Progress Bar with Audio Waveform -->
+                    <div style="display: flex; align-items: center; gap: 16px; margin-top: 24px;" vid="122">
+                        <span style="font-family: var(--mono-font); font-size: 13px; color: var(--ink-muted);" vid="123">12:40</span>
+                        <div style="flex: 1; display: flex; align-items: center; gap: 3px; height: 40px;" vid="124">
+                            <div style="width: 3px; height: 20%; background: rgba(130,124,119,0.3); border-radius: 2px;" vid="125">
+                            <div style="width: 3px; height: 35%; background: rgba(130,124,119,0.3); border-radius: 2px;" vid="126">
+                            <div style="width: 3px; height: 60%; background: rgba(130,124,119,0.4); border-radius: 2px;" vid="127">
+                            <div style="width: 3px; height: 85%; background: var(--orange-vibe); border-radius: 2px;" vid="128">
+                            <div style="width: 3px; height: 70%; background: var(--orange-vibe); border-radius: 2px;" vid="129">
+                            <div style="width: 3px; height: 90%; background: var(--orange-vibe); border-radius: 2px;" vid="130">
+                            <div style="width: 3px; height: 45%; background: rgba(130,124,119,0.3); border-radius: 2px;" vid="131">
+                            <div style="width: 3px; height: 30%; background: rgba(130,124,119,0.3); border-radius: 2px;" vid="132">
+                            <div style="width: 3px; height: 55%; background: rgba(130,124,119,0.3); border-radius: 2px;" vid="133">
+                            <div style="width: 3px; height: 25%; background: rgba(130,124,119,0.3); border-radius: 2px;" vid="134">
+                            <div style="width: 3px; height: 40%; background: rgba(130,124,119,0.3); border-radius: 2px;" vid="135">
+                            <div style="width: 3px; height: 50%; background: rgba(130,124,119,0.3); border-radius: 2px;" vid="136">
+                            <div style="width: 3px; height: 35%; background: rgba(130,124,119,0.3); border-radius: 2px;" vid="137">
+                            <div style="width: 3px; height: 20%; background: rgba(130,124,119,0.3); border-radius: 2px;" vid="138">
+                            <div style="width: 3px; height: 45%; background: rgba(130,124,119,0.3); border-radius: 2px;" vid="139">
+                            <div style="width: 3px; height: 30%; background: rgba(130,124,119,0.3); border-radius: 2px;" vid="140">
+                            <div style="width: 3px; height: 15%; background: rgba(130,124,119,0.3); border-radius: 2px;" vid="141">
+                            <div style="width: 3px; height: 25%; background: rgba(130,124,119,0.3); border-radius: 2px;" vid="142">
+                            <div style="width: 3px; height: 35%; background: rgba(130,124,119,0.3); border-radius: 2px;" vid="143">
+                            <div style="width: 3px; height: 20%; background: rgba(130,124,119,0.3); border-radius: 2px;" vid="144">
+                            <div style="width: 3px; height: 40%; background: rgba(130,124,119,0.3); border-radius: 2px;" vid="145">
+                            <div style="width: 3px; height: 50%; background: rgba(130,124,119,0.3); border-radius: 2px;" vid="146">
+                            <div style="width: 3px; height: 30%; background: rgba(130,124,119,0.3); border-radius: 2px;" vid="147">
+                            <div style="width: 3px; height: 25%; background: rgba(130,124,119,0.3); border-radius: 2px;" vid="148">
+                        </div>
+                        <span style="font-family: var(--mono-font); font-size: 13px; color: var(--ink-muted);" vid="149">-32:20</span>
+                    </div>
+                </div>
+
+                <!-- Article Links -->
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 24px;" vid="150">
+                    <a href="#" style="display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; background: linear-gradient(145deg, #F5F2F0, #E8E4E0); border-radius: 20px; box-shadow: 6px 6px 12px rgba(180,170,160,0.3), -4px -4px 8px rgba(255,255,255,0.6); text-decoration: none; color: inherit; transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'" vid="151">
+                        <div vid="152">
+                            <div style="font-size: 15px; font-weight: 600; margin-bottom: 4px;" vid="153">从扁平化到触感化</div>
+                            <div style="font-family: var(--mono-font); font-size: 11px; color: var(--ink-muted);" vid="154">2024.10 // DESIGN THEORY</div>
+                        </div>
+                        <span style="color: var(--orange-vibe); font-size: 20px;" vid="155">→</span>
+                    </a>
+                    <a href="#" style="display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; background: linear-gradient(145deg, #F5F2F0, #E8E4E0); border-radius: 20px; box-shadow: 6px 6px 12px rgba(180,170,160,0.3), -4px -4px 8px rgba(255,255,255,0.6); text-decoration: none; color: inherit; transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'" vid="156">
+                        <div vid="157">
+                            <div style="font-size: 15px; font-weight: 600; margin-bottom: 4px;" vid="158">数字机械与新拟态</div>
+                            <div style="font-family: var(--mono-font); font-size: 11px; color: var(--ink-muted);" vid="159">2024.05 // PRODUCT OPS</div>
+                        </div>
+                        <span style="color: var(--orange-vibe); font-size: 20px;" vid="160">→</span>
+                    </a>
+                </div>
+            </div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></section>
+
+            <footer style="text-align: center; padding: 40px; color: var(--ink-muted); font-family: var(--mono-font); font-size: 11px;" vid="161">
+                END_OF_TRANSMISSION // © 2024 VANCE.LOGIC
+            </footer>
+        </section></main>
+    </div>
+
+    <script vid="162">
+        const avatar = document.getElementById('avatar');
+        document.addEventListener('mousemove', (e) => {
+            const x = (window.innerWidth / 2 - e.pageX) / 45;
+            const y = (window.innerHeight / 2 - e.pageY) / 45;
+            avatar.style.transform = `translateX(${x}px) translateY(${y}px) rotateX(${-y}deg) rotateY(${x}deg)`;
+        });
+    </script>
+
+</body></html>

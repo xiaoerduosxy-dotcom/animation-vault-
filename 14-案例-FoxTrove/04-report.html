@@ -1,0 +1,413 @@
+<html lang="en" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">FoxTrove | Operations Intelligence Report</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" vid="5">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" vid="6">
+    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet" vid="7">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" vid="8"></script>
+    
+    <style vid="9">
+        :root {
+            --bg: #1D1818;
+            --clay: #FAD9D3;
+            --acid: #FFFFFF;
+            --text-main: #E8E4E3;
+            --text-muted: #959190;
+            --grid-line: rgba(255, 255, 255, 0.05);
+            --grid-line-strong: rgba(255, 255, 255, 0.15);
+            --surface: #332E2D;
+            --danger: #FF5A5A;
+            --warning: #FFB35A;
+            
+            --font-display: 'DotGothic16', monospace;
+            --font-body: 'Inter', sans-serif;
+            
+            --container-padding: 4vw;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .system-grid {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 1;
+            background-size: 24px 24px;
+            background-image: radial-gradient(circle, var(--grid-line-strong) 1px, transparent 1px);
+        }
+
+        nav {
+            position: relative;
+            padding: 2rem var(--container-padding);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            border-bottom: 1px solid var(--grid-line);
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            text-transform: uppercase;
+        }
+
+        .report-meta {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .meta-label {
+            font-family: var(--font-body);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        main {
+            position: relative;
+            z-index: 10;
+            padding: 4vh var(--container-padding);
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 2rem;
+        }
+
+        .header-block {
+            grid-column: span 12;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-family: var(--font-display);
+            font-size: 4rem;
+            text-transform: uppercase;
+            line-height: 1;
+            margin-top: 0.5rem;
+        }
+
+        .score-card {
+            grid-column: span 4;
+            background: var(--surface);
+            border-radius: 32px;
+            padding: 3rem;
+            border: 1px solid var(--grid-line-strong);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .score-value {
+            font-family: var(--font-display);
+            font-size: 8rem;
+            color: var(--clay);
+            line-height: 1;
+        }
+
+        .radar-container {
+            grid-column: span 8;
+            background: var(--surface);
+            border-radius: 32px;
+            padding: 3rem;
+            border: 1px solid var(--grid-line-strong);
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .radar-svg {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+        }
+
+        .bottleneck-section {
+            grid-column: span 5;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .priority-section {
+            grid-column: span 7;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .card-header {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .flag-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--grid-line-strong);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .flag-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+            margin-top: 4px;
+            flex-shrink: 0;
+        }
+
+        .flag-danger { background: var(--danger); box-shadow: 0 0 15px var(--danger); }
+        .flag-warning { background: var(--warning); box-shadow: 0 0 15px var(--warning); }
+
+        .fix-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .fix-item {
+            display: grid;
+            grid-template-columns: 60px 1fr 120px;
+            align-items: center;
+            padding: 1.5rem;
+            background: var(--surface);
+            border-radius: 20px;
+            border-left: 4px solid var(--clay);
+            transition: transform 0.3s ease;
+        }
+
+        .fix-item:hover {
+            transform: translateX(10px);
+        }
+
+        .fix-id {
+            font-family: var(--font-display);
+            color: var(--text-muted);
+        }
+
+        .fix-content h4 {
+            font-family: var(--font-body);
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .fix-content p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .fix-impact {
+            text-align: right;
+            font-family: var(--font-display);
+            color: var(--clay);
+        }
+
+        .star-motif {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 0.5; }
+            100% { transform: scale(1.1); opacity: 0; }
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--clay);
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .pulse-dot::after {
+            content: '';
+            position: absolute;
+            top: -4px; left: -4px; right: -4px; bottom: -4px;
+            border: 1px solid var(--clay);
+            border-radius: 50%;
+            animation: pulse-ring 2s infinite;
+        }
+    </style>
+</head>
+<body vid="10">
+    <div class="system-grid" vid="11"></div>
+
+    <nav vid="12">
+        <div class="logo" vid="13">FOXTROVE // INTEL</div>
+        <div class="report-meta" vid="14">
+            <div vid="15">
+                <span class="meta-label" vid="16">Subject:</span>
+                <span style="font-family: var(--font-display);" vid="17">OAKWOOD_LOGISTICS_GRP</span>
+            </div>
+            <div vid="18">
+                <span class="meta-label" vid="19">Audit ID:</span>
+                <span style="font-family: var(--font-display);" vid="20">FT-992-X</span>
+            </div>
+            <div class="pulse-dot" vid="21"></div>
+        </div>
+    </nav>
+
+    <main vid="22">
+        <div class="header-block" vid="23">
+            <span class="meta-label" vid="24">[OPERATIONAL MATURITY REPORT]</span>
+            <h1 vid="25">Intelligence Recap.</h1>
+        </div>
+
+        <div class="score-card" vid="26">
+            <span class="meta-label" vid="27">Composite Score</span>
+            <div class="score-value" vid="28">64</div>
+            <p class="meta-label" style="color: var(--clay); margin-top: 1rem;" vid="29">Maturity Level: Transitioning</p>
+            <div style="margin-top: 2rem; width: 100%; height: 1px; background: var(--grid-line-strong);" vid="30"></div>
+            <p style="margin-top: 2rem; font-size: 0.9rem; color: var(--text-muted); line-height: 1.5;" vid="31">Your infrastructure is stable but suffers from high coordination drag in decision-making and data visibility.</p>
+        </div>
+
+        <div class="radar-container" vid="32">
+            <svg class="radar-svg" viewBox="0 0 400 400" vid="33">
+                
+                <circle cx="200" cy="200" r="150" fill="none" stroke="var(--grid-line-strong)" stroke-width="1" vid="34"></circle>
+                <circle cx="200" cy="200" r="100" fill="none" stroke="var(--grid-line-strong)" stroke-width="1" vid="35"></circle>
+                <circle cx="200" cy="200" r="50" fill="none" stroke="var(--grid-line-strong)" stroke-width="1" vid="36"></circle>
+                
+                
+                <line x1="200" y1="50" x2="200" y2="350" stroke="var(--grid-line-strong)" vid="37"></line>
+                <line x1="70" y1="125" x2="330" y2="275" stroke="var(--grid-line-strong)" vid="38"></line>
+                <line x1="70" y1="275" x2="330" y2="125" stroke="var(--grid-line-strong)" vid="39"></line>
+
+                
+                <polygon points="200,80 320,150 290,280 200,320 80,260 110,140" fill="rgba(250, 217, 211, 0.2)" stroke="var(--clay)" stroke-width="2" vid="40"></polygon>
+
+                
+                <text x="200" y="35" text-anchor="middle" fill="var(--text-muted)" font-family="DotGothic16" font-size="12" vid="41">WORKFLOWS</text>
+                <text x="350" y="140" text-anchor="start" fill="var(--text-muted)" font-family="DotGothic16" font-size="12" vid="42">DATA</text>
+                <text x="350" y="280" text-anchor="start" fill="var(--text-muted)" font-family="DotGothic16" font-size="12" vid="43">DECISION</text>
+                <text x="200" y="375" text-anchor="middle" fill="var(--text-muted)" font-family="DotGothic16" font-size="12" vid="44">AUTOMATION</text>
+                <text x="50" y="280" text-anchor="end" fill="var(--text-muted)" font-family="DotGothic16" font-size="12" vid="45">TALENT</text>
+                <text x="50" y="140" text-anchor="end" fill="var(--text-muted)" font-family="DotGothic16" font-size="12" vid="46">GOVERNANCE</text>
+            </svg>
+        </div>
+
+        <div class="bottleneck-section" vid="47">
+            <div class="card-header" vid="48">
+                <svg class="star-motif" style="color: var(--danger);" vid="49"><path d="M12 0L13.5 10.5L24 12L13.5 13.5L12 24L10.5 13.5L0 12L10.5 10.5L12 0Z" vid="50"></path></svg>
+                System Leakage
+            </div>
+            
+            <div class="flag-item" vid="51">
+                <div class="flag-indicator flag-danger" vid="52"></div>
+                <div vid="53">
+                    <span class="meta-label" vid="54">Critical / Data Integrity</span>
+                    <h4 style="margin: 0.5rem 0 0.25rem;" vid="55">Manual Reconciliation Loop</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-muted);" vid="56">Invoices are hand-matched across 3 platforms, creating a 4% margin of error and $12k/mo in direct leakage.</p>
+                </div>
+            </div>
+
+            <div class="flag-item" vid="57">
+                <div class="flag-indicator flag-warning" vid="58"></div>
+                <div vid="59">
+                    <span class="meta-label" vid="60">Warning / Automation</span>
+                    <h4 style="margin: 0.5rem 0 0.25rem;" vid="61">Talent Misallocation</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-muted);" vid="62">Senior operators spending 14hrs/week on status reporting that could be handled by a telemetry layer.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="priority-section" vid="63">
+            <div class="card-header" vid="64">
+                <svg class="star-motif" style="color: var(--clay);" vid="65"><path d="M12 0L13.5 10.5L24 12L13.5 13.5L12 24L10.5 13.5L0 12L10.5 10.5L12 0Z" vid="66"></path></svg>
+                Prioritized Fix List
+            </div>
+            
+            <div class="fix-list" vid="67">
+                <div class="fix-item" vid="68">
+                    <div class="fix-id" vid="69">01</div>
+                    <div class="fix-content" vid="70">
+                        <h4 vid="71">Automated Invoice Matching Build</h4>
+                        <p vid="72">Eliminate manual data entry between ERP and Billing system.</p>
+                    </div>
+                    <div class="fix-impact" vid="73">+$12k/MO</div>
+                </div>
+
+                <div class="fix-item" vid="74">
+                    <div class="fix-id" vid="75">02</div>
+                    <div class="fix-content" vid="76">
+                        <h4 vid="77">Unified Operations Dashboard</h4>
+                        <p vid="78">Real-time telemetry layer to replace weekly manual reporting.</p>
+                    </div>
+                    <div class="fix-impact" vid="79">-56HRS/MO</div>
+                </div>
+
+                <div class="fix-item" vid="80">
+                    <div class="fix-id" vid="81">03</div>
+                    <div class="fix-content" vid="82">
+                        <h4 vid="83">Client Onboarding Protocol</h4>
+                        <p vid="84">Standardized document extraction for faster client kickoffs.</p>
+                    </div>
+                    <div class="fix-impact" vid="85">CAPACITY+</div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 2rem; display: flex; justify-content: flex-end;" vid="86">
+                <a href="#" style="text-decoration: none; display: flex; align-items: center; gap: 1rem; background: var(--clay); color: var(--bg); padding: 1rem 2rem; border-radius: 50px; font-weight: 500;" vid="87">
+                    Initiate Build Phase 01
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" vid="88"><path d="M5 12h14M12 5l7 7-7 7" vid="89"></path></svg>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <script vid="90">
+        
+        window.addEventListener('load', () => {
+            gsap.from('main > *', {
+                y: 30,
+                opacity: 0,
+                duration: 1,
+                stagger: 0.1,
+                ease: "power3.out"
+            });
+
+            gsap.from('.score-value', {
+                textContent: 0,
+                duration: 2,
+                ease: "power2.out",
+                snap: { textContent: 1 }
+            });
+
+            gsap.from('polygon', {
+                scale: 0,
+                transformOrigin: "center center",
+                duration: 1.5,
+                delay: 0.5,
+                ease: "elastic.out(1, 0.5)"
+            });
+        });
+    </script>
+</body></html>

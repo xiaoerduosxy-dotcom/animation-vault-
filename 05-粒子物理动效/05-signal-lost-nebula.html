@@ -1,0 +1,226 @@
+<html lang="en" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">Signal Lost - Cosmic Nebula</title>
+    <script src="https://cdn.tailwindcss.com/3.4.17" vid="5"></script>
+    <style vid="6">
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #050505; 
+        }
+        
+        #canvas-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: #000;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            filter: grayscale(1) contrast(1.2);
+        }
+
+        .title-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            text-align: center;
+            z-index: 20;
+            user-select: none;
+            width: 100%;
+        }
+
+        .glow-text {
+            color: rgba(255, 255, 255, 0.95);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-weight: 500;
+            font-size: 2.25rem;
+            letter-spacing: 0.3em;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.8), 
+                         0 0 30px rgba(200, 200, 200, 0.4);
+            margin-left: 0.3em;
+            animation: flicker 4s infinite;
+        }
+
+        .sub-glow-text {
+            color: rgba(200, 200, 200, 0.6);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.875rem;
+            letter-spacing: 0.5em;
+            text-transform: uppercase;
+            margin-top: 1.5rem;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes flicker {
+            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+            20%, 24%, 55% { opacity: 0.4; }
+        }
+
+        .static-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/5/5a/Can_Static_Noise.gif');
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: 15;
+            mix-blend-mode: screen;
+        }
+
+        .vignette {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.8) 100%);
+            z-index: 16;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body vid="7">
+
+    <div id="canvas-container" vid="8">
+        <div class="static-overlay" vid="9"></div>
+        <div class="vignette" vid="10"></div>
+        <canvas id="nebulaCanvas" vid="11"></canvas>
+        <div class="title-overlay" vid="12">
+            <h1 class="glow-text" vid="13">信号中断</h1>
+            <p class="sub-glow-text" vid="14">Connection Lost / Synchronizing...</p>
+        </div>
+    </div>
+
+    <script vid="15">
+        const canvas = document.getElementById('nebulaCanvas');
+        const ctx = canvas.getContext('2d', { alpha: false }); 
+        
+        let width, height, cx, cy;
+        let particles = [];
+        const PARTICLE_COUNT = 1500; 
+        let time = 0;
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            cx = width / 2;
+            cy = height / 2;
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() {
+                this.init();
+                this.angle = Math.random() * Math.PI * 2;
+            }
+
+            init() {
+                const distanceBias = Math.pow(Math.random(), 2.5);
+                this.radius = distanceBias * (width * 0.7); 
+                this.angle = Math.random() * Math.PI * 2;
+                this.speed = (Math.random() * 0.0005 + 0.0002) * (1000 / (this.radius + 100)); 
+                this.baseSize = Math.random() * 0.8 + 0.1;
+                
+                
+                const gray = Math.floor(Math.random() * 155 + 100);
+                const alpha = Math.random() * 0.3 + 0.2; 
+                this.color = `rgba(${gray}, ${gray}, ${gray}, ${alpha})`;
+            }
+
+            update() {
+                
+                if (Math.random() > 0.99) {
+                    this.angle += (Math.random() - 0.5) * 0.1;
+                }
+                this.angle += this.speed;
+            }
+
+            draw() {
+                const twist = this.radius * 0.003;
+                const a = this.angle + twist;
+                const x = Math.cos(a) * this.radius;
+                const z = Math.sin(a) * this.radius;
+                const warp = Math.sin(this.angle * 2) * (this.radius * 0.35);
+                const tilt = 0.2;
+                const y = z * tilt + warp;
+
+                const drawX = cx + x;
+                const drawY = cy + y;
+
+                let scale = 1 + (z * 0.001);
+                const finalSize = this.baseSize * scale;
+
+                if (drawX > 0 && drawX < width && drawY > 0 && drawY < height) {
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    
+                    ctx.rect(drawX, drawY, finalSize, finalSize);
+                    ctx.fill();
+                }
+            }
+        }
+
+        for (let i = 0; i < PARTICLE_COUNT; i++) {
+            particles.push(new Particle());
+        }
+
+        function drawCentralGlow() {
+            
+            const coreGradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, 180);
+            coreGradient.addColorStop(0, 'rgba(100, 100, 100, 0.3)');
+            coreGradient.addColorStop(0.5, 'rgba(40, 40, 40, 0.1)');
+            coreGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+
+            ctx.globalCompositeOperation = 'lighter';
+            ctx.fillStyle = coreGradient;
+            ctx.fillRect(cx - 300, cy - 300, 600, 600);
+        }
+
+        function drawStatic() {
+            
+            if (Math.random() > 0.95) {
+                const h = Math.random() * 2;
+                const y = Math.random() * height;
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+                ctx.fillRect(0, y, width, h);
+            }
+        }
+
+        function animate() {
+            time += 0.01;
+
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.fillStyle = 'rgba(2, 2, 2, 0.3)'; 
+            ctx.fillRect(0, 0, width, height);
+
+            ctx.globalCompositeOperation = 'lighter';
+
+            drawCentralGlow();
+            drawStatic();
+
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+
+</body></html>

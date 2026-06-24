@@ -1,0 +1,400 @@
+<html lang="en" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">Aura Capital | Origination Network</title>
+    <style vid="5">
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+        :root {
+            --bg-color: #7a7a7a;
+            --card-color: #f2f1ed;
+            --ink-color: #0c0c0c;
+            --hairline: 1px solid var(--ink-color);
+            --accent-glow: rgba(12, 12, 12, 0.4);
+            --font-stack: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body, html {
+            width: 1280px;
+            height: 960px;
+            font-family: var(--font-stack);
+            color: var(--ink-color);
+            background-color: var(--bg-color);
+            overflow: hidden;
+        }
+
+        .background-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            filter: grayscale(100%) blur(12px) brightness(0.5);
+            z-index: 1;
+        }
+
+        .app-wrapper {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 24px 40px;
+        }
+
+        .global-bar {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            width: 100%;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(242, 241, 237, 0.3);
+            color: #f2f1ed;
+            font-size: 13px;
+            margin-bottom: 24px;
+        }
+
+        .global-bar .center { text-align: center; }
+        .global-bar .right { text-align: right; }
+
+        .main-card {
+            background-color: var(--card-color);
+            border-radius: 20px;
+            flex-grow: 1;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.3);
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        
+        .map-container {
+            padding: 40px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            border-right: var(--hairline);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 40px;
+        }
+
+        .title-group h1 {
+            font-size: 64px;
+            font-weight: 500;
+            line-height: 0.9;
+            letter-spacing: -0.04em;
+        }
+
+        .local-nav {
+            display: flex;
+            gap: 40px;
+            font-size: 13px;
+            padding-top: 8px;
+        }
+
+        .local-nav a {
+            color: var(--ink-color);
+            text-decoration: none;
+            opacity: 0.6;
+        }
+
+        .local-nav a.active {
+            opacity: 1;
+            font-weight: 600;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+
+        .map-visual {
+            flex-grow: 1;
+            position: relative;
+            background-image: url("data:image/svg+xml,%3Csvg width='800' height='400' viewBox='0 0 800 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M120 100h20v10h-20zM380 80h15v8h-15zM550 150h30v15h-30zM680 280h25v10h-25z' fill='%23000' fill-opacity='0.05'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        
+        .network-svg {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .node {
+            fill: var(--ink-color);
+            transition: r 0.3s ease;
+        }
+
+        .node-ring {
+            fill: none;
+            stroke: var(--ink-color);
+            stroke-width: 1;
+            opacity: 0.3;
+            animation: pulse 3s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.3; }
+            100% { transform: scale(2.5); opacity: 0; }
+        }
+
+        .connection-line {
+            stroke: var(--ink-color);
+            stroke-width: 0.5;
+            stroke-dasharray: 4 4;
+            opacity: 0.2;
+        }
+
+        .active-beam {
+            stroke: var(--ink-color);
+            stroke-width: 1.5;
+            fill: none;
+            stroke-dasharray: 100;
+            stroke-dashoffset: 100;
+            animation: beamMove 4s linear infinite;
+        }
+
+        @keyframes beamMove {
+            to { stroke-dashoffset: -100; }
+        }
+
+        .city-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        
+        .sidebar {
+            padding: 40px 24px;
+            display: flex;
+            flex-direction: column;
+            background-color: rgba(0,0,0,0.02);
+        }
+
+        .sidebar-title {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 32px;
+            padding-bottom: 12px;
+            border-bottom: var(--hairline);
+        }
+
+        .pipeline-group {
+            margin-bottom: 40px;
+        }
+
+        .region-tag {
+            font-size: 11px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .deal-item {
+            margin-bottom: 20px;
+            padding-left: 12px;
+            border-left: 1px solid rgba(12,12,12,0.1);
+        }
+
+        .deal-name {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .deal-meta {
+            font-size: 12px;
+            opacity: 0.6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #000;
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+        .status-dot.active { background: #22c55e; box-shadow: 0 0 8px rgba(34, 197, 94, 0.5); }
+        .status-dot.pending { background: #eab308; }
+
+        .sidebar-footer {
+            margin-top: auto;
+            font-size: 12px;
+            line-height: 1.5;
+            opacity: 0.5;
+        }
+
+    </style>
+</head>
+<body vid="6">
+
+    <div class="background-layer" vid="7"></div>
+
+    <div class="app-wrapper" vid="8">
+        <header class="global-bar" vid="9">
+            <div class="left" vid="10">Aura Capital Partners</div>
+            <div class="center" vid="11">Cross-Border Private Debt</div>
+            <div class="right" vid="12">Q3 Report, 2024</div>
+        </header>
+
+        <main class="main-card" vid="13">
+            
+            <section class="map-container" vid="14">
+                <div class="header-top" vid="15">
+                    <div class="title-group" vid="16">
+                        <h1 vid="17">Origination<br vid="18">Network</h1>
+                    </div>
+                    <nav class="local-nav" vid="19">
+                        <a href="#" vid="20">Strategy</a>
+                        <a href="#" class="active" vid="21">Origination</a>
+                        <a href="#" vid="22">Network</a>
+                        <a href="#" vid="23">Contact</a>
+                    </nav>
+                </div>
+
+                <div class="map-visual" vid="24">
+                    
+                    <svg class="network-svg" viewBox="0 0 800 400" vid="25">
+                        <defs vid="26">
+                            <filter id="glow" vid="27">
+                                <feGaussianBlur stdDeviation="2" result="coloredBlur" vid="28"></feGaussianBlur>
+                                <feMerge vid="29">
+                                    <feMergeNode in="coloredBlur" vid="30"></feMergeNode>
+                                    <feMergeNode in="SourceGraphic" vid="31"></feMergeNode>
+                                </feMerge>
+                            </filter>
+                        </defs>
+
+                        
+                        <path d="M180,120 Q350,100 520,130" class="connection-line" fill="none" vid="32"></path> 
+                        <path d="M520,130 Q600,160 650,180" class="connection-line" fill="none" vid="33"></path> 
+                        <path d="M650,180 Q680,240 700,300" class="connection-line" fill="none" vid="34"></path> 
+                        <path d="M180,120 Q440,300 700,300" class="connection-line" fill="none" vid="35"></path> 
+
+                        
+                        <path d="M180,120 Q350,100 520,130" class="active-beam" filter="url(#glow)" vid="36"></path>
+                        <path d="M650,180 Q680,240 700,300" class="active-beam" style="animation-delay: -2s;" vid="37"></path>
+
+                        
+                        <g transform="translate(180, 120)" vid="38">
+                            <circle class="node-ring" r="8" vid="39"></circle>
+                            <circle class="node" r="4" vid="40"></circle>
+                            <text class="city-label" x="10" y="4" vid="41">New York</text>
+                        </g>
+
+                        
+                        <g transform="translate(520, 130)" vid="42">
+                            <circle class="node-ring" r="8" vid="43"></circle>
+                            <circle class="node" r="4" vid="44"></circle>
+                            <text class="city-label" x="10" y="4" vid="45">London</text>
+                        </g>
+
+                        
+                        <g transform="translate(650, 180)" vid="46">
+                            <circle class="node-ring" r="8" vid="47"></circle>
+                            <circle class="node" r="4" vid="48"></circle>
+                            <text class="city-label" x="10" y="4" vid="49">Dubai</text>
+                        </g>
+
+                        
+                        <g transform="translate(700, 300)" vid="50">
+                            <circle class="node-ring" r="8" vid="51"></circle>
+                            <circle class="node" r="4" vid="52"></circle>
+                            <text class="city-label" x="10" y="4" vid="53">Singapore</text>
+                        </g>
+                    </svg>
+                </div>
+
+                <div style="margin-top: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px;" vid="54">
+                    <div style="font-size: 13px; font-weight: 500;" vid="55">Network Reach</div>
+                    <div style="font-size: 14px; line-height: 1.4; opacity: 0.8;" vid="56">
+                        Our global presence allows for real-time monitoring of credit spreads across major liquidity hubs, providing the arbitrage advantage necessary for superior risk-adjusted returns.
+                    </div>
+                </div>
+            </section>
+
+            
+            <aside class="sidebar" vid="57">
+                <h2 class="sidebar-title" vid="58">Active Pipelines</h2>
+                
+                <div class="pipeline-group" vid="59">
+                    <span class="region-tag" vid="60">AMERICAS</span>
+                    <div class="deal-item" vid="61">
+                        <div class="deal-name" vid="62">Tech Infra Bridge</div>
+                        <div class="deal-meta" vid="63">
+                            <span vid="64">$45M • Senior Sec.</span>
+                            <span vid="65"><span class="status-dot active" vid="66"></span>Closing</span>
+                        </div>
+                    </div>
+                    <div class="deal-item" vid="67">
+                        <div class="deal-name" vid="68">Manhattan Logistics</div>
+                        <div class="deal-meta" vid="69">
+                            <span vid="70">$110M • Mezzanine</span>
+                            <span vid="71"><span class="status-dot pending" vid="72"></span>Diligence</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pipeline-group" vid="73">
+                    <span class="region-tag" vid="74">EMEA / GCC</span>
+                    <div class="deal-item" vid="75">
+                        <div class="deal-name" vid="76">Dubai RE Development</div>
+                        <div class="deal-meta" vid="77">
+                            <span vid="78">$75M • Unitranche</span>
+                            <span vid="79"><span class="status-dot active" vid="80"></span>Funding</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pipeline-group" vid="81">
+                    <span class="region-tag" vid="82">APAC</span>
+                    <div class="deal-item" vid="83">
+                        <div class="deal-name" vid="84">SGP Data Center</div>
+                        <div class="deal-meta" vid="85">
+                            <span vid="86">$200M • Structured</span>
+                            <span vid="87"><span class="status-dot pending" vid="88"></span>Mandated</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-footer" vid="89">
+                    Total AUM Under Mandate: $1.4B<br vid="90">
+                    Updated: 14 Oct 2024, 08:30 GMT
+                </div>
+            </aside>
+        </main>
+    </div>
+
+
+</body></html>

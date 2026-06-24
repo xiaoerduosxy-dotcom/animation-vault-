@@ -1,0 +1,391 @@
+<html vid="0"><head vid="1">
+<meta charset="UTF-8" vid="2">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+<title vid="4">Pattern Plotter // BROWSER</title>
+<style vid="5">
+    @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
+    :root {
+        --bg-app: #111111;
+        --bg-panel: #1A1A1A;
+        --text-main: #E0E0E0;
+        --text-dim: #888888;
+        --border-color: #333333;
+        --accent: #E84A5F;
+        --accent-dim: #5c242b;
+        --font-mono: 'Space Mono', 'Courier New', Courier, monospace;
+    }
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        background-color: var(--bg-app);
+        color: var(--text-main);
+        font-family: var(--font-mono);
+        font-size: 12px;
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        user-select: none;
+    }
+
+    header {
+        height: 32px;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+        justify-content: space-between;
+        background: var(--bg-panel);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .status-group {
+        display: flex;
+        gap: 24px;
+    }
+
+    .status-item span:first-child {
+        color: var(--text-dim);
+        margin-right: 8px;
+    }
+
+    main {
+        display: flex;
+        flex: 1;
+        height: calc(100vh - 32px);
+    }
+
+    aside.sidebar {
+        width: 240px;
+        border-right: 1px solid var(--border-color);
+        background: var(--bg-panel);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .panel-section {
+        border-bottom: 1px solid var(--border-color);
+        padding: 16px;
+    }
+
+    .panel-header {
+        color: var(--text-dim);
+        margin-bottom: 16px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+
+    .nav-item {
+        padding: 8px 12px;
+        margin-bottom: 4px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--text-dim);
+        border: 1px solid transparent;
+    }
+
+    .nav-item.active {
+        color: var(--text-main);
+        background: rgba(255,255,255,0.05);
+        border-color: var(--border-color);
+    }
+
+    .nav-item:hover:not(.active) {
+        color: var(--text-main);
+    }
+
+    .browser-container {
+        flex: 1;
+        padding: 40px;
+        overflow-y: auto;
+        background: #0d0d0d;
+    }
+
+    .browser-container::-webkit-scrollbar {
+        width: 12px;
+    }
+    .browser-container::-webkit-scrollbar-track {
+        background: var(--bg-panel);
+    }
+    .browser-container::-webkit-scrollbar-thumb {
+        background: #444;
+        border: 2px solid var(--bg-panel);
+    }
+
+    .grid-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 32px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .grid-title {
+        font-size: 18px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    .file-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 32px;
+    }
+
+    .file-card {
+        cursor: pointer;
+        transition: transform 0.1s;
+    }
+
+    .file-card:hover .thumbnail {
+        border-color: var(--accent);
+    }
+
+    .file-card:hover .file-name {
+        color: var(--accent);
+    }
+
+    .thumbnail {
+        width: 100%;
+        aspect-ratio: 1;
+        background: #1a1a1a;
+        border: 1px solid var(--border-color);
+        margin-bottom: 12px;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-image: 
+            linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+        background-size: 10px 10px;
+    }
+
+    .thumbnail canvas {
+        width: 80%;
+        height: 80%;
+        image-rendering: pixelated;
+    }
+
+    .file-info {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .file-name {
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .file-meta {
+        color: var(--text-dim);
+        font-size: 10px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .btn {
+        background: transparent;
+        border: 1px solid var(--border-color);
+        color: var(--text-main);
+        font-family: inherit;
+        padding: 8px 12px;
+        cursor: pointer;
+        text-transform: uppercase;
+        transition: all 0.2s;
+        font-size: 11px;
+    }
+
+    .btn:hover {
+        background: var(--text-main);
+        color: var(--bg-app);
+    }
+
+    .btn-primary {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: #ff5e71;
+        color: white;
+    }
+
+    .search-bar {
+        background: #000;
+        border: 1px solid var(--border-color);
+        padding: 6px 12px;
+        color: var(--text-main);
+        font-family: inherit;
+        width: 200px;
+    }
+
+    .tag {
+        font-size: 9px;
+        padding: 2px 4px;
+        border: 1px solid var(--text-dim);
+        color: var(--text-dim);
+        text-transform: uppercase;
+    }
+</style>
+</head>
+<body vid="6">
+
+<header vid="7">
+    <div class="status-group" vid="8">
+        <div class="status-item" vid="9">
+            <span vid="10">SYS:</span>
+            <span vid="11">TX_PLOTTER v4.2</span>
+        </div>
+        <div class="status-item" vid="12">
+            <span vid="13">MODE:</span>
+            <span vid="14">LIBRARY_BROWSER</span>
+        </div>
+    </div>
+    <div class="status-group" vid="15">
+        <div class="status-item" vid="16">
+            <span vid="17">USER:</span>
+            <span vid="18">ANON_DRAFT_00</span>
+        </div>
+    </div>
+</header>
+
+<main vid="19">
+    <aside class="sidebar" vid="20">
+        <div class="panel-section" vid="21">
+            <div class="panel-header" vid="22">DIRECTORIES</div>
+            <div class="nav-item active" vid="23">
+                <span vid="24">//</span> ALL_PATTERNS
+            </div>
+            <div class="nav-item" vid="25">
+                <span vid="26">//</span> RECENT
+            </div>
+            <div class="nav-item" vid="27">
+                <span vid="28">//</span> ARCHIVE
+            </div>
+            <div class="nav-item" vid="29">
+                <span vid="30">//</span> EXPORTED
+            </div>
+        </div>
+        <div class="panel-section" vid="31">
+            <div class="panel-header" vid="32">FILTERS</div>
+            <div class="nav-item" vid="33"><span vid="34">[ ]</span> LANDSCAPES</div>
+            <div class="nav-item" vid="35"><span vid="36">[ ]</span> FLORAL</div>
+            <div class="nav-item" vid="37"><span vid="38">[ ]</span> GEOMETRIC</div>
+        </div>
+        <div class="panel-section" style="margin-top: auto; border-top: 1px solid var(--border-color); border-bottom: none;" vid="39">
+            <button class="btn btn-primary" style="width: 100%;" vid="40">+ NEW_PATTERN</button>
+        </div>
+    </aside>
+
+    <div class="browser-container" vid="41">
+        <div class="grid-header" vid="42">
+            <div vid="43">
+                <div class="grid-title" vid="44">LOCAL_STORAGE / PATTERNS</div>
+                <div style="color: var(--text-dim); margin-top: 4px;" vid="45">8 TOTAL OBJECTS FOUND</div>
+            </div>
+            <div style="display: flex; gap: 12px;" vid="46">
+                <input type="text" class="search-bar" placeholder="SEARCH_FILES..." vid="47">
+                <button class="btn" vid="48">SORT: DATE</button>
+            </div>
+        </div>
+
+        <div class="file-grid" id="file-grid" vid="49">
+            
+        </div>
+    </div>
+</main>
+
+<script vid="50">
+    const patterns = [
+        { name: "FLORA_GRASSLAND_01.ptn", date: "2023-10-12", stitches: 7000, colors: 10, seed: 123 },
+        { name: "MOSS_VALLEY_FINAL.ptn", date: "2023-11-05", stitches: 12450, colors: 8, seed: 442 },
+        { name: "DESERT_DUNE_04.ptn", date: "2023-11-18", stitches: 5200, colors: 5, seed: 99 },
+        { name: "VOID_STRUCT_01.ptn", date: "2023-12-01", stitches: 18900, colors: 2, seed: 666 },
+        { name: "ALPINE_LAKE_v2.ptn", date: "2023-12-14", stitches: 9820, colors: 12, seed: 1024 },
+        { name: "NEON_GRID_GEN.ptn", date: "2024-01-02", stitches: 4400, colors: 4, seed: 33 },
+        { name: "CRIMSON_PEAK.ptn", date: "2024-01-15", stitches: 11120, colors: 7, seed: 88 },
+        { name: "OAK_FOREST_TEST.ptn", date: "2024-01-20", stitches: 8700, colors: 9, seed: 512 }
+    ];
+
+    const container = document.getElementById('file-grid');
+
+    patterns.forEach(ptn => {
+        const card = document.createElement('div');
+        card.className = 'file-card';
+        
+        
+        const thumbId = `thumb-${ptn.seed}`;
+        card.innerHTML = `
+            <div class="thumbnail">
+                <canvas id="${thumbId}" width="100" height="100"></canvas>
+            </div>
+            <div class="file-info">
+                <div class="file-name">${ptn.name}</div>
+                <div class="file-meta">
+                    <span>${ptn.date}</span>
+                    <span>${ptn.stitches.toLocaleString()} ST</span>
+                </div>
+                <div style="margin-top: 4px; display: flex; gap: 4px;">
+                    <span class="tag">${ptn.colors} CLR</span>
+                    <span class="tag">PTN</span>
+                </div>
+            </div>
+        `;
+        
+        container.appendChild(card);
+        drawThumbnail(thumbId, ptn.seed);
+    });
+
+    function drawThumbnail(id, seed) {
+        const canvas = document.getElementById(id);
+        const ctx = canvas.getContext('2d');
+        const size = 10;
+        const rows = 10;
+        const cols = 10;
+
+        const colors = ['#2A4B2C', '#7A9151', '#A4D5B0', '#D8D3B8', '#E84A5F', '#FFC408', '#BBDDF2', '#FFFFFF'];
+        
+        let localSeed = seed;
+        function random() {
+            localSeed = (localSeed * 9301 + 49297) % 233280;
+            return localSeed / 233280;
+        }
+
+        for(let r=0; r<rows; r++) {
+            for(let c=0; c<cols; c++) {
+                ctx.fillStyle = colors[Math.floor(random() * colors.length)];
+                ctx.fillRect(c*size, r*size, size, size);
+                
+                
+                if(random() > 0.7) {
+                    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+                    ctx.font = '8px monospace';
+                    ctx.fillText('x', c*size+2, r*size+8);
+                }
+            }
+        }
+    }
+</script>
+
+
+</body></html>

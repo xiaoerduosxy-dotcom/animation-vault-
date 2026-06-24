@@ -1,0 +1,242 @@
+<html vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">Particle Flow - Focus Mode</title>
+    <style vid="5">
+        :root {
+            --bg-color: #F2EBDB;
+            --line-color: #4E3934;
+            --accent-color: #4E3934;
+            --ui-font: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        * {
+            box-sizing: border-box;
+        }
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background-color: var(--bg-color);
+            cursor: crosshair;
+            font-family: var(--ui-font);
+        }
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        #hud {
+            position: absolute;
+            bottom: 40px;
+            right: 40px;
+            text-align: right;
+            pointer-events: none;
+            color: var(--line-color);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-size: 11px;
+            line-height: 1.8;
+            opacity: 0.8;
+        }
+        .hud-group {
+            margin-bottom: 12px;
+        }
+        .label {
+            font-weight: 400;
+            margin-right: 8px;
+            opacity: 0.6;
+        }
+        .value {
+            font-weight: 700;
+        }
+        .title {
+            position: absolute;
+            top: 40px;
+            left: 40px;
+            color: var(--line-color);
+            font-weight: 300;
+            font-size: 14px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+        }
+        .back-btn {
+            position: absolute;
+            top: 40px;
+            right: 40px;
+            color: var(--line-color);
+            text-decoration: none;
+            font-size: 11px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--line-color);
+            padding-bottom: 4px;
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body vid="6">
+    <div class="title" vid="7">Particle Flow / Single Panel Study</div>
+    <a href="#" class="back-btn" vid="8">Return to Index</a>
+    
+    <div id="hud" vid="9">
+        <div class="hud-group" vid="10">
+            <span class="label" vid="11">Simulation Engine</span>
+            <span class="value" vid="12">PF-64X G2</span>
+        </div>
+        <div class="hud-group" vid="13">
+            <span class="label" vid="14">Active Particles</span>
+            <span class="value" id="val-count" vid="15">512</span>
+        </div>
+        <div class="hud-group" vid="16">
+            <span class="label" vid="17">Avg Velocity</span>
+            <span class="value" id="val-speed" vid="18">0.42 m/s</span>
+        </div>
+        <div class="hud-group" vid="19">
+            <span class="label" vid="20">Turbulence Factor</span>
+            <span class="value" id="val-turb" vid="21">1.842</span>
+        </div>
+        <div class="hud-group" vid="22">
+            <span class="label" vid="23">X-Pos</span>
+            <span class="value" id="val-mx" vid="24">0.00</span>
+            <br vid="25">
+            <span class="label" vid="26">Y-Pos</span>
+            <span class="value" id="val-my" vid="27">0.00</span>
+        </div>
+    </div>
+
+    <canvas id="glcanvas" vid="28"></canvas>
+
+    <script vid="29">
+        const canvas = document.getElementById('glcanvas');
+        const gl = canvas.getContext('webgl2', { antialias: true });
+
+        const vertexShaderSource = `#version 300 es
+            out vec2 vUv;
+            void main() {
+                float x = -1.0 + float((gl_VertexID & 1) << 2);
+                float y = -1.0 + float((gl_VertexID & 2) << 1);
+                vUv = vec2(x, y) * 0.5 + 0.5;
+                gl_Position = vec4(x, y, 0.0, 1.0);
+            }
+        `;
+
+        const fragmentShaderSource = `#version 300 es
+            precision highp float;
+            in vec2 vUv;
+            out vec4 fragColor;
+            uniform vec2 u_resolution;
+            uniform float u_time;
+            uniform vec2 u_mouse;
+
+            #define BG_COLOR vec3(0.949, 0.922, 0.859)
+            #define LINE_COLOR vec3(0.306, 0.224, 0.204)
+
+            float hash(vec2 p) { return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
+
+            void main() {
+                vec2 aspect = vec2(u_resolution.x / u_resolution.y, 1.0);
+                vec2 uv = vUv * aspect;
+                vec2 mouse = (u_mouse / u_resolution) * aspect;
+                
+                vec3 col = BG_COLOR;
+                
+                // Enhanced Particle Flow Simulation
+                float particleCount = 64.0;
+                for(float i=0.0; i < particleCount; i++) {
+                    float t = u_time * 0.3 + i * 1.5;
+                    
+                    // Base horizontal/vertical scattering
+                    vec2 seed = vec2(fract(i * 12.345), fract(i * 56.789));
+                    vec2 pos = seed * aspect;
+                    
+                    // Movement logic: particles move towards or follow mouse influence
+                    float speed = 0.2 + hash(vec2(i)) * 0.3;
+                    pos.y = mod(seed.y * 2.0 + t * speed, aspect.y * 1.2) - 0.1;
+                    
+                    // Interaction with mouse
+                    float distToMouse = length(uv - mouse);
+                    float influence = smoothstep(0.4, 0.0, distToMouse);
+                    
+                    // Wave distortion
+                    pos.x += sin(pos.y * 4.0 + u_time + i) * (0.05 + influence * 0.2);
+                    pos.x += (mouse.x - 0.5 * aspect.x) * influence;
+
+                    float d = length(uv - pos);
+                    
+                    // Particle size varying by depth/speed
+                    float size = 0.005 + (1.0 - influence) * 0.003;
+                    float m = smoothstep(size, size - 0.002, d);
+                    
+                    col = mix(col, LINE_COLOR, m * 0.9);
+                }
+
+                // Fine Grain Noise (from existing design)
+                col = mix(col, vec3(hash(vUv * u_resolution + u_time)), 0.04);
+                
+                fragColor = vec4(col, 1.0);
+            }
+        `;
+
+        function createShader(gl, type, source) {
+            const shader = gl.createShader(type);
+            gl.shaderSource(shader, source);
+            gl.compileShader(shader);
+            return shader;
+        }
+
+        const program = gl.createProgram();
+        gl.attachShader(program, createShader(gl, gl.VERTEX_SHADER, vertexShaderSource));
+        gl.attachShader(program, createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource));
+        gl.linkProgram(program);
+        gl.useProgram(program);
+
+        const uRes = gl.getUniformLocation(program, "u_resolution");
+        const uTime = gl.getUniformLocation(program, "u_time");
+        const uMouse = gl.getUniformLocation(program, "u_mouse");
+
+        let mouseX = 0, mouseY = 0;
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = window.innerHeight - e.clientY;
+        });
+
+        function resize() {
+            canvas.width = window.innerWidth * window.devicePixelRatio;
+            canvas.height = window.innerHeight * window.devicePixelRatio;
+            gl.viewport(0, 0, canvas.width, canvas.height);
+            gl.uniform2f(uRes, canvas.width, canvas.height);
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+
+        
+        const valCount = document.getElementById('val-count');
+        const valSpeed = document.getElementById('val-speed');
+        const valTurb = document.getElementById('val-turb');
+        const valMx = document.getElementById('val-mx');
+        const valMy = document.getElementById('val-my');
+
+        function render(t) {
+            const time = t * 0.001;
+            gl.uniform1f(uTime, time);
+            gl.uniform2f(uMouse, mouseX * window.devicePixelRatio, mouseY * window.devicePixelRatio);
+            
+            gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+            
+            if(Math.floor(t) % 10 === 0) {
+                valMx.innerText = (mouseX / window.innerWidth).toFixed(3);
+                valMy.innerText = (mouseY / window.innerHeight).toFixed(3);
+                valSpeed.innerText = (0.4 + Math.sin(time) * 0.05).toFixed(2) + " m/s";
+                valTurb.innerText = (1.8 + Math.cos(time * 0.5) * 0.1).toFixed(3);
+            }
+
+            requestAnimationFrame(render);
+        }
+        requestAnimationFrame(render);
+    </script>
+
+</body></html>

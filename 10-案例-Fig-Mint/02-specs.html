@@ -1,0 +1,421 @@
+<html lang="en" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">Fig Mint - Technical Specifications</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" vid="5">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" vid="6">
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&amp;family=VT323&amp;display=swap" rel="stylesheet" vid="7">
+    <style vid="8">
+        :root {
+            --beige-light: #F0EDE0;
+            --beige-main: #E0DCCF;
+            --beige-dark: #C4C0B3;
+            --beige-shadow: #A09C8F;
+            --screen-black: #222529;
+            --crt-green: #33ff00;
+            --accent-blue: #2B6CB0;
+            --accent-orange: #C05621;
+            --ink-black: #0f0f0f;
+            --font-serif: 'EB Garamond', serif;
+            --font-mono: 'VT323', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #f4f1e6;
+            font-family: 'EB Garamond', serif;
+            color: var(--ink-black);
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+
+        header {
+            padding: 2rem 4rem;
+            border-bottom: 1px solid var(--beige-dark);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f4f1e6;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 500;
+            font-style: italic;
+            text-decoration: none;
+            color: var(--ink-black);
+        }
+
+        .specs-container {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem;
+            gap: 4rem;
+        }
+
+        h2 {
+            font-size: 3.5rem;
+            margin-bottom: 2rem;
+            letter-spacing: -1px;
+            font-weight: 500;
+        }
+
+        .section-title {
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            color: var(--accent-orange);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        
+        .spec-accordion {
+            border-top: 1px solid var(--beige-dark);
+            margin-bottom: 4rem;
+        }
+
+        .accordion-item {
+            border-bottom: 1px solid var(--beige-dark);
+        }
+
+        .accordion-header {
+            width: 100%;
+            padding: 1.5rem 0;
+            background: none;
+            border: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            text-align: left;
+            color: var(--ink-black);
+        }
+
+        .accordion-header:hover {
+            color: var(--accent-blue);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            padding-bottom: 0;
+        }
+
+        .accordion-item.active .accordion-content {
+            max-height: 500px;
+            padding-bottom: 1.5rem;
+        }
+
+        .accordion-item.active .icon-plus::before {
+            content: "−";
+        }
+
+        .spec-details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            font-family: var(--font-mono);
+            background: var(--beige-light);
+            padding: 1.5rem;
+            border-radius: 4px;
+        }
+
+        .detail-row span:first-child {
+            display: block;
+            opacity: 0.6;
+            font-size: 0.8rem;
+            margin-bottom: 0.2rem;
+        }
+
+        
+        .comparison-wrap {
+            margin-top: 6rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: var(--font-mono);
+            margin-top: 2rem;
+            background: var(--screen-black);
+            color: #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 1.5rem;
+            text-align: left;
+            border-bottom: 1px solid #333;
+        }
+
+        th {
+            background: #2a2d32;
+            color: var(--crt-green);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        .highlight {
+            color: #fff;
+            font-weight: bold;
+        }
+
+        
+        .order-sidebar {
+            position: sticky;
+            top: 120px;
+            height: fit-content;
+            background: var(--beige-main);
+            padding: 2rem;
+            border: 1px solid var(--beige-dark);
+            box-shadow: 8px 8px 0 var(--beige-dark);
+        }
+
+        .sidebar-product {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-img {
+            width: 100%;
+            height: 200px;
+            background: var(--beige-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            border: 1px solid var(--beige-dark);
+        }
+
+        .price-big {
+            font-family: var(--font-mono);
+            font-size: 2rem;
+            font-weight: bold;
+            display: block;
+            margin: 1rem 0;
+        }
+
+        .btn-order {
+            display: block;
+            background: var(--ink-black);
+            color: #f4f1e6;
+            padding: 1.2rem;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 1.2rem;
+            transition: all 0.2s;
+            margin-bottom: 1rem;
+        }
+
+        .btn-order:hover {
+            background: var(--accent-blue);
+            transform: translateY(-2px);
+        }
+
+        .stock-info {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            text-align: center;
+            color: #666;
+        }
+
+        .stock-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            margin-right: 5px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.4; }
+            50% { opacity: 1; }
+            100% { opacity: 0.4; }
+        }
+
+        
+        .mini-crt {
+            width: 80px;
+            height: 60px;
+            background: var(--screen-black);
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+            border: 3px solid var(--beige-dark);
+        }
+        .mini-crt::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%);
+            background-size: 100% 2px;
+        }
+        .mini-glow {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px; height: 10px;
+            background: var(--crt-green);
+            filter: blur(8px);
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body vid="9">
+
+    <header vid="10">
+        <a href="#" class="logo" vid="11">Fig Mint.</a>
+        <div style="font-family: var(--font-mono); font-size: 0.8rem;" vid="12">MODEL NO. FM-1984 / SERIES 1</div>
+    </header>
+
+    <div class="specs-container" vid="13">
+        
+        <main vid="14">
+            <span class="section-title" vid="15">Architecture &amp; Design</span>
+            <h2 vid="16">Built for the future.<br vid="17">Wired for today.</h2>
+            
+            <div class="spec-accordion" vid="18">
+                
+                <div class="accordion-item active" vid="19">
+                    <button class="accordion-header" onclick="this.parentElement.classList.toggle('active')" vid="20">
+                        The Neural Engine
+                        <span class="icon-plus" vid="21"></span>
+                    </button>
+                    <div class="accordion-content" vid="22">
+                        <div class="spec-details-grid" vid="23">
+                            <div class="detail-row" vid="24"><span vid="25">CORE CLOCK</span><p vid="26">8.0 MHz Hyper-Threaded</p></div>
+                            <div class="detail-row" vid="27"><span vid="28">CO-PROCESSOR</span><p vid="29">Synaptic Link 1.0</p></div>
+                            <div class="detail-row" vid="30"><span vid="31">INSTRUCTION SET</span><p vid="32">FIG-RISC Enhanced</p></div>
+                            <div class="detail-row" vid="33"><span vid="34">L1 CACHE</span><p vid="35">32K Static RAM</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div class="accordion-item" vid="36">
+                    <button class="accordion-header" onclick="this.parentElement.classList.toggle('active')" vid="37">
+                        Phosphor Display Matrix
+                        <span class="icon-plus" vid="38"></span>
+                    </button>
+                    <div class="accordion-content" vid="39">
+                        <div class="spec-details-grid" vid="40">
+                            <div class="detail-row" vid="41"><span vid="42">RESOLUTION</span><p vid="43">512 x 342 Pixels</p></div>
+                            <div class="detail-row" vid="44"><span vid="45">COLOR DEPTH</span><p vid="46">1-Bit Monochrome (P4 Phosphor)</p></div>
+                            <div class="detail-row" vid="47"><span vid="48">REFRESH RATE</span><p vid="49">60Hz Non-Interlaced</p></div>
+                            <div class="detail-row" vid="50"><span vid="51">TUBE TYPE</span><p vid="52">9" Spherical CRT</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div class="accordion-item" vid="53">
+                    <button class="accordion-header" onclick="this.parentElement.classList.toggle('active')" vid="54">
+                        Memory &amp; Storage
+                        <span class="icon-plus" vid="55"></span>
+                    </button>
+                    <div class="accordion-content" vid="56">
+                        <div class="spec-details-grid" vid="57">
+                            <div class="detail-row" vid="58"><span vid="59">MAIN MEMORY</span><p vid="60">512K Synapse RAM</p></div>
+                            <div class="detail-row" vid="61"><span vid="62">EXPANSION</span><p vid="63">Dual 128K Ports</p></div>
+                            <div class="detail-row" vid="64"><span vid="65">FLOPPY DRIVE</span><p vid="66">Internal 3.5" (400K capacity)</p></div>
+                            <div class="detail-row" vid="67"><span vid="68">IO BUS</span><p vid="69">FigBus High-Speed Link</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="comparison-wrap" vid="70">
+                <span class="section-title" vid="71">Competitive Analysis</span>
+                <h3 style="font-size: 2rem; margin-bottom: 1rem;" vid="72">The Benchmark of Intelligence</h3>
+                <table vid="73">
+                    <thead vid="74">
+                        <tr vid="75">
+                            <th vid="76">Feature</th>
+                            <th class="highlight" vid="77">Fig Mint</th>
+                            <th vid="78">The "Standard" PC</th>
+                            <th vid="79">Old Typewriters</th>
+                        </tr>
+                    </thead>
+                    <tbody vid="80">
+                        <tr vid="81">
+                            <td vid="82">Operating System</td>
+                            <td class="highlight" vid="83">FigOS 1.0 (Neural)</td>
+                            <td vid="84">Command Line Only</td>
+                            <td vid="85">Mechanical</td>
+                        </tr>
+                        <tr vid="86">
+                            <td vid="87">Drafting Speed</td>
+                            <td class="highlight" vid="88">Instantaneous</td>
+                            <td vid="89">Manual Input</td>
+                            <td vid="90">Slow / Physical</td>
+                        </tr>
+                        <tr vid="91">
+                            <td vid="92">Organization</td>
+                            <td class="highlight" vid="93">Auto-Sort Synapse</td>
+                            <td vid="94">Directory Trees</td>
+                            <td vid="95">File Cabinets</td>
+                        </tr>
+                        <tr vid="96">
+                            <td vid="97">Aesthetic</td>
+                            <td class="highlight" vid="98">Warm Beige Bliss</td>
+                            <td vid="99">Industrial Gray</td>
+                            <td vid="100">Cold Metal</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
+        <aside vid="101">
+            <div class="order-sidebar" vid="102">
+                <div class="sidebar-product" vid="103">
+                    <div class="sidebar-img" vid="104">
+                        <div class="mini-crt" vid="105">
+                            <div class="mini-glow" vid="106"></div>
+                        </div>
+                    </div>
+                    <h4 vid="107">Fig Mint Series 1</h4>
+                    <p style="font-size: 0.9rem; opacity: 0.7;" vid="108">Standard Configuration</p>
+                    <span class="price-big" vid="109">$2,495.00</span>
+                </div>
+                
+                <a href="#" class="btn-order" vid="110">Order Now</a>
+                
+                <div class="stock-info" vid="111">
+                    <span class="stock-indicator" vid="112"></span>
+                    Ready for shipping
+                    <div style="margin-top: 1rem; font-size: 0.7rem; border-top: 1px solid var(--beige-dark); padding-top: 1rem;" vid="113">
+                        Estimated delivery: 4-6 weeks via Express Courier. Includes FigOS boot floppy.
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+    </div>
+
+    <footer style="padding: 4rem; text-align: center; border-top: 1px solid var(--beige-dark); font-family: var(--font-mono); font-size: 0.8rem; opacity: 0.5;" vid="114">
+        © 1984 FIG MINT COMPUTING CORP. CALIFORNIA, USA. ALL RIGHTS RESERVED.
+    </footer>
+
+</body></html>

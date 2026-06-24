@@ -1,0 +1,347 @@
+<html lang="en" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">Order Confirmed - Fig Mint</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" vid="5">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" vid="6">
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&amp;family=VT323&amp;display=swap" rel="stylesheet" vid="7">
+    <style vid="8">
+        :root {
+            --beige-light: #F0EDE0;
+            --beige-main: #E0DCCF;
+            --beige-dark: #C4C0B3;
+            --beige-shadow: #A09C8F;
+            --screen-black: #222529;
+            --crt-green: #33ff00;
+            --ink-black: #0f0f0f;
+            --font-serif: 'EB Garamond', serif;
+            --font-mono: 'VT323', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #f4f1e6;
+            font-family: 'EB Garamond', serif;
+            color: var(--ink-black);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .main-container {
+            position: relative;
+            width: 100%;
+            max-width: 1400px;
+            height: 100vh;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            align-items: center;
+            padding: 4rem;
+        }
+
+        
+        .confirmation-col {
+            padding-left: 4rem;
+            z-index: 10;
+        }
+
+        .receipt {
+            background: #fff;
+            padding: 3rem;
+            width: 450px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            position: relative;
+            border-bottom: 8px dashed #f4f1e6;
+        }
+
+        .receipt::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background: radial-gradient(circle, transparent, transparent 50%, #fff 50%, #fff) 0 0 / 20px 20px;
+            background-repeat: repeat-x;
+        }
+
+        h1 {
+            font-size: 3rem;
+            line-height: 0.9;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .receipt-header {
+            border-bottom: 2px solid var(--ink-black);
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .receipt-header h2 {
+            font-family: var(--font-mono);
+            font-size: 1.5rem;
+            text-transform: uppercase;
+        }
+
+        .order-details {
+            font-family: var(--font-mono);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .line-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .total-row {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px dashed #ccc;
+            font-weight: bold;
+            font-size: 1.4rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .delivery-est {
+            margin-top: 3rem;
+            font-style: italic;
+            font-size: 1.1rem;
+            color: #555;
+        }
+
+        
+        .product-col {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 2000px;
+        }
+
+        .scene {
+            position: relative;
+            transform-style: preserve-3d;
+            transform: rotateY(-10deg) rotateX(2deg);
+        }
+
+        .computer-unit {
+            position: relative;
+            width: 360px;
+            height: 440px;
+            transform-style: preserve-3d;
+        }
+
+        .face {
+            position: absolute;
+            background: var(--beige-main);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .front {
+            width: 360px;
+            height: 440px;
+            transform: translateZ(100px);
+            background: linear-gradient(135deg, var(--beige-light) 0%, var(--beige-main) 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 40px;
+        }
+
+        .screen-inset {
+            width: 280px;
+            height: 220px;
+            background: #D1CEC7;
+            border-radius: 16px;
+            box-shadow: inset 2px 2px 8px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .crt {
+            width: 260px;
+            height: 200px;
+            background: var(--screen-black);
+            border-radius: 40% 40% 40% 40% / 10% 10% 10% 10%; 
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .crt::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+            background-size: 100% 2px;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .success-animation {
+            color: var(--crt-green);
+            font-family: var(--font-mono);
+            font-size: 24px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.4; text-shadow: 0 0 0px var(--crt-green); }
+            50% { opacity: 1; text-shadow: 0 0 10px var(--crt-green); }
+            100% { opacity: 0.4; text-shadow: 0 0 0px var(--crt-green); }
+        }
+
+        .confetti {
+            position: absolute;
+            font-size: 10px;
+            color: var(--crt-green);
+            animation: fall 3s linear infinite;
+        }
+
+        @keyframes fall {
+            from { transform: translateY(-120px) rotate(0deg); }
+            to { transform: translateY(120px) rotate(360deg); }
+        }
+
+        
+        .keyboard-flat {
+            position: absolute;
+            width: 360px;
+            height: 100px;
+            bottom: -60px;
+            background: var(--beige-main);
+            transform: translateZ(150px) rotateX(70deg);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .logo-badge {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            width: 20px;
+            height: 26px;
+            background: linear-gradient(180deg, #63B548, #F6C829, #E57D25, #D83335, #9C4595, #468CCF);
+        }
+
+        .right {
+            width: 200px;
+            height: 440px;
+            transform: rotateY(90deg) translateZ(260px);
+            background: var(--beige-dark);
+        }
+
+        .btn-back {
+            display: inline-block;
+            margin-top: 2rem;
+            color: var(--ink-black);
+            text-decoration: underline;
+            font-family: var(--font-mono);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body vid="9">
+
+    <div class="main-container" vid="10">
+        
+        <div class="confirmation-col" vid="11">
+            <div class="receipt" vid="12">
+                <div class="receipt-header" vid="13">
+                    <h2 vid="14">Payment Confirmed</h2>
+                    <div style="font-family: var(--font-mono); font-size: 0.9rem;" vid="15">NO. 00842-X</div>
+                </div>
+                
+                <h1 vid="16">Thank you for choosing Fig Mint.</h1>
+                
+                <div class="order-details" vid="17">
+                    <div class="line-item" vid="18">
+                        <span vid="19">1x Fig Mint Personal Computer</span>
+                        <span vid="20">$2,495.00</span>
+                    </div>
+                    <div class="line-item" vid="21">
+                        <span vid="22">Shipping &amp; Handling</span>
+                        <span vid="23">$0.00</span>
+                    </div>
+                    <div class="line-item" vid="24">
+                        <span vid="25">State Tax</span>
+                        <span vid="26">$149.70</span>
+                    </div>
+                    
+                    <div class="total-row" vid="27">
+                        <span vid="28">TOTAL</span>
+                        <span vid="29">$2,644.70</span>
+                    </div>
+                </div>
+
+                <div class="delivery-est" vid="30">
+                    Estimated delivery: September 14, 1984.
+                </div>
+            </div>
+            
+            <a href="#" class="btn-back" vid="31">&lt; Return to Catalog</a>
+        </div>
+
+        <div class="product-col" vid="32">
+            <div class="scene" vid="33">
+                <div class="computer-unit" vid="34">
+                    <div class="face front" vid="35">
+                        <div class="screen-inset" vid="36">
+                            <div class="crt" id="crt-screen" vid="37">
+                                <div class="success-animation" vid="38">
+                                    SUCCESS<br vid="39">ORDER FILED
+                                </div>
+                            </div>
+                        </div>
+                        <div class="logo-badge" vid="40"></div>
+                        <div style="width: 140px; height: 12px; background: #333; border-radius: 6px; margin-left: 100px; margin-top: 40px;" vid="41"></div>
+                    </div>
+                    <div class="face right" vid="42"></div>
+                    <div class="keyboard-flat" vid="43"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script vid="44">
+        const screen = document.getElementById('crt-screen');
+        
+        function createConfetti() {
+            const char = Math.random() > 0.5 ? '1' : '0';
+            const el = document.createElement('div');
+            el.className = 'confetti';
+            el.innerText = char;
+            el.style.left = Math.random() * 260 + 'px';
+            el.style.animationDuration = (Math.random() * 2 + 1) + 's';
+            el.style.opacity = Math.random();
+            screen.appendChild(el);
+            
+            setTimeout(() => {
+                el.remove();
+            }, 3000);
+        }
+
+        setInterval(createConfetti, 200);
+    </script>
+
+
+</body></html>

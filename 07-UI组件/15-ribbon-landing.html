@@ -1,0 +1,783 @@
+<html lang="en" vid="0"><head vid="1">
+<meta charset="UTF-8" vid="2">
+<title vid="3">Ribbon — Design systems for teams that ship</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" vid="4">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" vid="5">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Inter+Tight:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet" vid="6">
+<style vid="7">
+  :root{
+    --paper:#ECE6DB;
+    --paper-2:#E4DDD0;
+    --ink:#1A1814;
+    --ink-soft:#4A453D;
+    --line:#C9C0B0;
+    --cobalt:#2B4FC9;
+    --green:#1F6B3F;
+    --amber:#E07A18;
+    --orange:#E04820;
+    --coral:#F45A55;
+    --pink:#F49AB8;
+    --violet:#7A5AC9;
+    --indigo:#3A3FB0;
+    --cyan:#7BB8E8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--paper);color:var(--ink);font-family:'Inter Tight',sans-serif;-webkit-font-smoothing:antialiased}
+  body{
+    background-image:
+      radial-gradient(ellipse 1400px 900px at 50% 0%, rgba(255,250,240,0.5), transparent 60%),
+      radial-gradient(ellipse 1200px 800px at 100% 100%, rgba(0,0,0,0.04), transparent 60%);
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none}
+
+  /* ============ NAV ============ */
+  nav{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:28px 56px;
+    position:sticky;top:0;z-index:100;
+    backdrop-filter:blur(8px);
+    background:rgba(236,230,219,0.75);
+    border-bottom:1px solid transparent;
+    transition:border-color .3s;
+  }
+  nav.scrolled{border-bottom-color:var(--line)}
+  .logo{display:flex;align-items:center;gap:12px;font-weight:600;font-size:17px;letter-spacing:-0.01em}
+  .logo-mark{
+    width:34px;height:18px;border-radius:999px;
+    background:linear-gradient(90deg,var(--cobalt) 0%,var(--cobalt) 33%,var(--coral) 33%,var(--coral) 66%,var(--amber) 66%,var(--amber) 100%);
+    position:relative;
+  }
+  .logo-mark::after{
+    content:"";position:absolute;inset:0;border-radius:999px;
+    background:linear-gradient(180deg,rgba(255,255,255,0.35),transparent 40%,rgba(0,0,0,0.15));
+  }
+  .nav-links{display:flex;gap:36px;font-size:14px;color:var(--ink-soft);font-weight:500}
+  .nav-links a{transition:color .2s;position:relative}
+  .nav-links a:hover{color:var(--ink)}
+  .nav-links a::after{content:"";position:absolute;left:0;bottom:-4px;height:1px;width:0;background:var(--ink);transition:width .25s}
+  .nav-links a:hover::after{width:100%}
+  .nav-cta{display:flex;align-items:center;gap:14px}
+  .nav-cta .sign-in{font-size:14px;color:var(--ink-soft);font-weight:500}
+  .nav-cta .sign-in:hover{color:var(--ink)}
+
+  /* ============ PILL BUTTON (signature component) ============ */
+  .pill{
+    display:inline-flex;align-items:center;justify-content:center;
+    height:44px;padding:0 22px;border-radius:999px;
+    font-family:'Inter Tight',sans-serif;font-weight:600;font-size:14px;letter-spacing:-0.005em;
+    border:none;cursor:pointer;position:relative;overflow:hidden;
+    transition:transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s;
+    color:#fff;
+  }
+  .pill:hover{transform:translateY(-1px);box-shadow:0 10px 28px rgba(26,24,20,0.18)}
+  .pill:active{transform:translateY(0)}
+  .pill.primary{
+    background:
+      linear-gradient(180deg,rgba(255,255,255,0.22) 0%,transparent 35%,rgba(0,0,0,0.18) 100%),
+      linear-gradient(90deg,var(--cobalt) 0%,var(--cobalt) 34%,var(--coral) 34%,var(--coral) 67%,var(--amber) 67%,var(--amber) 100%);
+    color:#fff;
+    box-shadow:0 2px 0 rgba(0,0,0,0.15), 0 8px 22px rgba(26,24,20,0.12);
+  }
+  .pill.ghost{
+    background:transparent;color:var(--ink);border:1px solid var(--ink);
+  }
+  .pill.ghost:hover{background:var(--ink);color:var(--paper)}
+  .pill.small{height:36px;padding:0 16px;font-size:13px}
+
+  /* ============ HERO ============ */
+  .hero{
+    padding:80px 56px 120px;
+    display:grid;grid-template-columns:1.1fr 1fr;gap:80px;align-items:center;
+    position:relative;
+  }
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:10px;
+    font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.14em;
+    color:var(--ink-soft);margin-bottom:32px;
+  }
+  .eyebrow-dot{width:8px;height:8px;border-radius:999px;background:linear-gradient(90deg,var(--coral),var(--amber))}
+  h1{
+    font-family:'Instrument Serif',serif;
+    font-weight:400;
+    font-size:96px;line-height:0.95;letter-spacing:-0.025em;
+    margin-bottom:32px;
+  }
+  h1 em{font-style:italic;background:linear-gradient(90deg,var(--cobalt),var(--violet) 40%,var(--coral) 70%,var(--amber));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p.lede{
+    font-size:19px;line-height:1.5;color:var(--ink-soft);max-width:480px;margin-bottom:40px;
+  }
+  .hero-ctas{display:flex;gap:14px;align-items:center;margin-bottom:48px}
+  .hero-meta{display:flex;gap:32px;font-size:13px;color:var(--ink-soft)}
+  .hero-meta-item{display:flex;align-items:center;gap:8px}
+  .hero-meta-item svg{width:14px;height:14px;stroke:var(--ink-soft)}
+
+  /* ============ HERO COMPOSITION (authored graphic) ============ */
+  .composition{
+    position:relative;height:620px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .ribbon{
+    position:absolute;border-radius:999px;overflow:hidden;
+    box-shadow:0 20px 60px rgba(26,24,20,0.15), inset 0 1px 0 rgba(255,255,255,0.15);
+  }
+  .ribbon::after{
+    content:"";position:absolute;inset:0;border-radius:999px;
+    background:linear-gradient(180deg,rgba(255,255,255,0.25) 0%,transparent 30%,transparent 70%,rgba(0,0,0,0.2) 100%);
+    pointer-events:none;
+  }
+  .ribbon-1{
+    width:520px;height:120px;
+    top:40px;left:20px;
+    transform:rotate(-12deg);
+    background:linear-gradient(90deg,var(--cobalt) 0%,var(--cobalt) 28%,var(--green) 28%,var(--green) 55%,var(--amber) 55%,var(--amber) 100%);
+    animation:float1 9s ease-in-out infinite;
+  }
+  .ribbon-2{
+    width:540px;height:120px;
+    top:200px;left:-10px;
+    transform:rotate(14deg);
+    background:linear-gradient(90deg,var(--amber) 0%,var(--amber) 25%,var(--coral) 25%,var(--coral) 55%,var(--pink) 55%,var(--pink) 80%,var(--violet) 80%,var(--violet) 100%);
+    animation:float2 11s ease-in-out infinite;
+  }
+  .ribbon-3{
+    width:500px;height:120px;
+    top:360px;left:40px;
+    transform:rotate(-10deg);
+    background:linear-gradient(90deg,var(--violet) 0%,var(--violet) 30%,var(--indigo) 30%,var(--indigo) 60%,var(--cyan) 60%,var(--cyan) 100%);
+    animation:float1 10s ease-in-out infinite -2s;
+  }
+  .ribbon-4{
+    width:460px;height:120px;
+    top:500px;left:0px;
+    transform:rotate(6deg);
+    background:linear-gradient(90deg,var(--cyan) 0%,var(--cyan) 45%,#fff 45%,#fff 65%,var(--ink) 65%,var(--ink) 100%);
+    animation:float2 12s ease-in-out infinite -3s;
+  }
+  @keyframes float1{
+    0%,100%{transform:rotate(-12deg) translateY(0)}
+    50%{transform:rotate(-11deg) translateY(-8px)}
+  }
+  @keyframes float2{
+    0%,100%{transform:rotate(14deg) translateY(0)}
+    50%{transform:rotate(13deg) translateY(-10px)}
+  }
+  .ribbon-3{animation-name:float1}
+  .ribbon-4{animation-name:float2}
+
+  /* ============ LOGO CLOUD ============ */
+  .logos{
+    padding:40px 56px 80px;
+    border-top:1px solid var(--line);
+  }
+  .logos-label{
+    font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.14em;
+    color:var(--ink-soft);text-align:center;margin-bottom:32px;
+  }
+  .logos-grid{
+    display:grid;grid-template-columns:repeat(6,1fr);gap:48px;align-items:center;
+    opacity:0.75;
+  }
+  .logo-item{
+    font-family:'Instrument Serif',serif;font-size:24px;text-align:center;color:var(--ink);
+    letter-spacing:-0.01em;
+  }
+  .logo-item.mono{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:500;letter-spacing:0}
+  .logo-item.bold{font-family:'Inter Tight',sans-serif;font-weight:700;font-size:20px;letter-spacing:-0.02em}
+
+  /* ============ FEATURES ============ */
+  .features{padding:140px 56px;position:relative}
+  .section-head{
+    display:grid;grid-template-columns:1fr 1fr;gap:80px;margin-bottom:80px;align-items:end;
+  }
+  .section-head h2{
+    font-family:'Instrument Serif',serif;font-weight:400;
+    font-size:72px;line-height:0.98;letter-spacing:-0.02em;
+  }
+  .section-head h2 em{font-style:italic;color:var(--coral)}
+  .section-head p{font-size:17px;line-height:1.55;color:var(--ink-soft);max-width:460px}
+
+  .features-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+    background:var(--line);
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  }
+  .feature{
+    background:var(--paper);
+    padding:48px 36px;
+    min-height:320px;
+    display:flex;flex-direction:column;justify-content:space-between;gap:32px;
+    transition:background .3s;
+    cursor:default;
+    position:relative;
+  }
+  .feature:hover{background:var(--paper-2)}
+  .feature-ribbon{
+    width:88px;height:36px;border-radius:999px;position:relative;overflow:hidden;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.2), 0 4px 14px rgba(26,24,20,0.1);
+  }
+  .feature-ribbon::after{
+    content:"";position:absolute;inset:0;border-radius:999px;
+    background:linear-gradient(180deg,rgba(255,255,255,0.25),transparent 35%,rgba(0,0,0,0.2));
+  }
+  .fr-1{background:linear-gradient(90deg,var(--cobalt) 0%,var(--cobalt) 45%,var(--green) 45%,var(--green) 100%)}
+  .fr-2{background:linear-gradient(90deg,var(--amber) 0%,var(--amber) 40%,var(--coral) 40%,var(--coral) 75%,var(--pink) 75%,var(--pink) 100%)}
+  .fr-3{background:linear-gradient(90deg,var(--violet) 0%,var(--violet) 50%,var(--indigo) 50%,var(--indigo) 100%)}
+  .fr-4{background:linear-gradient(90deg,var(--cyan) 0%,var(--cyan) 50%,var(--ink) 50%,var(--ink) 100%)}
+  .fr-5{background:linear-gradient(90deg,var(--green) 0%,var(--green) 40%,var(--amber) 40%,var(--amber) 100%)}
+  .fr-6{background:linear-gradient(90deg,var(--coral) 0%,var(--coral) 33%,var(--violet) 33%,var(--violet) 66%,var(--cobalt) 66%,var(--cobalt) 100%)}
+  .feature h3{
+    font-family:'Instrument Serif',serif;font-weight:400;
+    font-size:32px;line-height:1.05;letter-spacing:-0.015em;margin-bottom:12px;
+  }
+  .feature p{font-size:15px;line-height:1.55;color:var(--ink-soft)}
+  .feature-idx{
+    position:absolute;top:20px;right:24px;
+    font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-soft);letter-spacing:0.1em;
+  }
+
+  /* ============ SHOWCASE ============ */
+  .showcase{
+    padding:140px 56px;
+    background:var(--ink);color:var(--paper);
+    position:relative;overflow:hidden;
+  }
+  .showcase::before{
+    content:"";position:absolute;top:-100px;right:-100px;width:500px;height:120px;
+    border-radius:999px;
+    background:linear-gradient(90deg,var(--coral) 0%,var(--coral) 33%,var(--amber) 33%,var(--amber) 66%,var(--pink) 66%,var(--pink) 100%);
+    transform:rotate(18deg);opacity:0.85;
+  }
+  .showcase::after{
+    content:"";position:absolute;bottom:-80px;left:-120px;width:480px;height:100px;
+    border-radius:999px;
+    background:linear-gradient(90deg,var(--cobalt) 0%,var(--cobalt) 40%,var(--violet) 40%,var(--violet) 70%,var(--cyan) 70%,var(--cyan) 100%);
+    transform:rotate(-14deg);opacity:0.8;
+  }
+  .showcase-inner{position:relative;z-index:2;max-width:1080px;margin:0 auto;text-align:center}
+  .showcase-eyebrow{
+    font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.14em;
+    opacity:0.6;margin-bottom:28px;
+  }
+  .showcase h2{
+    font-family:'Instrument Serif',serif;font-weight:400;
+    font-size:88px;line-height:0.98;letter-spacing:-0.025em;margin-bottom:32px;
+  }
+  .showcase h2 em{font-style:italic;background:linear-gradient(90deg,var(--amber),var(--coral) 40%,var(--pink) 70%,var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .showcase p{font-size:18px;line-height:1.55;color:rgba(236,230,219,0.7);max-width:560px;margin:0 auto 48px}
+
+  .canvas-demo{
+    margin-top:72px;
+    background:#0F0D0A;border-radius:20px;
+    padding:24px;
+    border:1px solid rgba(255,255,255,0.08);
+    text-align:left;
+    max-width:980px;margin-left:auto;margin-right:auto;
+    box-shadow:0 40px 80px rgba(0,0,0,0.4);
+  }
+  .canvas-top{
+    display:flex;align-items:center;gap:12px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,0.06);
+    margin-bottom:20px;
+  }
+  .canvas-dots{display:flex;gap:6px}
+  .canvas-dots span{width:10px;height:10px;border-radius:999px;background:rgba(255,255,255,0.15)}
+  .canvas-title{font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(236,230,219,0.5);margin-left:12px}
+  .canvas-grid{
+    display:grid;grid-template-columns:1fr 2fr;gap:20px;min-height:340px;
+  }
+  .canvas-panel{
+    background:rgba(255,255,255,0.03);border-radius:12px;padding:18px;
+    border:1px solid rgba(255,255,255,0.04);
+  }
+  .canvas-panel h4{
+    font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.14em;
+    color:rgba(236,230,219,0.5);margin-bottom:16px;font-weight:500;
+  }
+  .token-row{
+    display:flex;align-items:center;gap:10px;padding:8px 0;
+    font-family:'JetBrains Mono',monospace;font-size:12px;color:rgba(236,230,219,0.8);
+  }
+  .token-swatch{width:18px;height:18px;border-radius:6px;flex-shrink:0}
+  .preview-area{
+    display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(ellipse at center,rgba(255,255,255,0.04),transparent 70%);
+    border-radius:8px;min-height:280px;position:relative;
+  }
+  .preview-ribbons{display:flex;flex-direction:column;gap:14px}
+  .pv-ribbon{width:280px;height:56px;border-radius:999px;overflow:hidden;position:relative;box-shadow:0 10px 30px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.15)}
+  .pv-ribbon::after{content:"";position:absolute;inset:0;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,0.2),transparent 35%,rgba(0,0,0,0.25))}
+  .pv1{background:linear-gradient(90deg,var(--cobalt) 0%,var(--cobalt) 40%,var(--amber) 40%,var(--amber) 100%)}
+  .pv2{background:linear-gradient(90deg,var(--coral) 0%,var(--coral) 33%,var(--pink) 33%,var(--pink) 66%,var(--violet) 66%,var(--violet) 100%)}
+  .pv3{background:linear-gradient(90deg,var(--green) 0%,var(--green) 50%,var(--cyan) 50%,var(--cyan) 100%)}
+
+  /* ============ PRICING ============ */
+  .pricing{padding:140px 56px}
+  .pricing-head{text-align:center;margin-bottom:80px}
+  .pricing-head h2{
+    font-family:'Instrument Serif',serif;font-weight:400;
+    font-size:72px;line-height:0.98;letter-spacing:-0.02em;margin-bottom:16px;
+  }
+  .pricing-head h2 em{font-style:italic;color:var(--cobalt)}
+  .pricing-head p{font-size:17px;color:var(--ink-soft);max-width:520px;margin:0 auto}
+  .pricing-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1200px;margin:0 auto;
+  }
+  .price-card{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:20px;padding:36px 32px;
+    display:flex;flex-direction:column;gap:28px;
+    transition:transform .3s, box-shadow .3s;
+    position:relative;
+  }
+  .price-card:hover{transform:translateY(-4px);box-shadow:0 20px 50px rgba(26,24,20,0.08)}
+  .price-card.featured{
+    background:var(--ink);color:var(--paper);border-color:var(--ink);
+  }
+  .price-card.featured .pill.primary{background:var(--paper);color:var(--ink)}
+  .price-ribbon{
+    width:64px;height:28px;border-radius:999px;overflow:hidden;position:relative;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.2);
+  }
+  .price-ribbon::after{content:"";position:absolute;inset:0;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,0.25),transparent 40%,rgba(0,0,0,0.2))}
+  .pr-starter{background:linear-gradient(90deg,var(--cyan) 0%,var(--cyan) 50%,var(--cobalt) 50%,var(--cobalt) 100%)}
+  .pr-studio{background:linear-gradient(90deg,var(--amber) 0%,var(--amber) 33%,var(--coral) 33%,var(--coral) 66%,var(--violet) 66%,var(--violet) 100%)}
+  .pr-scale{background:linear-gradient(90deg,var(--green) 0%,var(--green) 40%,var(--indigo) 40%,var(--indigo) 100%)}
+  .price-card h3{
+    font-family:'Instrument Serif',serif;font-weight:400;font-size:28px;letter-spacing:-0.015em;
+  }
+  .price-amount{display:flex;align-items:baseline;gap:6px}
+  .price-amount .num{font-family:'Instrument Serif',serif;font-size:56px;line-height:1;letter-spacing:-0.02em}
+  .price-amount .per{font-size:14px;opacity:0.65}
+  .price-desc{font-size:14px;line-height:1.5;opacity:0.7}
+  .price-feats{list-style:none;display:flex;flex-direction:column;gap:12px;font-size:14px}
+  .price-feats li{display:flex;align-items:center;gap:10px}
+  .price-feats li::before{
+    content:"";width:16px;height:6px;border-radius:999px;flex-shrink:0;
+    background:linear-gradient(90deg,var(--coral) 0%,var(--coral) 50%,var(--amber) 50%,var(--amber) 100%);
+  }
+  .price-card.featured .price-feats li::before{background:linear-gradient(90deg,var(--amber) 0%,var(--amber) 50%,var(--pink) 50%,var(--pink) 100%)}
+
+  /* ============ TESTIMONIAL ============ */
+  .testimonial{
+    padding:140px 56px;
+    display:grid;grid-template-columns:1fr 1.3fr;gap:80px;align-items:center;
+    border-top:1px solid var(--line);
+  }
+  .testimonial-visual{
+    position:relative;height:400px;display:flex;align-items:center;justify-content:center;
+  }
+  .tv-ribbon{
+    position:absolute;width:320px;height:80px;border-radius:999px;overflow:hidden;
+    box-shadow:0 20px 50px rgba(26,24,20,0.15), inset 0 1px 0 rgba(255,255,255,0.15);
+  }
+  .tv-ribbon::after{content:"";position:absolute;inset:0;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,0.25),transparent 35%,rgba(0,0,0,0.2))}
+  .tv1{top:80px;left:10px;transform:rotate(-10deg);background:linear-gradient(90deg,var(--cobalt) 0%,var(--cobalt) 35%,var(--amber) 35%,var(--amber) 100%)}
+  .tv2{top:180px;left:40px;transform:rotate(8deg);background:linear-gradient(90deg,var(--coral) 0%,var(--coral) 40%,var(--pink) 40%,var(--pink) 70%,var(--violet) 70%,var(--violet) 100%)}
+  .tv3{top:280px;left:20px;transform:rotate(-6deg);background:linear-gradient(90deg,var(--green) 0%,var(--green) 55%,var(--cyan) 55%,var(--cyan) 100%)}
+  blockquote{
+    font-family:'Instrument Serif',serif;font-weight:400;
+    font-size:44px;line-height:1.15;letter-spacing:-0.015em;margin-bottom:32px;
+  }
+  blockquote em{font-style:italic;color:var(--coral)}
+  .testimonial-author{display:flex;align-items:center;gap:16px}
+  .ta-avatar{
+    width:48px;height:48px;border-radius:999px;
+    background:linear-gradient(135deg,var(--amber),var(--coral));
+    display:flex;align-items:center;justify-content:center;
+    color:#fff;font-weight:600;font-size:16px;
+  }
+  .ta-info .name{font-weight:600;font-size:15px}
+  .ta-info .role{font-size:13px;color:var(--ink-soft);margin-top:2px}
+
+  /* ============ CTA FINAL ============ */
+  .final-cta{
+    margin:80px 56px 120px;
+    background:var(--paper-2);
+    border-radius:32px;padding:96px 64px;text-align:center;
+    position:relative;overflow:hidden;
+  }
+  .final-cta::before{
+    content:"";position:absolute;top:-60px;left:-60px;width:360px;height:90px;
+    border-radius:999px;
+    background:linear-gradient(90deg,var(--cobalt) 0%,var(--cobalt) 40%,var(--green) 40%,var(--green) 100%);
+    transform:rotate(-20deg);
+  }
+  .final-cta::after{
+    content:"";position:absolute;bottom:-60px;right:-60px;width:360px;height:90px;
+    border-radius:999px;
+    background:linear-gradient(90deg,var(--amber) 0%,var(--amber) 33%,var(--coral) 33%,var(--coral) 66%,var(--violet) 66%,var(--violet) 100%);
+    transform:rotate(-20deg);
+  }
+  .final-cta-inner{position:relative;z-index:2;max-width:720px;margin:0 auto}
+  .final-cta h2{
+    font-family:'Instrument Serif',serif;font-weight:400;
+    font-size:80px;line-height:0.98;letter-spacing:-0.025em;margin-bottom:24px;
+  }
+  .final-cta h2 em{font-style:italic;background:linear-gradient(90deg,var(--cobalt),var(--coral) 50%,var(--amber));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .final-cta p{font-size:18px;color:var(--ink-soft);margin-bottom:40px}
+  .final-cta-row{display:flex;gap:14px;justify-content:center}
+
+  /* ============ FOOTER ============ */
+  footer{
+    padding:64px 56px 40px;border-top:1px solid var(--line);
+  }
+  .footer-grid{
+    display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr 1fr;gap:48px;margin-bottom:64px;
+  }
+  .footer-brand p{font-size:14px;color:var(--ink-soft);line-height:1.55;margin-top:20px;max-width:280px}
+  .footer-col h5{
+    font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.14em;
+    color:var(--ink-soft);margin-bottom:18px;font-weight:500;
+  }
+  .footer-col ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+  .footer-col a{font-size:14px;color:var(--ink);transition:opacity .2s}
+  .footer-col a:hover{opacity:0.6}
+  .footer-bottom{
+    display:flex;justify-content:space-between;align-items:center;
+    padding-top:32px;border-top:1px solid var(--line);
+    font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.14em;
+    color:var(--ink-soft);
+  }
+  .footer-ribbon{
+    width:100%;height:14px;border-radius:999px;overflow:hidden;margin-bottom:40px;position:relative;
+  }
+  .footer-ribbon::after{content:"";position:absolute;inset:0;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,0.25),transparent 35%,rgba(0,0,0,0.2))}
+  .footer-ribbon{
+    background:linear-gradient(90deg,
+      var(--cobalt) 0%,var(--cobalt) 14%,
+      var(--green) 14%,var(--green) 28%,
+      var(--amber) 28%,var(--amber) 42%,
+      var(--coral) 42%,var(--coral) 56%,
+      var(--pink) 56%,var(--pink) 70%,
+      var(--violet) 70%,var(--violet) 84%,
+      var(--cyan) 84%,var(--cyan) 100%);
+  }
+</style>
+</head>
+<body vid="8">
+
+<nav id="nav" vid="9">
+  <div class="logo" vid="10">
+    <div class="logo-mark" vid="11"></div>
+    <span vid="12">Ribbon</span>
+  </div>
+  <div class="nav-links" vid="13">
+    <a href="#" vid="14">Product</a>
+    <a href="#" vid="15">Systems</a>
+    <a href="#" vid="16">Pricing</a>
+    <a href="#" vid="17">Studio</a>
+    <a href="#" vid="18">Changelog</a>
+  </div>
+  <div class="nav-cta" vid="19">
+    <a href="#" class="sign-in" vid="20">Sign in</a>
+    <button class="pill primary small" vid="21">Start free</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" vid="22">
+  <div vid="23">
+    <div class="eyebrow" vid="24">
+      <span class="eyebrow-dot" vid="25"></span>
+      <span vid="26">Ribbon v4.2 — Spectrum release</span>
+    </div>
+    <h1 vid="27">Design systems, <em vid="28">woven</em> into your product.</h1>
+    <p class="lede" vid="29">Ribbon is the design infrastructure for teams that take craft seriously. Tokens, components, and documentation — kept in perfect sync from Figma to production.</p>
+    <div class="hero-ctas" vid="30">
+      <button class="pill primary" vid="31">Start building free</button>
+      <button class="pill ghost" vid="32">Watch the tour</button>
+    </div>
+    <div class="hero-meta" vid="33">
+      <div class="hero-meta-item" vid="34">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" vid="35"><path d="M20 6 9 17l-5-5" vid="36"></path></svg>
+        <span vid="37">No credit card</span>
+      </div>
+      <div class="hero-meta-item" vid="38">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" vid="39"><path d="M20 6 9 17l-5-5" vid="40"></path></svg>
+        <span vid="41">Free for 5 seats</span>
+      </div>
+      <div class="hero-meta-item" vid="42">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" vid="43"><path d="M20 6 9 17l-5-5" vid="44"></path></svg>
+        <span vid="45">SOC 2 Type II</span>
+      </div>
+    </div>
+  </div>
+  <div class="composition" vid="46">
+    <div class="ribbon ribbon-1" vid="47"></div>
+    <div class="ribbon ribbon-2" vid="48"></div>
+    <div class="ribbon ribbon-3" vid="49"></div>
+    <div class="ribbon ribbon-4" vid="50"></div>
+  </div>
+</section>
+
+<!-- LOGO CLOUD -->
+<section class="logos" vid="51">
+  <div class="logos-label" vid="52">Trusted by product teams at</div>
+  <div class="logos-grid" vid="53">
+    <div class="logo-item" vid="54">Meridian</div>
+    <div class="logo-item bold" vid="55">NORTHWIND</div>
+    <div class="logo-item mono" vid="56">/Parallel</div>
+    <div class="logo-item" vid="57">Fieldwork</div>
+    <div class="logo-item bold" vid="58">ATLAS°</div>
+    <div class="logo-item mono" vid="59">Canopy_</div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" vid="60">
+  <div class="section-head" vid="61">
+    <h2 vid="62">One source of truth for <em vid="63">every pixel</em> you ship.</h2>
+    <p vid="64">Stop reconciling tokens across tools. Ribbon unifies your design language into a living system that designers, engineers, and PMs all edit together.</p>
+  </div>
+  <div class="features-grid" vid="65">
+    <div class="feature" vid="66">
+      <div class="feature-idx" vid="67">01 / Tokens</div>
+      <div vid="68">
+        <div class="feature-ribbon fr-1" vid="69"></div>
+      </div>
+      <div vid="70">
+        <h3 vid="71">Semantic tokens, versioned.</h3>
+        <p vid="72">Primitive to semantic to component tokens — with full diff history, branching, and a review flow your engineers will actually use.</p>
+      </div>
+    </div>
+    <div class="feature" vid="73">
+      <div class="feature-idx" vid="74">02 / Components</div>
+      <div vid="75">
+        <div class="feature-ribbon fr-2" vid="76"></div>
+      </div>
+      <div vid="77">
+        <h3 vid="78">Components that stay in sync.</h3>
+        <p vid="79">Bi-directional sync between Figma and your codebase. Props, variants, and states are authored once and flow everywhere.</p>
+      </div>
+    </div>
+    <div class="feature" vid="80">
+      <div class="feature-idx" vid="81">03 / Themes</div>
+      <div vid="82">
+        <div class="feature-ribbon fr-3" vid="83"></div>
+      </div>
+      <div vid="84">
+        <h3 vid="85">Themes without the tangle.</h3>
+        <p vid="86">Dark mode, brand skins, density modes, accessibility variants. Compose them with overrides — not copies.</p>
+      </div>
+    </div>
+    <div class="feature" vid="87">
+      <div class="feature-idx" vid="88">04 / Docs</div>
+      <div vid="89">
+        <div class="feature-ribbon fr-4" vid="90"></div>
+      </div>
+      <div vid="91">
+        <h3 vid="92">Docs that write themselves.</h3>
+        <p vid="93">Every component page is generated from the source. Usage guidelines live next to the thing they describe.</p>
+      </div>
+    </div>
+    <div class="feature" vid="94">
+      <div class="feature-idx" vid="95">05 / Pipelines</div>
+      <div vid="96">
+        <div class="feature-ribbon fr-5" vid="97"></div>
+      </div>
+      <div vid="98">
+        <h3 vid="99">Ship via your own CI.</h3>
+        <p vid="100">Publish tokens as npm, CSS, Swift, Kotlin, or anything custom. Hook into Git, Linear, and your design review process.</p>
+      </div>
+    </div>
+    <div class="feature" vid="101">
+      <div class="feature-idx" vid="102">06 / Governance</div>
+      <div vid="103">
+        <div class="feature-ribbon fr-6" vid="104"></div>
+      </div>
+      <div vid="105">
+        <h3 vid="106">Review, approve, enforce.</h3>
+        <p vid="107">Role-based access, contribution guidelines, and automatic lint rules keep the system consistent as your team scales.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SHOWCASE -->
+<section class="showcase" vid="108">
+  <div class="showcase-inner" vid="109">
+    <div class="showcase-eyebrow" vid="110">The Spectrum Editor</div>
+    <h2 vid="111">Author tokens <em vid="112">like colors on a palette.</em></h2>
+    <p vid="113">A dedicated canvas for designing the foundations of your product. Drag, combine, and preview — then publish the result to every surface your team ships to.</p>
+
+    <div class="canvas-demo" vid="114">
+      <div class="canvas-top" vid="115">
+        <div class="canvas-dots" vid="116"><span vid="117"></span><span vid="118"></span><span vid="119"></span></div>
+        <div class="canvas-title" vid="120">spectrum / brand-core.ribbon</div>
+      </div>
+      <div class="canvas-grid" vid="121">
+        <div class="canvas-panel" vid="122">
+          <h4 vid="123">Tokens</h4>
+          <div class="token-row" vid="124"><span class="token-swatch" style="background:var(--cobalt)" vid="125"></span>color.brand.primary</div>
+          <div class="token-row" vid="126"><span class="token-swatch" style="background:var(--coral)" vid="127"></span>color.brand.accent</div>
+          <div class="token-row" vid="128"><span class="token-swatch" style="background:var(--amber)" vid="129"></span>color.signal.warn</div>
+          <div class="token-row" vid="130"><span class="token-swatch" style="background:var(--green)" vid="131"></span>color.signal.ok</div>
+          <div class="token-row" vid="132"><span class="token-swatch" style="background:var(--violet)" vid="133"></span>color.surface.muted</div>
+          <div class="token-row" vid="134"><span class="token-swatch" style="background:var(--pink)" vid="135"></span>color.accent.soft</div>
+          <div class="token-row" vid="136"><span class="token-swatch" style="background:var(--cyan)" vid="137"></span>color.info.base</div>
+        </div>
+        <div class="canvas-panel preview-area" vid="138">
+          <div class="preview-ribbons" vid="139">
+            <div class="pv-ribbon pv1" vid="140"></div>
+            <div class="pv-ribbon pv2" vid="141"></div>
+            <div class="pv-ribbon pv3" vid="142"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" vid="143">
+  <div class="pricing-head" vid="144">
+    <h2 vid="145">Pricing that <em vid="146">scales with you.</em></h2>
+    <p vid="147">Start free for small teams. Upgrade when your system grows up.</p>
+  </div>
+  <div class="pricing-grid" vid="148">
+    <div class="price-card" vid="149">
+      <div class="price-ribbon pr-starter" vid="150"></div>
+      <div vid="151">
+        <h3 vid="152">Starter</h3>
+        <p class="price-desc" vid="153">For solo designers and small teams exploring systems thinking.</p>
+      </div>
+      <div class="price-amount" vid="154"><span class="num" vid="155">$0</span><span class="per" vid="156">forever</span></div>
+      <ul class="price-feats" vid="157">
+        <li vid="158">Up to 5 editors</li>
+        <li vid="159">Core tokens &amp; components</li>
+        <li vid="160">Figma plugin</li>
+        <li vid="161">Community support</li>
+      </ul>
+      <button class="pill ghost" style="width:100%" vid="162">Start free</button>
+    </div>
+    <div class="price-card featured" vid="163">
+      <div class="price-ribbon pr-studio" vid="164"></div>
+      <div vid="165">
+        <h3 vid="166">Studio</h3>
+        <p class="price-desc" vid="167">For design teams who need governance, theming, and production pipelines.</p>
+      </div>
+      <div class="price-amount" vid="168"><span class="num" vid="169">$24</span><span class="per" vid="170">/ editor / month</span></div>
+      <ul class="price-feats" vid="171">
+        <li vid="172">Unlimited editors</li>
+        <li vid="173">Themes &amp; branching</li>
+        <li vid="174">CI publishing (npm, iOS, Android)</li>
+        <li vid="175">Review workflows</li>
+        <li vid="176">Priority support</li>
+      </ul>
+      <button class="pill primary" style="width:100%" vid="177">Start 14-day trial</button>
+    </div>
+    <div class="price-card" vid="178">
+      <div class="price-ribbon pr-scale" vid="179"></div>
+      <div vid="180">
+        <h3 vid="181">Scale</h3>
+        <p class="price-desc" vid="182">For organizations with multiple products, brands, and compliance needs.</p>
+      </div>
+      <div class="price-amount" vid="183"><span class="num" vid="184">Custom</span></div>
+      <ul class="price-feats" vid="185">
+        <li vid="186">Multi-workspace federation</li>
+        <li vid="187">SSO, SCIM, audit logs</li>
+        <li vid="188">Dedicated environment</li>
+        <li vid="189">Design system architect</li>
+        <li vid="190">SOC 2 &amp; HIPAA</li>
+      </ul>
+      <button class="pill ghost" style="width:100%" vid="191">Talk to sales</button>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIAL -->
+<section class="testimonial" vid="192">
+  <div class="testimonial-visual" vid="193">
+    <div class="tv-ribbon tv1" vid="194"></div>
+    <div class="tv-ribbon tv2" vid="195"></div>
+    <div class="tv-ribbon tv3" vid="196"></div>
+  </div>
+  <div vid="197">
+    <blockquote vid="198">"We collapsed three tools into Ribbon. Our engineers stopped arguing about hex codes and <em vid="199">started shipping faster</em>. It's the first design system tool that actually felt native to both sides of the table."</blockquote>
+    <div class="testimonial-author" vid="200">
+      <div class="ta-avatar" vid="201">SL</div>
+      <div class="ta-info" vid="202">
+        <div class="name" vid="203">Sana Lindqvist</div>
+        <div class="role" vid="204">VP of Design, Meridian</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta" vid="205">
+  <div class="final-cta-inner" vid="206">
+    <h2 vid="207">Your system, <em vid="208">finally woven together.</em></h2>
+    <p vid="209">Join 4,200 product teams who replaced spreadsheets and Slack threads with a single source of truth.</p>
+    <div class="final-cta-row" vid="210">
+      <button class="pill primary" vid="211">Start building free</button>
+      <button class="pill ghost" vid="212">Book a demo</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer vid="213">
+  <div class="footer-ribbon" vid="214"></div>
+  <div class="footer-grid" vid="215">
+    <div class="footer-brand" vid="216">
+      <div class="logo" vid="217">
+        <div class="logo-mark" vid="218"></div>
+        <span vid="219">Ribbon</span>
+      </div>
+      <p vid="220">Design infrastructure for teams that take craft seriously. Made in Copenhagen and distributed globally.</p>
+    </div>
+    <div class="footer-col" vid="221">
+      <h5 vid="222">Product</h5>
+      <ul vid="223">
+        <li vid="224"><a href="#" vid="225">Tokens</a></li>
+        <li vid="226"><a href="#" vid="227">Components</a></li>
+        <li vid="228"><a href="#" vid="229">Themes</a></li>
+        <li vid="230"><a href="#" vid="231">Pipelines</a></li>
+      </ul>
+    </div>
+    <div class="footer-col" vid="232">
+      <h5 vid="233">Resources</h5>
+      <ul vid="234">
+        <li vid="235"><a href="#" vid="236">Documentation</a></li>
+        <li vid="237"><a href="#" vid="238">Changelog</a></li>
+        <li vid="239"><a href="#" vid="240">Systems Library</a></li>
+        <li vid="241"><a href="#" vid="242">Community</a></li>
+      </ul>
+    </div>
+    <div class="footer-col" vid="243">
+      <h5 vid="244">Company</h5>
+      <ul vid="245">
+        <li vid="246"><a href="#" vid="247">About</a></li>
+        <li vid="248"><a href="#" vid="249">Careers</a></li>
+        <li vid="250"><a href="#" vid="251">Press</a></li>
+        <li vid="252"><a href="#" vid="253">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col" vid="254">
+      <h5 vid="255">Legal</h5>
+      <ul vid="256">
+        <li vid="257"><a href="#" vid="258">Terms</a></li>
+        <li vid="259"><a href="#" vid="260">Privacy</a></li>
+        <li vid="261"><a href="#" vid="262">Security</a></li>
+        <li vid="263"><a href="#" vid="264">DPA</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom" vid="265">
+    <div vid="266">© Ribbon Systems ApS</div>
+    <div vid="267">Copenhagen — Lisbon — Brooklyn</div>
+  </div>
+</footer>
+
+<script vid="268">
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 10);
+  });
+</script>
+
+
+</body></html>

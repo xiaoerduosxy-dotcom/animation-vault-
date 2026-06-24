@@ -1,0 +1,123 @@
+<html lang="zh-CN" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">情绪收藏罐 - 开启</title>
+    <script src="https://cdn.tailwindcss.com/3.4.17" vid="5"></script>
+    <style vid="6">
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500&display=swap');
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #E5E5E5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(2deg); }
+        }
+        @keyframes floatMedium {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(-3deg); }
+        }
+        @keyframes pulseSoft {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.1); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-float-slow { animation: floatSlow 8s ease-in-out infinite; }
+        .animate-float-med { animation: floatMedium 6s ease-in-out infinite; }
+        .animate-pulse-soft { animation: pulseSoft 5s ease-in-out infinite; }
+        .animate-fade-in { animation: fadeIn 1.2s ease-out forwards; }
+
+        .glass-jar {
+            background: linear-gradient(180deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.15) 100%);
+            box-shadow: 
+                inset 0 0 15px rgba(255,255,255,0.5),
+                0 10px 25px rgba(0,0,0,0.02);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.7);
+        }
+
+        .jar-lid {
+            background: #E8E3DB;
+            box-shadow: inset 0 -2px 4px rgba(0,0,0,0.05);
+            border-radius: 4px 4px 0 0;
+        }
+
+        .gradient-bg {
+            background: radial-gradient(circle at 50% 40%, #FFFFFF 0%, #FAFAF7 100%);
+        }
+    </style>
+</head>
+<body vid="7">
+
+    <div id="app-onboarding" class="w-[400px] h-[867px] relative overflow-hidden gradient-bg text-stone-800 rounded-[20px] shadow-2xl flex flex-col items-center justify-between py-20 px-10" vid="8">
+        
+        
+        <div class="relative w-full flex-1 flex items-center justify-center" vid="9">
+            
+            <div class="absolute w-[280px] h-[280px] bg-amber-100/30 rounded-full blur-[80px] animate-pulse-soft" vid="10"></div>
+            
+            
+            <div class="relative z-10 w-[140px] h-[190px] animate-float-slow" vid="11">
+                <div class="w-10 h-3 jar-lid absolute top-0 left-1/2 -translate-x-1/2 z-10" vid="12"></div>
+                <div class="absolute inset-x-0 bottom-0 top-3 glass-jar rounded-[36px]" vid="13">
+                    <div class="absolute top-[20%] left-[15%] w-[10%] h-[50%] bg-white/40 rounded-full blur-[1px] rotate-[-5deg]" vid="14"></div>
+                    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 w-16 h-16 bg-amber-200/50 rounded-full blur-xl" vid="15"></div>
+                    <div class="absolute inset-0 flex items-center justify-center text-2xl" vid="16">✨</div>
+                </div>
+            </div>
+
+            
+            <div class="absolute top-[10%] right-[-10%] w-[100px] h-[130px] animate-float-med opacity-60 scale-75" style="animation-delay: -1s;" vid="17">
+                <div class="w-8 h-2.5 jar-lid absolute top-0 left-1/2 -translate-x-1/2 z-10" vid="18"></div>
+                <div class="absolute inset-x-0 bottom-0 top-2.5 glass-jar rounded-[28px]" vid="19">
+                    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 w-10 h-10 bg-blue-200/40 rounded-full blur-lg" vid="20"></div>
+                    <div class="absolute inset-0 flex items-center justify-center text-lg" vid="21">🍃</div>
+                </div>
+            </div>
+
+            
+            <div class="absolute bottom-[10%] left-[-5%] w-[110px] h-[150px] animate-float-slow opacity-50 scale-90" style="animation-delay: -3s;" vid="22">
+                <div class="w-8 h-2.5 jar-lid absolute top-0 left-1/2 -translate-x-1/2 z-10" vid="23"></div>
+                <div class="absolute inset-x-0 bottom-0 top-2.5 glass-jar rounded-[30px]" vid="24">
+                    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 w-12 h-12 bg-orange-100/40 rounded-full blur-lg" vid="25"></div>
+                    <div class="absolute inset-0 flex items-center justify-center text-xl" vid="26">⏱️</div>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="w-full text-center space-y-6 animate-fade-in" style="animation-delay: 0.5s;" vid="27">
+            <div class="space-y-3" vid="28">
+                <h1 class="text-[28px] font-light tracking-[0.2em] text-stone-700" vid="29">情绪收藏罐</h1>
+                <div class="w-8 h-[1px] bg-stone-300 mx-auto" vid="30"></div>
+                <p class="text-stone-400 text-sm font-light tracking-widest leading-relaxed px-4" vid="31">
+                    把每一缕无声的情绪<br vid="32">
+                    轻轻装进透明的罐子里
+                </p>
+            </div>
+
+            <div class="pt-10" vid="33">
+                <button onclick="window.location.reload()" class="group relative w-full h-[60px] outline-none" vid="34">
+                    <div class="absolute inset-0 bg-stone-800/5 rounded-full blur-lg group-hover:bg-stone-800/10 transition-all" vid="35"></div>
+                    <div class="relative w-full h-full bg-stone-800 rounded-full flex items-center justify-center text-[#FAFAF7] text-sm tracking-[0.3em] font-medium transition-transform active:scale-[0.98]" vid="36">
+                        开启收藏
+                    </div>
+                </button>
+                <p class="text-[10px] text-stone-300 mt-4 tracking-widest" vid="37">给心灵一个安放的地方</p>
+            </div>
+        </div>
+        
+    </div>
+
+</body></html>
